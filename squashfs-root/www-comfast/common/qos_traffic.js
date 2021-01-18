@@ -123,6 +123,7 @@ define(function (require, b) {
         d.each(flow_net, function (n, m) {
             var devip, txrate, upload, rxrate, download, uptime, mac, limit_real_num = '', limit_uprate = '',
                 limit_downrate = '', limit_download = '', limit_upload = '';
+                var arp_data;
             devip = m.ip;
             txrate = m.ur;
             upload = m.ub;

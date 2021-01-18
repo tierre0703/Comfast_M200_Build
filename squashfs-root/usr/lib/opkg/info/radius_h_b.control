@@ -1,0 +1,8 @@
+Package: radius_h_b
+Version: 0.1-1
+Depends: libc, libubus, libubox, libuci, libblobmsg-json, ljson-c
+Source: package/ap/radius_h_b
+Section: net
+Architecture: ramips_1004kc
+Installed-Size: 56041
+Description:  This package contains RADIUS Heart Beat Daemond

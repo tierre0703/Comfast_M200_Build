@@ -1,0 +1,23 @@
+
+config default
+	option host '8.8.8.8'
+	option interval '10'
+	option timeout '30'
+	option protocol 'icmp'
+
+config interface 'wan'
+	option name 'wan'
+	option status 'online'
+
+config interface 'wan1'
+	option name 'wan1'
+	option status 'offline'
+
+config interface 'wan2'
+	option name 'wan2'
+	option status 'online'
+
+config interface 'wan3'
+	option name 'wan3'
+	option status 'offline'
+

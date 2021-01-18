@@ -1,0 +1,23 @@
+{
+  "ap_wizard": [
+    "lan_set",
+    "w24g",
+    "w58g",
+    "finish"
+  ],
+  "bridge_wizard": [
+    "lan_set",
+    "bridge_set",
+    "wan_set",
+    "w24g",
+    "w58g",
+    "finish"
+  ],
+  "router_wizard": [
+    "wan_set",
+    "lan_set",
+    "w24g",
+    "w58g",
+    "finish"
+  ]
+}

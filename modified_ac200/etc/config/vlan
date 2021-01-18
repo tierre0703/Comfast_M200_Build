@@ -1,0 +1,23 @@
+
+config defaults 'fw_defaults'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+
+config com 'com_vlan'
+	option mport '1'
+	option vlan_min '6'
+	option vlan_max '127'
+	option vlan_itype 'line'
+	option double_support '1'
+	option wireless_support '0'
+	option switch_support '1'
+
+config switch 'switch'
+	option name 'switch0'
+	option reset '0'
+	option enable_vlan '1'
+
+config map 'vlan_list'
+	option list '0,'
+

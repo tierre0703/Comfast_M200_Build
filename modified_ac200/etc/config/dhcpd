@@ -1,0 +1,10 @@
+
+config dhcpd 'lan'
+	option interface 'lan'
+	option leasetime '7200'
+	option domain 'SOLEUX'
+	option ignore '0'
+	option start '50'
+	option limit '150'
+	option dns '8.8.8.8'
+

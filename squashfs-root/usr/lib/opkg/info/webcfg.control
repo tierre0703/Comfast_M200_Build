@@ -1,0 +1,8 @@
+Package: webcfg
+Version: 0.1-1
+Depends: libc, libubus, libubox, libuci, libblobmsg-json, nginx, fcgi, libiwinfo, ljson-c
+Source: package/webcfg
+Section: net
+Architecture: ramips_1004kc
+Installed-Size: 1975820
+Description:  This package contains Web management fcgi daemond

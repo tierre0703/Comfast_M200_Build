@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/fonts/allfonts.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/ora.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/theme.css"/>
+
+    <!--[if lt IE 9]>
+    <script src="/common/lib/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body module="network_dhcp" id="mbox_container">
+<div id="theme-wrapper">
+    <!-- header start -->
+    <div class="navbar" id="header-navbar">
+        <div class="container-fluid">
+            <div id="logo" class="navbar-brand">
+                <img src="/images/logo.png" alt="" class="normal-logo logo-white"/>
+                <span>Advance Gateway Router: SLX-M200</span>
+            </div>
+            <div class="clearfix">
+                <button class="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bars"></span>
+                </button>
+                <button class="navbar-toggle mode_set" type="button">
+                    <span class="mode_set_text"></span>
+                </button>
+                <div class="nav-no-collapse navbar-left pull-left hidden">
+                    <ul class="nav navbar-nav pull-left">
+                        <li>
+                            <a class="btn" id="make-small-nav">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-no-collapse pull-right" id="header-nav">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="hidden-xs mode_set">
+                            <a href="#" class="mode_set_text"></a>
+                        </li>
+                        <li class="hidden-xs" id="login_out">
+                            <a href="#">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <div id="page-wrapper" class="container-fluid">
+        <div id="nav-col">
+            <div id="col-left" class="col-left-nano">
+                <div id="col-left-inner" class="col-left-nano-content">
+                    <div class="" style="position: relative;" id="seach_box">
+                        <div class="sidebar-search">
+                            <div class="input-group search-form">
+                                <input type="text" class="form-control" id="search_value">
+                                <span class="seach-icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="nav-submenu" class="clearfix">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <ol class="breadcrumb">
+                            <li class="litile">
+                                <span sh_lang="home_web"></span>
+                                <span> > </span>
+                                <span sh_lang="index_network_settings"></span>
+                                <span> > </span>
+                                <span sh_lang="index_dhcp_network_set"></span>
+                                <span> > </span>
+                                <span sh_lang="index_dhcp_sever_port"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!--left content start-->
+                <div class="col-lg-12">
+                    <div class="main-box clearfix">
+                        <div class="tabs-wrapper profile-tabs">
+                            <ul class="nav nav-tabs" id="if_dhcpnet"></ul>
+                            <div class="tab-content">
+                                <div class="main-box-header"></div>
+                                <div class="main-box-body">
+                                    <div class="row list">
+                                        <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                            <span>DHCP</span>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                            <select class="form-control" et="change:dhcpChange" id="dhcp_server">
+                                                <option value="enable" sh_lang="tcpip_lan_dhcp_server"></option>
+                                                <option value="disable" sh_lang="tcpip_lan_dhcp_disabled"></option>
+                                            </select>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <div class="row list">
+                                        <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                            <span sh_lang="dhcp_start_address"></span>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                            <span class="tip_name hide" sh_lang="dhcp_start_address"></span>
+                                            <input type="text" class="form-control require isNUM" name="_@0_255"
+                                                   id="dhcp_start">
+                                            <p><span sh_lang="dhcp_eg"></span><span id="defaut_ip"></span><span sh_lang="dhcp_last_tip"></span></p>
+                                        </div>
+                                    </div>
+                                    <div class="row list">
+                                        <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                            <span sh_lang="dhcp_limit_address"></span>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                            <span class="tip_name hide" sh_lang="dhcp_limit_address"></span>
+                                            <input type="text" class="form-control require isNUM" name="_@1_32768"
+                                                   id="dhcp_limit">
+                                            <p sh_lang="dhcp_client_limit_tips"></p>
+                                        </div>
+                                    </div>
+                                    <div class="row list">
+                                        <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                            <span sh_lang="tcpip_lan_dhcp_time"></span>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                            <span class="tip_name hide" sh_lang="tcpip_lan_dhcp_time"></span>
+                                            <input type="text" class="form-control require isNUM" name="_@2_10080"
+                                                   id="dhcp_leasetime">
+                                            <p sh_lang="localnet_leasetime_tips"></p>
+                                        </div>
+                                    </div>
+                                    <div class="row list">
+                                        <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                            <span sh_lang="tcpip_domain"></span>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                            <span class="tip_name hide" sh_lang="tcpip_domain"></span>
+                                            <input type="text" class="form-control  require isNULL isDomain"
+                                                   maxlength="32" id="dhcp_domain">
+                                            <p sh_lang="dhcp_client_domaint_tips"></p>
+                                        </div>
+                                    </div>
+                                    <div class="hide" id="dns">
+                                        <div class="row list">
+                                            <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                                <span sh_lang="wan_main_dns"></span>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                                <span class="tip_name hide" sh_lang="wan_main_dns"></span>
+                                                <input type="text" class="form-control require isNULL isIP" id="dns_main">
+                                                <p sh_lang="ipex"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row list">
+                                            <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                                                <span sh_lang="wan_secondary_dns"></span>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+                                                <span class="tip_name hide" sh_lang="wan_secondary_dns"></span>
+                                                <input type="text" class="form-control require isNULL isIP" id="dns_backup">
+                                                <p sh_lang="ipex"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row list">
+                                        <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4 col-xs-8  col-xs-offset-2">
+                                            <div class="row text-center">
+                                                <button type="button"
+                                                        class="btn btn-primary mrg-b-lg col-lg-3 col-md-3 col-xs-5 col-lg-offset-2 col-md-offset-1"
+                                                        et="click tap:saveConfig" sh_lang="save_config"></button>
+                                                <button type="button" sh_lang="cancel_config"
+                                                        class="btn btn-default mrg-b-lg col-lg-3 col-md-3 col-xs-5 col-lg-offset-4 col-md-offset-2 col-xs-offset-2"
+                                                        et="click tap:doResetConfig"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--left content end-->
+            </div>
+            <div class="row">
+                <div id="footer-bar" style="opacity: 1;">
+                    <p id="footer-copyright" class="col-xs-12" sh_lang="copyright"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="set_tips"></div>
+</body>
+</html>
+
+<script type="text/javascript" src="/common/sea.js"></script>
+<script type="text/javascript">
+    var moduleName = document.body.getAttribute("module");
+    if (moduleName) {
+        seajs.use([moduleName, "touch"], function (page) {
+            page.init();
+        });
+    }
+</script>

@@ -1,0 +1,175 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+nginxconfig="/etc/nginx/nginx.conf"
+firewallremote="/etc/firewall.remote"
+restart_firewall=0
+restart_nginx=0
+
+run_config_network()
+{
+	local network=$1
+
+	ifnamenum=`echo ${network} |grep lan|wc -l`
+	if [ ${ifnamenum} -eq 1 ];then
+		lanipaddr=`uci get network.${network}.ipaddr`
+		lannetmask=`uci get network.${network}.netmask`
+		lannetwork=`/bin/ipcalc.sh ${lanipaddr} ${lannetmask} | grep NETWORK |awk -F "=" '{print $2}'`
+		lanprefix=`/bin/ipcalc.sh ${lanipaddr} ${lannetmask} | grep PREFIX |awk -F "=" '{print $2}'`
+		lansubnetwork=${lannetwork}/${lanprefix}
+		sed -i "/listen 80/a\allow ${lansubnetwork};" ${nginxconfig}	
+	fi
+}
+
+allow_lan_ip()
+{
+	config_load network
+	config_foreach run_config_network interface
+}
+
+allow_wan_ip()
+{
+	local counter max_wait_time
+
+	counter=0
+	max_wait_time=1
+	[ -f "/tmp/needsleep_remote" ] && max_wait_time=5 && rm -f /tmp/needsleep_remote
+	wantype=`uci get network.wan.type`
+	wanproto=`uci get network.wan.proto`
+	if [ ${wanproto} == "dhcp" ] || [ ${wanproto} == "static" ];then
+		while [ "$counter" -lt $max_wait_time ]; do
+			wanipaddr=`ifstatus wan |grep '"address"'|awk -F '"' '{print $4}'`
+			wannetmask=`ifstatus wan |grep 'mask'|head -1|awk '{print $2}'`
+			if [ -n "${wanipaddr}" ] && [ -n "${wannetmask}" ];then
+				wannetwork=`/bin/ipcalc.sh ${wanipaddr} ${wannetmask} | grep NETWORK |awk -F "=" '{print $2}'`
+				wanprefix=`/bin/ipcalc.sh ${wanipaddr} ${wannetmask} | grep PREFIX |awk -F "=" '{print $2}'`
+				wansubnetwork=${wannetwork}/${wanprefix}
+				sed -i "/listen 80/a\allow ${wansubnetwork};" ${nginxconfig}
+				break
+			fi
+			sleep 1
+			let counter++
+		done
+	fi
+}
+
+run_config_vlan()
+{
+	local network=$1
+
+	ifnamenum=`echo ${network} |grep vlan|wc -l`
+	if [ ${ifnamenum} -eq 1 ];then
+		vlanipaddr=`uci get vlan.${network}.ipaddr`
+		vlannetmask=`uci get vlan.${network}.netmask`
+		vlannetwork=`/bin/ipcalc.sh ${vlanipaddr} ${vlannetmask} | grep NETWORK |awk -F "=" '{print $2}'`
+		vlanprefix=`/bin/ipcalc.sh ${vlanipaddr} ${vlannetmask} | grep PREFIX |awk -F "=" '{print $2}'`
+		vlansubnetwork=${vlannetwork}/${vlanprefix}
+		sed -i "/listen 80/a\allow ${vlansubnetwork};" ${nginxconfig}	
+	fi
+}
+
+allow_vlan_ip()
+{
+	config_load vlan
+	config_foreach run_config_vlan interface
+}
+
+firewall_restart()
+{
+	if [ $restart_firewall -eq 1 ];then
+		/etc/init.d/firewall restartall
+	fi
+}
+
+nginx_restart()
+{
+	if [ $restart_nginx -eq 1 ];then
+		/etc/init.d/nginx restart
+	fi
+}
+
+wan_config()
+{
+	local network=$1
+	local ifname
+	local type
+	local proto
+	
+	if [ ${network:0:3} == "wan" ];then
+			config_get proto $1 proto
+			if [ "$proto" == "pppoe" ];then
+				echo "iptables -t nat -I PREROUTING -i pppoe-$network -j PREROUTING_EXTRA" >> ${firewallremote}
+			else
+				config_get type $1 type
+				if [ x"$type" == "xbridge" ];then
+					echo "iptables -t nat -I PREROUTING -i br-$network -j PREROUTING_EXTRA" >> ${firewallremote}
+				else
+					config_get ifname $1 ifname
+					echo "iptables -t nat -I PREROUTING -i $ifname -j PREROUTING_EXTRA" >> ${firewallremote}
+				fi
+			fi
+	fi
+}
+
+allow_wan_prerouting()
+{
+	config_load network
+	config_foreach wan_config interface
+}
+
+start()
+{
+	enable=`uci get remote.remote.enable`
+	if [ -n "$enable" ] && [ "$enable" == "1" ];then
+
+		remoteport=`uci get remote.remote.port`
+		if [ -z "remoteport" ];then
+			remoteport=80
+		fi
+		echo "iptables -t nat -N PREROUTING_EXTRA" > ${firewallremote}
+		allow_wan_prerouting
+		echo "iptables -t nat -I PREROUTING_EXTRA -p tcp --dport ${remoteport} -m comment --comment "remote_management" -j REDIRECT --to-ports 80" >> ${firewallremote}
+		echo "iptables -I INPUT -p tcp --dport 80 -m comment --comment allow_remote_80_port -j ACCEPT" >> ${firewallremote}
+
+		uci set firewall.remote="include"
+		uci set firewall.remote.path="${firewallremote}"
+		uci commit firewall
+		restart_firewall=1
+
+		remoteip=`uci get remote.remote.ipaddr`
+		sed -i '/allow/d' ${nginxconfig}
+		sed -i '/deny all/d' ${nginxconfig}
+		if [ -n "$remoteip" ] && [ "$remoteip" != "0.0.0.0" ];then
+			sed -i '/listen 80/a\deny all;' ${nginxconfig}
+			sed -i "/listen 80/a\allow ${remoteip};" ${nginxconfig}
+			allow_wan_ip
+			allow_lan_ip
+			allow_vlan_ip
+		fi
+		restart_nginx=1
+	else
+		firewall_exist=`uci get firewall.remote 2>/dev/null`
+		if [ -n "$firewall_exist" ];then
+			sed -i '/allow/d' ${nginxconfig}
+			sed -i '/deny all/d' ${nginxconfig}
+
+			uci delete firewall.remote
+			uci commit firewall
+			restart_firewall=1
+			restart_nginx=1
+		fi
+	fi
+
+	firewall_restart
+	nginx_restart
+}
+
+stop()
+{
+	echo stop > /dev/null
+}
+
+restart()
+{
+	start
+}

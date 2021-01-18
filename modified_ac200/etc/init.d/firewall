@@ -1,0 +1,141 @@
+#!/bin/sh /etc/rc.common
+
+START=19
+USE_PROCD=1
+QUIET=""
+
+validate_firewall_redirect()
+{
+	uci_validate_section firewall redirect "${1}" \
+		'proto:or(uinteger, string)' \
+		'src:string' \
+		'src_ip:string' \
+		'src_dport:or(port, portrange)' \
+		'dest:string' \
+		'dest_ip:string' \
+		'dest_port:or(port, portrange)' \
+		'target:or("SNAT", "DNAT")'
+}
+
+validate_firewall_rule()
+{
+	uci_validate_section firewall rule "${1}" \
+		'proto:or(uinteger, string)' \
+		'src:string' \
+		'dest:string' \
+		'src_port:or(port, portrange)' \
+		'dest_port:or(port, portrange)' \
+		'target:string'
+}
+
+service_triggers() {
+	procd_add_reload_trigger firewall	
+
+	procd_open_validate
+	validate_firewall_redirect
+	validate_firewall_rule
+	procd_close_validate
+}
+
+check_to_exec()
+{
+	local last_restart=0
+	local delay_restart=0
+	local counter=0
+
+	now_time=`date +%s`
+	if [ -f /tmp/fw_restart ];then
+		last_restart=`cat /tmp/fw_restart`
+	fi
+
+	if [ $last_restart -gt 0 ];then
+		interval=`expr $now_time - $last_restart`
+		if [ $interval -le 10 ];then
+			[ -f /tmp/fw_delay_restart ] && exit 0
+			touch /tmp/fw_delay_restart
+			date +%s > /tmp/fw_restart
+			sleep 10
+		fi
+	fi
+
+	date +%s > /tmp/fw_restart
+	[ -f /tmp/fw_delay_restart ] && rm -f /tmp/fw_delay_restart
+
+	lsof_output=`lsof /etc/hotplug.d/iface/15-mwan3`
+	while [ -n "$lsof_output" ] && [ "$counter" -lt 60 ]; do
+		sleep 1
+		let counter++
+		if [ "$counter" -ge 60 ]; then
+			$LOG warn "Timeout waiting for older hotplug processes to finish." && return 0
+		fi
+		lsof_output=`lsof /etc/hotplug.d/iface/15-mwan3`
+	done
+
+	counter=0
+	while [ -f /tmp/fw_lock ] && [ "$counter" -lt 60 ]; do
+		sleep 1
+		let counter++
+		if [ "$counter" -ge 60 ]; then
+			$LOG warn "Timeout waiting for older firewall processes to finish." && return 0
+		fi
+	done
+}
+
+restartall() {
+
+	local workmode=`uci get network.workmode 2>/dev/null`
+
+	if [ -z "$workmode" ] || [ "$workmode" = "router" -o ${workmode:0:4} = "wisp" ]; then
+		  [ -e /usr/sbin/mwan3 ] && {
+				check_to_exec
+				touch /tmp/mwan3_stop
+		  }
+		  touch /tmp/fw_lock
+		  fw3 restart
+		  [ -e /usr/sbin/mwan3 ] && rm -f /tmp/mwan3_stop && /usr/sbin/mwan3 restart
+		  [ -e /etc/init.d/chilli ] && /etc/init.d/chilli restart
+		  [ -e /etc/init.d/customqos ] && /etc/init.d/customqos start
+		  [ -e /etc/init.d/wifilith ] && /etc/init.d/wifilith restart
+		  rm /tmp/fw_lock
+	else
+		  fw3 flush
+	fi
+}
+
+restart() {
+	local workmode=`uci get network.workmode`
+	if [ -z "$workmode" ] || [ "$workmode" = "router" -o ${workmode:0:4} = "wisp" ]; then
+		fw3 restart
+	else
+		fw3 flush
+	fi
+}
+
+start_service() {
+	local workmode=`uci get network.workmode`
+	if [ -z "$workmode" ] || [ "$workmode" = "router" -o ${workmode:0:4} = "wisp" ]; then
+		fw3 ${QUIET} start
+	else
+		fw3 flush
+	fi
+}
+
+stop_service() {
+	fw3 flush
+}
+
+reload_service() {
+	local workmode=`uci get network.workmode`
+        if [ -z "$workmode" ] || [ "$workmode" = "router" -o ${workmode:0:4} = "wisp" ]; then
+                fw3 reload
+        else
+                fw3 flush
+        fi
+}
+
+boot() {
+	# Be silent on boot, firewall might be started by hotplug already,
+	# so don't complain in syslog.
+	QUIET=-q
+	start
+}

@@ -1,0 +1,8 @@
+Package: wifilith
+Version: 0.1-26
+Depends: libc, libubus, libubox, libuci, libblobmsg-json, libiwinfo, zlib, libpthread, nginx, fcgi, libopenssl, libcurl, libmnl, mbase, libxml2, ljson-c
+Source: package/network/wifilith
+Section: net
+Architecture: ramips_1004kc
+Installed-Size: 550843
+Description:  This package contains WiFi-Lith Daemond

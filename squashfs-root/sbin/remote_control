@@ -1,0 +1,32 @@
+#!/bin/sh
+
+disable=`uci get remote.disable_remote_control 2>/dev/null`
+if [ "$disable" = "1" ]; then
+	[ -f /etc/init.d/dropbear ] && /etc/init.d/dropbear stop
+	if [ -f /tmp/sysinfo/noswitch ]; then
+		#x86
+		sed -i '/ttyS0::askfirst:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '/#ttyS0::askfirst:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '$a\#ttyS0::askfirst:/bin/login' /etc/inittab 2>/dev/null
+	else
+		#ramips && ar71xx
+		sed -i '/::askconsole:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '/#::askconsole:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '$a\#::askconsole:\/bin\/login' /etc/inittab 2>dev/null
+	fi
+else
+	[ -f /etc/init.d/dropbear ] && /etc/init.d/dropbear restart
+	if [ -f /tmp/sysinfo/noswitch ]; then
+		#x86
+		sed -i '/ttyS0::askfirst:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '/#ttyS0::askfirst:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '$a\ttyS0::askfirst:/bin/login' /etc/inittab 2>/dev/null
+	else
+		#ramips && ar71xx
+		sed -i '/::askconsole:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '/#::askconsole:\/bin\/login/d' /etc/inittab 2>/dev/null
+		sed -i '$a\::askconsole:\/bin\/login' /etc/inittab 2>dev/null
+	fi
+fi
+
+exit 0

@@ -1,0 +1,37 @@
+#!/bin/sh
+
+DEVICE=$1
+
+if [ x"$DEVICE" = "x" ];then
+	exit 0
+fi
+
+exist_debugfs=`/bin/mount |grep debugfs`
+exist_overlay=`/bin/mount |grep overlayfs:/overlay`
+
+while [ x"$exist_debugfs" = "x" -o x"$exist_overlay" = "x" ]
+do
+	sleep 1
+	exist_debugfs=`/bin/mount |grep debugfs`
+	exist_overlay=`/bin/mount |grep overlayfs:/overlay`
+done
+
+mkdir -p /mnt/$DEVICE
+/bin/mount  -o iocharset=cp936,rw /dev/$DEVICE /mnt/$DEVICE
+if [ "$?" -ne 0 ];then
+	/bin/mount -o rw /dev/$DEVICE /mnt/$DEVICE
+fi
+
+if [ ! -d "/www-comfast/data/temp" ]; then
+	mkdir /www-comfast/data/temp
+fi
+df -h |grep /dev/sd > /www-comfast/data/temp/udisk_info.txt
+blkid |grep /dev/sd >> /www-comfast/data/temp/udisk_info.txt
+				
+php_start=`pidof php-fpm`
+if [ x"$php_start" = "x" ];then
+	uci set php5-fpm.@php5-fpm[0].enabled=1
+	uci commit php5-fpm
+	/etc/init.d/php5-fpm restart
+fi
+

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+awk 'BEGIN{
+    RS="}"
+    FS="\n"
+}
+/lease/{
+    for(i=1;i<=NF;i++){
+        gsub(";","",$i)
+		
+        if ($i ~ /lease/) {
+            m=split($i, IP," ")
+            ip=IP[2]
+        }
+		if ($i ~ /ends/) {
+            m=split($i, TIME," ")
+            time=TIME[3]
+        }
+        if( $i ~ /hardware/ ){
+            m=split($i, hw," ")
+            ether=hw[3]
+        }
+        if ( $i ~ /client-hostname/){
+            m=split($i,ch, "\"")
+            hostname=ch[2]
+        }
+		if ( hostname == "" )
+			hostname="*"
+    }
+	if(ether != "")
+		print time " "ether " "ip "  "hostname
+	ip=""
+	time=""
+	ether=""
+	hostname=""
+    
+} ' /tmp/dhcpd.leases > /tmp/dhcpd.leases.file.temp
+cat /tmp/dhcpd.leases.file.temp |sort -r > /tmp/dhcpd.leases.file
+rm -f /tmp/dhcpd.leases.file.temp
+exit 0;

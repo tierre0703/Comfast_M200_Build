@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+start() {
+	[ -e "/dev/watchdog" ] && {
+		watchdog /dev/watchdog
+	}
+
+	[ -e "/dev/watchdog1" ] && {
+		watchdog /dev/watchdog1
+	}
+
+	[ -e "/dev/watchdog2" ] && {
+		watchdog /dev/watchdog2
+	}
+}

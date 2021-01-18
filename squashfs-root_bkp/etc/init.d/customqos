@@ -1,0 +1,36 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+START=99
+
+start() {
+	/bin/generaterule.sh "all"
+}
+
+stop() {
+	/bin/generaterule.sh "stop"
+}
+
+clean_exist_qos_pid()
+{
+	local generaterule_pid
+	local pid_kill
+
+	pid_self=`echo $$`
+	for pid_kill in `pidof customqos`
+	do
+		[ $pid_kill -eq $pid_self ] && continue
+		kill -9 $pid_kill
+	done
+
+	sleep 1
+
+	generaterule_pid=`pidof generaterule.sh`
+	[ -n "$generaterule_pid" ] && kill -9 $generaterule_pid
+}
+
+restart() {
+	clean_exist_qos_pid
+	stop
+	sleep 1
+	start
+}

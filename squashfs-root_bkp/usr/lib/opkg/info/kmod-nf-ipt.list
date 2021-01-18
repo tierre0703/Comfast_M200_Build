@@ -1,0 +1,3 @@
+/lib/modules/3.18.9/ip_tables.ko
+/etc/modules.d/nf-ipt
+/lib/modules/3.18.9/x_tables.ko

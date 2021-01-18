@@ -1,0 +1,8 @@
+Package: mbase
+Version: 0.1-1
+Depends: libc, libubus, libubox, libuci, libblobmsg-json
+Source: package/system/mbase
+Section: net
+Architecture: ramips_1004kc
+Installed-Size: 105
+Description:  This package contains MWiFi base system

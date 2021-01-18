@@ -1,0 +1,148 @@
+#!/bin/sh /etc/rc.common
+
+# create a rrd file
+START=99
+#rrdfile=/tmp/rrd/cpu.rrd
+STEP=60
+HEARTBEAT=120
+now=`date +%s`
+
+if [ ! -d "/tmp/rrd" ];then
+	mkdir -p /tmp/rrd
+	ln -s /tmp/rrd /www-comfast
+fi
+
+
+run_config_network()
+{
+	TEMPLATE_STR="rx_bytes:tx_bytes"
+	local network=$1
+	local ifname
+	
+	config_get ifname $1 ifname
+
+#	ifname="eth5"
+#	network="lan"
+	
+	is_lan=`echo $network | grep "lan"`
+	is_wan=`echo $network | grep "wan"`
+	if [ -z "$is_lan" ] && [ -z "$is_wan" ];then
+		continue;
+	fi
+	rrdfile="/tmp/rrd/"$network".rrd"
+	if [ ! -f $rrdfile ];then
+		rrdtool create $rrdfile --start $now --step $STEP \
+			DS:rx_bytes:COUNTER:$HEARTBEAT:0:U              \
+			DS:tx_bytes:COUNTER:$HEARTBEAT:0:U              \
+			RRA:AVERAGE:0.5:1:10080
+	else
+		echo "$rrdfile already exists, remove it"
+	fi
+	
+	rx_bytes=0
+	tx_bytes=0
+	if [ -n "$is_wan" ] && [ -n "$ifname" ];then
+		rx_bytes=`cat /sys/class/net/$ifname/statistics/rx_bytes`
+		tx_bytes=`cat /sys/class/net/$ifname/statistics/tx_bytes`
+	elif [ -n "$is_lan" ] && [ -n "$ifname" ];then
+		ifname_num=`echo "$ifname" | awk '{print NF}'`
+		i=1
+		while [[ $i -le $ifname_num ]]
+		do
+			ifname_temp=`echo "$ifname" | cut -d ' ' -f$i`
+			rx_bytes_temp=`cat /sys/class/net/$ifname_temp/statistics/rx_bytes`
+			rx_bytes=`expr $rx_bytes + $rx_bytes_temp`
+			tx_bytes_temp=`cat /sys/class/net/$ifname_temp/statistics/tx_bytes`
+			tx_bytes=`expr $tx_bytes + $tx_bytes_temp`
+			i=`expr $i + 1`
+		done
+	else
+		continue;
+	fi
+	
+	rrdtool update $rrdfile                           \
+    --template $TEMPLATE_STR                      \
+    N:$rx_bytes:$tx_bytes
+}
+
+#run_config_network
+
+
+interfacerrd()
+{
+	config_load network
+	config_foreach run_config_network interface
+	
+}
+
+
+cpurrd()
+{
+	rrdfile_cpu=/tmp/rrd/cpu.rrd
+
+	if [ ! -f $rrdfile_cpu ];then
+		rrdtool create $rrdfile_cpu --start $now --step $STEP \
+			DS:cpu_usage:GAUGE:$HEARTBEAT:0:100              \
+			DS:cpu_user_usage:GAUGE:$HEARTBEAT:0:100              \
+			DS:cpu_nice_total:GAUGE:$HEARTBEAT:0:100              \
+			DS:cpu_system_total:GAUGE:$HEARTBEAT:0:100              \
+			DS:cpu_irq_total:GAUGE:$HEARTBEAT:0:100              \
+			DS:cpu_softirq_total:GAUGE:$HEARTBEAT:0:100              \
+			RRA:AVERAGE:0.01:1:10080
+	else
+		echo "$rrdfile_cpu already exists, remove it"
+	fi
+
+	TEMPLATE_STR="cpu_usage:cpu_user_usage:cpu_nice_total:cpu_system_total:cpu_irq_total:cpu_softirq_total"
+
+	cpu_string1=`head -1 /proc/stat`
+	cpu_sum_temp1=`echo ${cpu_string1} |awk '{sum=$2+$3+$4+$5+$6+$7+$8} {print"",sum}'`
+	cpu_sum1=`echo $cpu_sum_temp1`
+	cpu_user1=`echo ${cpu_string1} | awk '{print $2}'`
+	cpu_nice1=`echo ${cpu_string1} | awk '{print $3}'`
+	cpu_system1=`echo ${cpu_string1} | awk '{print $4}'`
+	cpu_idle1=`echo ${cpu_string1} | awk '{print $5}'`
+	cpu_irq1=`echo ${cpu_string1} | awk '{print $7}'`
+	cpu_softirq1=`echo ${cpu_string1} | awk '{print $8}'`
+	cpu_used1=`expr ${cpu_sum1} - ${cpu_idle1}`
+
+
+	sleep 1
+
+	cpu_string2=`head -1 /proc/stat`
+	cpu_sum_temp2=`echo ${cpu_string2} |awk '{sum=$2+$3+$4+$5+$6+$7+$8} {print"",sum}'`
+	cpu_sum2=`echo $cpu_sum_temp2`
+	cpu_user2=`echo ${cpu_string2} | awk '{print $2}'`
+	cpu_nice2=`echo ${cpu_string2} | awk '{print $3}'`
+	cpu_system2=`echo ${cpu_string2} | awk '{print $4}'`
+	cpu_idle2=`echo ${cpu_string2} | awk '{print $5}'`
+	cpu_irq2=`echo ${cpu_string2} | awk '{print $7}'`
+	cpu_softirq2=`echo ${cpu_string2} | awk '{print $8}'`
+	cpu_used2=`expr ${cpu_sum2} - ${cpu_idle2}`
+
+	cpu_user_total=`expr $cpu_user2 - $cpu_user1`
+	cpu_nice_total=`expr $cpu_nice2 - $cpu_nice1`
+	cpu_system_total=`expr $cpu_system2 - $cpu_system1`
+	cpu_irq_total=`expr $cpu_irq2 - $cpu_irq1`
+	cpu_softirq_total=`expr $cpu_softirq2 - $cpu_softirq1`
+	cpu_used_total=`expr $cpu_used2 - $cpu_used1`
+	cpu_sum_total=`expr $cpu_sum2 - $cpu_sum1`
+	cpu_usage=`awk 'BEGIN{printf "%.2f\n",('$cpu_used_total'/'$cpu_sum_total')*100}'`
+	cpu_user_usage=`awk 'BEGIN{printf "%.2f\n",('$cpu_user_total'/'$cpu_sum_total')*100}'`
+	cpu_nice_usage=`awk 'BEGIN{printf "%.2f\n",('$cpu_nice_total'/'$cpu_sum_total')*100}'`
+	cpu_system_usage=`awk 'BEGIN{printf "%.2f\n",('$cpu_system_total'/'$cpu_sum_total')*100}'`
+	cpu_irq_usage=`awk 'BEGIN{printf "%.2f\n",('$cpu_irq_total'/'$cpu_sum_total')*100}'`
+	cpu_softirq_usage=`awk 'BEGIN{printf "%.2f\n",('$cpu_softirq_total'/'$cpu_sum_total')*100}'`
+
+	rrdtool update $rrdfile_cpu                           \
+		--template $TEMPLATE_STR                      \
+		N:$cpu_usage:$cpu_user_usage:$cpu_nice_usage:$cpu_system_usage:$cpu_irq_usage:$cpu_softirq_usage
+
+}
+
+start()
+{
+	cpurrd
+	interfacerrd
+}
+

@@ -1,0 +1,4 @@
+/etc/modules.d/54-usb3
+/lib/modules/3.18.9/xhci-pci.ko
+/lib/modules/3.18.9/xhci-hcd.ko
+/etc/modules-boot.d/54-usb3

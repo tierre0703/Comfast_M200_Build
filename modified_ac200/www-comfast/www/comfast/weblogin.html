@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="GBK">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1;IE=11;IE=10;IIE=9;IE=8;IE=7">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes"> <!-- wap自适应 //-->
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>连网认证系统</title>
+    <script type="text/javascript" src="js/jquery_1.7.2.js"></script>
+</head>
+
+<body>
+
+
+<!--LOGO 开始-->
+<header>
+    <div class="logo" style="text-align: center">
+        <img id="logo" src="">
+    </div>
+</header>
+<!--LOGO 结束-->
+
+<div class="page">
+    <div class="main">
+        <form name="_userregistr" id="_userregistr" action="" method="post">
+            <!--公用-->
+            <div class="lf_passwd">
+                <center id="errorinfo"></center>
+            </div>
+            <input name="user" id="user" class="lf_input" type="text" placeholder="请输入用户名" value="">
+            <div class="lf_passwd">
+                <input name="password1" id="pass" class="lf_passwd_input pass_hide" type="password" placeholder="请输入密码" style="display: inline;">
+                <input name="password11" id="pass_2" class="lf_passwd_input pass_show" type="text" placeholder="请输入密码" style="display: none;">
+                <b class="tp-btn btn-off"></b>
+            </div>
+
+            <!--登录-->
+            <div id="lf_login" style="display:''"><!--登录-->
+                <div class="lf_option">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td>
+                                <input id="save" type="checkbox" checked onclick="save_ck(this)">记住信息
+                                <input id="auto" type="checkbox" checked onclick="auto_ck(this);">自动登录
+                                <input id="mianze" name="mianze" type="checkbox" checked><a href="mianze.html">同意免责协议</a>
+                            </td>
+                            <td style="text-align:right"><a id="find_password" style="color: #4eabe8;font-size: 15px;text-decoration: underline;" href="#">找回密码</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+                <a id="lf_btn_login" class="lf_btn_login" onclick="login()">用户登录</a>
+                <a id="lf_btn_registr" class="lf_btn_registr" style="display:none" onclick="$('#lf_registr').css({display:''});$('#lf_login').css({display:'none'});delcookie('lfradius_cook_auto');">没有账号？立即注册</a>
+
+
+                <div id="lf_content">
+
+                </div>
+
+            </div>
+
+            <!--注册-->
+            <div id="lf_registr" style="display:none"><!--注册-->
+                <div class="lf_passwd" style="display:none" id="password2">
+                    <input name="password2" id="pass2" class="lf_passwd_input pass_hide" type="password" placeholder="确认密码" style="display: inline;">
+                    <input name="password22" id="pass2_2" class="lf_passwd_input pass_show" type="text" placeholder="确认密码" style="display: none;">
+                    <b class="tp-btn btn-off"></b>
+                </div>
+
+                <div class="lf_code" style="display:none" id="code">
+                    <input name="code" maxlength="4" class="lf_code_input" type="text" placeholder="图片验证码">
+                    <span style="border-left: 1px solid #d7d7d7;height: 25px; padding-left: 7px; position: absolute;right: 0;top: 0px;width: 100px;"><img src="" id="imgcode"
+                                                                                                                                                          onclick="this.src='http://'+radiusip+'/lfradius/libs/checkcode.php?'+Math.random();"
+                                                                                                                                                          style="cursor:pointer;border: 0px dashed #666666;height:30px;width:90px;margin-top:5px;"
+                                                                                                                                                          alt="点击更换验证码..." title="点击更换验证码..."> </span>
+                </div>
+
+                <div class="lf_code" style="display:none" id="smscode">
+                    <input name="smscode" maxlength="4" class="lf_code_input" type="text" placeholder="短信验证码">
+                    <span style="border-left: 1px solid #d7d7d7; padding-left: 7px; position: absolute;right: 0;top: 9px;width: 100px;"> <input type="button" name="smsok" value="发送..." onclick="sendsms()"
+                                                                                                                                                style="color:#FF0000;font-weight:900;font-size:16px;"> </span>
+                </div>
+
+                <input id="mianze2" name="mianze2" type="checkbox" checked><a href="mianze.html">同意免责协议</a>
+                <br>
+                <a class="lf_btn_login" onclick="lf_registrok();">确定注册</a>
+                <a class="lf_btn_registr" onclick="$('#lf_login').css({display:''});$('#lf_registr').css({display:'none'});">←返回登录</a>
+
+            </div>
+
+            <!--多个隐藏框取值，不要去修改-->
+            <input type="hidden" name="nasid" value="">
+            <input type="hidden" name="usrname" value="">
+            <input type="hidden" name="passwd" value="">
+            <input type="hidden" name="usrmac" value="">
+            <input type="hidden" name="usrip" value="">
+            <input type="hidden" name="basip" value="">
+            <input type="hidden" name="refer" value="">
+            <input type="hidden" name="success" value="">
+            <input type="hidden" name="fail" value="">
+            <input type="hidden" name="clear" value="">
+            <input type="hidden" name="offline" value="">
+
+        </form>
+    </div>
+</div>
+
+<!--footer 开始-->
+<div id="footer" class="footer">
+    <nav>
+        <ul class="footer_menu">
+            <li><a href="javascript:l_phone()"><img src="css/plugmenu1.png">
+                    <label>联系电话</label>
+                </a></li>
+
+            <li><a href="javascript:l_address()"><img src="css/plugmenu4.png">
+                    <label>联系地址</label>
+                </a></li>
+
+            <li class="home"><a href="server.html"></a></li>
+            <li><a href="server.html"><img src="css/plugmenu3.png">
+                    <label>服务套餐</label>
+                </a></li>
+
+            <li><a id="lf_usermyself" href="#"><img src="css/plugmenu2.png">
+                    <label>自助系统</label>
+                </a></li>
+        </ul>
+    </nav>
+</div>
+<!--footer 结束-->
+
+</body>
+
+<!--加载相关文件防止缓存文件，不要改动以下的设置-->
+<!--短信发送-->
+<form id="_userregistr_sms" name="_userregistr_sms" target="radius" method="post" action="">
+    <input type="hidden" name="user">
+    <input type="hidden" name="code">
+</form>
+<iframe src="about:blank" name="radius" style="width:0px;height:0px;display:none"></iframe>
+
+<!--加载全局JS-->
+<script type="text/javascript">
+    document.write("<s" + "cript type='text/javascript' src='js/radius.js?time=" + Date.parse(new Date()) + "'></scr" + "ipt>");
+</script>
+
+<script type="text/javascript">
+    //显示注册按钮，更改登录注册按钮文本提示
+    if (registr_button_show === 1) document.getElementById("lf_btn_registr").style.display = '';
+    document.getElementById("lf_btn_login").innerHTML = login_button_text;
+    document.getElementById("lf_btn_registr").innerHTML = registr_button_text;
+
+    //验证码，短信框
+    document.getElementById("logo").src = 'css/logo.png?' + Math.random();
+    document.getElementById("lf_content").innerHTML = lf_content;
+    document.getElementById("imgcode").src = 'http://' + radiusip + '/lfradius/libs/checkcode.php?' + Math.random();
+    $("#_userregistr_sms").attr("action", "http://" + radiusip + "/lfradius/libs/portal/portalweb.php?run=registr_sms");
+    document.getElementById("find_password").href = 'http://' + radiusip + '/lfradius/home.php?c=user&a=findpassword';
+    document.getElementById("lf_usermyself").href = 'http://' + radiusip + '/lfradius/login.php?c=login&a=showlogin';
+
+    //显隐密码切换
+    $(".tp-btn").toggle(
+        function () {
+            $(this).addClass("btn-on");
+            var textInput = $(this).siblings(".pass_show");
+            var pwdInput = $(this).siblings(".pass_hide");
+            pwdInput.hide();
+            textInput.val(pwdInput.val()).show().focusEnd();
+        },
+        function () {
+            $(this).removeClass("btn-on");
+            var textInput = $(this).siblings(".pass_show");
+            var pwdInput = $(this).siblings(".pass_hide");
+            textInput.hide();
+            pwdInput.val(textInput.val()).show().focusEnd();
+        }
+    );
+
+    function l_phone() {
+        if (confirm(phone + '，确定拔打？')) window.location.href = 'tel:' + phone_call;
+    }
+
+    function l_address() {
+        alert(address);
+    }
+
+    //回车提交事件//keyCode=13是回车键
+    $("body").keydown(function () {
+        if (event.keyCode == "13" && document.getElementById("lf_login").style.display != "none") login();
+        if (event.keyCode == "13" && document.getElementById("lf_registr").style.display != "none") lf_registrok();
+    });
+    document['_userregistr'].user.focus(); //默认输入位置
+
+</script>
+</html>

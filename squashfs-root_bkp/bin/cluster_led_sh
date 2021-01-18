@@ -1,0 +1,37 @@
+#!/bin/sh
+
+FLASH_TIMES=30
+BRIGHTNESS=1
+NEW_TIMES=0
+
+EXIST_CLUSTER=`ps |grep cluster_led|wc -l`
+
+echo EXIST_CLUSTER=$EXIST_CLUSTER
+if [ $EXIST_CLUSTER -gt 3 ]; then
+	echo "$FLASH_TIMES" > /tmp/flash_led_times
+	exit 0
+fi
+
+while [ $FLASH_TIMES -gt 0 ]; do
+	echo $FLASH_TIMES 
+	echo "$BRIGHTNESS" > /sys/class/leds/comfast\:red\:wan/brightness
+
+	if [ $BRIGHTNESS -eq 1 ]; then
+		BRIGHTNESS=0
+	else
+		BRIGHTNESS=1
+	fi
+	sleep 1
+	FLASH_TIMES=$(($FLASH_TIMES - 1))
+	[ -f /tmp/flash_led_times ] && {
+		NEW_TIMES=`cat /tmp/flash_led_times`
+		rm /tmp/flash_led_times
+	}
+	if [ -n $NEW_TIMES -a $NEW_TIMES -gt $FLASH_TIMES ]; then
+		FLASH_TIMES=$NEW_TIMES
+		NEW_TIMES=0
+	fi
+done;
+
+echo 0 > /sys/class/leds/comfast\:red\:wan/brightness
+

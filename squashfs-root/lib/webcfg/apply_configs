@@ -1,0 +1,12 @@
+#!/bin/sh
+
+. /lib/webcfg/manage_configs
+
+local file_dev_configs="/tmp/sysinfo/dev_configs"
+local file_changeconfig="/etc/changeconfig"
+local file_resetconfig="/tmp/resetconfig"
+
+[ -f $file_dev_configs ] || exit 0
+[ -f $file_resetconfig ] && exit 0
+
+update_mtd

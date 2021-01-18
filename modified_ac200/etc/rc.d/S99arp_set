@@ -1,0 +1,127 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+START=99
+
+lan=
+lan1=
+lan2=
+lan3=
+lan4=
+lan5=
+
+wan=
+wan1=
+wan2=
+wan3=
+wan4=
+wan5=
+
+run_config_network()
+{
+	local network=$1
+	local ifname
+	local proto
+	local type
+	local wan_ifname
+	config_get ifname $1 ifname
+	config_get proto $1 proto
+	config_get type $1 type
+	
+	case "$network" in 
+		*wan*)
+			[ x"$proto" = "xpppoe" ] && {
+				wan_ifname=pppoe-"$network"
+			}
+			[ x"$proto" = "xpppoe" ] || [ x"$type" = "xbridge" ] && {
+				wan_ifname=br-"$network"
+			}
+			[ x"$proto" = "xpppoe" ] || [ x"$type" = "xbridge" ] || {
+				wan_ifname=${ifname}
+			}
+		;;
+	esac
+	
+	case "$network" in
+		lan) 
+			lan=br-lan
+			;;
+		lan1) 
+			lan1=br-lan1
+			;;
+		lan2) 
+			lan2=br-lan2
+			;;
+		lan3) 
+			lan3=br-lan3
+			;;
+		lan4) 
+			lan4=br-lan4
+			;;
+		wan)
+			wan=${wan_ifname}
+			;;
+		wan1)
+			wan1=${wan_ifname}
+			;;
+		wan2)
+			wan2=${wan_ifname}
+			;;
+		wan3)
+			wan3=${wan_ifname}
+			;;
+		wan4)
+			wan4=${wan_ifname}
+			;;
+		*) ;;
+	esac
+}
+
+run_config_arp()
+{
+	local ip
+	local mac
+	local ifname
+	local device_name
+	config_get ip $1 ip
+	config_get mac $1 mac
+	config_get ifname $1 ifname
+
+	case "$ifname" in
+		vlan*) 
+			device_name=br-"$ifname"
+			;;
+		*)
+			num=`echo ${ifname:3:5}`
+			if [ $num -gt 10 ] ; then
+				device_name="adsl"$num
+			else
+				device_name=`eval echo '$'"$ifname"`
+			fi
+			;;
+	esac
+	
+	[ -n "$ip" ] && [ -n "$mac" ] && [ -n "$device_name" ] && /sbin/arp -i $device_name -s ${ip} ${mac}
+}
+
+start()
+{
+	config_load network
+	config_foreach run_config_network interface
+
+	config_load arp
+	config_foreach run_config_arp rule
+}
+
+stop()
+{
+	cat /proc/net/arp | grep 0x6 | while read line
+	do
+		echo "$line" |awk '/^[1-9]/{system("/sbin/arp -d "$1" -i "$6)}'
+	done
+}
+
+restart()
+{
+	stop
+	start
+}

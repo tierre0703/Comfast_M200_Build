@@ -1,0 +1,4 @@
+config mbox 'management'
+	option refresh_period '5'
+	option report_period '30'
+	option scan_period '600'

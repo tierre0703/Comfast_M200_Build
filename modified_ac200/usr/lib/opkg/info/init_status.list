@@ -1,0 +1,3 @@
+/etc/init.d/init_status
+/etc/rc.d/S96init_status
+/usr/bin/init_status

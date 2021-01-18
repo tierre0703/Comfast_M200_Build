@@ -1,0 +1,283 @@
+[
+  {
+    "name": "status_state",
+    "icon": "img-index",
+    "urls": "/dashboard/",
+    "childs": [
+    {
+      "name": "page_status",
+      "urls": "/dashboard/status.html",
+      "childs": ""
+    },
+    {
+      "name": "bandwidth_management",
+      "urls": "/dashboard/bandwidth_management.html",
+      "childs": ""
+    },
+    {
+      "name": "access_control",
+      "urls": "/dashboard/access_control.html",
+      "childs": ""
+    },
+    {
+      "name": "index_dhcp_all_client_list",
+      "urls": "/dashboard/client_all_status.html",
+      "childs": ""
+    },
+    {
+      "name": "traffic_network_stat",
+      "urls": "/dashboard/dashboard_traffic.html",
+      "childs": ""
+    }
+    ]
+  },
+  {
+    "name": "index_network_settings",
+    "icon": "img-network",
+    "urls": "/network/",
+    "childs": [
+      {
+        "mwan": "1",
+        "name": "intertface_set",
+        "urls": "/network/network_interface.html",
+        "childs": ""
+      },
+      {
+        "name": "index_internet_network_set",
+        "urls": "/network/network_extranet.html",
+        "childs": ""
+      },
+      {
+        "name": "index_local_network_set",
+        "urls": "/network/network_localnet.html",
+        "childs": ""
+      },
+      
+      {
+        "vlan": "1",
+        "name": "index_vlan",
+        "urls": "/network/network_vlan.html",
+        "childs": ""
+      },
+      {
+        "name": "index_dns_network_set",
+        "urls": "/network/network_dns.html",
+        "childs": ""
+      },
+      {
+        "name": "index_static_route",
+        "urls": "/network/network_static.html",
+        "childs": ""
+      },
+      {
+        "name": "index_route_route",
+        "urls": "/network/network_route.html",
+        "childs": ""
+      },
+      {
+        "name": "auto_redial",
+        "urls": "/network/network_redial.html",
+        "childs": ""
+      }
+    ]
+  },
+  {
+  "icon": "img-network-wired-solid",
+  "name": "index_dhcp_network_set",
+  "urls": "dhcp",
+  "childs": [
+    {
+      "name": "index_dhcp_sever_port",
+      "urls": "/dhcp/dhcp.html",
+      "childs": ""
+    },
+    {
+      "name": "static_ip_list",
+      "urls": "/dhcp/dhcp_static.html",
+      "childs": ""
+    },
+    {
+      "name": "index_dhcp_client_list",
+      "urls": "/dhcp/dhcp_status.html",
+      "childs": ""
+    }
+
+
+  ]
+  },
+  {
+    "name": "traffic_control",
+    "icon": "img-qos",
+    "urls": "qos",
+    "childs": [
+      {
+        "name": "qos_simple",
+        "urls": "/qos/qos_simple.html",
+        "childs": ""
+      },
+      {
+        "name": "ip_limit",
+        "urls": "/qos/qos_iplimit.html",
+        "childs": ""
+      },
+      {
+        "mwan": "1",
+        "name": "mwanset",
+        "urls": "/qos/qos_mwan.html",
+        "childs": ""
+      }
+    ]
+  },
+  {
+    "name": "ads_firewall",
+    "icon": "img-firewall",
+    "urls": "firewall",
+    "childs": [
+      {
+        "name": "index_fwall_ip_filter",
+        "urls": "/firewall/firewall_ip.html",
+        "childs": ""
+      },
+      {
+        "name": "ads_wlmac",
+        "urls": "/firewall/firewall_mac.html",
+        "childs": ""
+      },
+      {
+        "name": "urlfilter_header",
+        "urls": "/firewall/firewall_url.html",
+        "childs": ""
+      },
+      {
+        "name": "menu_firewall_port",
+        "urls": "/firewall/firewall_port.html",
+        "childs": ""
+      },
+      {
+        "name": "menu_portmapp",
+        "urls": "/firewall/firewall_portmapp.html",
+        "childs": ""
+      },
+      {
+        "name": "dmz_set",
+        "urls": "/firewall/firewall_dmz.html",
+        "childs": ""
+      },
+      {
+        "name": "arp_binding",
+        "urls": "/firewall/firewall_arp.html",
+        "childs": ""
+      },
+      {
+        "name": "ddos",
+        "urls": "/firewall/firewall_ddos.html",
+        "childs": ""
+      }
+    ]
+  },
+
+  {
+  "name": "index_vpn",
+  "icon": "img-shield",
+  "urls": "vpn",
+  "childs": [
+        {
+            "name": "pptpd_server",
+            "urls": "/vpn/pptp_server.html",
+            "childs": ""
+          },
+          {
+            "name": "pptp_user",
+            "urls": "/vpn/pptp_usr.html",
+            "childs": ""
+          },
+        {
+            "name": "pptp_client",
+            "urls": "/vpn/pptp_client.html",
+            "childs": ""
+          },
+          {
+            "name": "l2tp_client",
+            "urls": "/vpn/l2tp_client.html",
+            "childs": ""
+          }
+    ]
+  },
+  {
+    "name": "network_service",
+    "icon": "img-service",
+    "urls": "service",
+    "childs": [
+      {
+        "name": "index_ddns_network_set",
+        "urls": "/service/service_ddns.html",
+        "childs": ""
+      },
+      {
+        "name": "remote_set",
+        "urls": "/service/service_manage.html",
+        "childs": ""
+      },
+      
+      {
+        "name": "upnp_setup",
+        "urls": "/service/service_upnp.html",
+        "childs": ""
+      }
+    ]
+  },
+  {
+    "name": "journal_and_statistics",
+    "icon": "img-log",
+    "urls": "log",
+    "childs": [
+      {
+        "name": "log_log",
+        "urls": "/logs/logs_log.html",
+        "childs": ""
+      },
+      {
+        "name": "system_status",
+        "urls": "/logs/logs_history.html",
+        "childs": ""
+      }
+    ]
+  },
+  {
+    "name": "System_Tools",
+    "icon": "img-tools",
+    "urls": "tools",
+    "childs": [
+      {
+        "name": "index_system_upgrade",
+        "urls": "/tools/tools_upgrade.html",
+        "childs": ""
+      },
+      {
+        "name": "index_system_backup",
+        "urls": "/tools/tools_save.html",
+        "childs": ""
+      },
+      {
+        "name": "index_system_reboot",
+        "urls": "/tools/tools_reboot.html",
+        "childs": ""
+      },
+      {
+        "name": "usr_set",
+        "urls": "/tools/tools_account.html",
+        "childs": ""
+      },
+      {
+        "name": "ntp_header",
+        "urls": "/tools/tools_time.html",
+        "childs": ""
+      },
+      {
+        "name": "ping_test",
+        "urls": "/tools/tools_ping.html",
+        "childs": ""
+      }
+    ]
+  }
+]

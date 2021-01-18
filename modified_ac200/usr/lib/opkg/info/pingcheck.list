@@ -1,0 +1,5 @@
+/etc/init.d/pingcheck
+/etc/pingcheck/online.d/example-script.sh
+/etc/pingcheck/offline.d/example-script.sh
+/usr/sbin/pingcheck
+/etc/config/pingcheck

@@ -1,0 +1,136 @@
+#!/bin/sh
+rrdfile=/tmp/rrd/cpu.rrd
+#PIC=/tmp/rrd/cpu.png
+
+
+# only run, if no other rrdtool is running
+        if [ -n "$(ps | grep rrdtool | grep -v grep)" ] ; then
+                return
+        fi
+
+        time=28800
+        PIC=/tmp/rrd/cpu_hour.png
+        rrdtool graph "${PIC}" -a PNG -s -"${time}" -w 550 -h 240 -v "percentage" \
+                'DEF:cpu_usage='${rrdfile}':cpu_usage:AVERAGE' \
+				'AREA:cpu_usage#00AA00:totalusage' \
+				'LINE1:cpu_usage#00AA00' \
+				GPRINT:cpu_usage:"MAX:    Max\\: %5.1lf %s" \
+                GPRINT:cpu_usage:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_usage:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_user_usage='${rrdfile}':cpu_user_usage:AVERAGE' \
+				'AREA:cpu_user_usage#990000:user' \
+				'LINE1:cpu_user_usage#990000' \
+				GPRINT:cpu_user_usage:"MAX:          Max\\: %5.1lf %s" \
+                GPRINT:cpu_user_usage:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_user_usage:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_nice_total='${rrdfile}':cpu_nice_total:AVERAGE' \
+				'AREA:cpu_nice_total#0000FF:nice' \
+				'LINE1:cpu_nice_total#0000FF' \
+				GPRINT:cpu_nice_total:"MAX:          Max\\: %5.1lf %s" \
+                GPRINT:cpu_nice_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_nice_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_system_total='${rrdfile}':cpu_system_total:AVERAGE' \
+				'AREA:cpu_system_total#DD9B00:system' \
+				'LINE1:cpu_system_total#DD9B00' \
+				GPRINT:cpu_system_total:"MAX:        Max\\: %5.1lf %s" \
+                GPRINT:cpu_system_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_system_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_irq_total='${rrdfile}':cpu_irq_total:AVERAGE' \
+				'AREA:cpu_irq_total#000000:irq' \
+				'LINE1:cpu_irq_total#000000' \
+				GPRINT:cpu_irq_total:"MAX:           Max\\: %5.1lf %s" \
+                GPRINT:cpu_irq_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_irq_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_softirq_total='${rrdfile}':cpu_softirq_total:AVERAGE' \
+				'AREA:cpu_softirq_total#8E388E:softirq' \
+				'LINE1:cpu_softirq_total#8E388E' \
+				GPRINT:cpu_softirq_total:"MAX:       Max\\: %5.1lf %s" \
+                GPRINT:cpu_softirq_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_softirq_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'HRULE:0#000000' -t "cpu usage - 8 hours - 1 minute average"
+				
+
+				
+				
+        time=86400
+        PIC=/tmp/rrd/cpu_day.png
+        rrdtool graph "${PIC}" -a PNG -s -"${time}" -w 550 -h 240 -v "percentage" \
+                'DEF:cpu_usage='${rrdfile}':cpu_usage:AVERAGE' \
+				'AREA:cpu_usage#00AA00:totalusage' \
+				'LINE1:cpu_usage#00AA00' \
+				GPRINT:cpu_usage:"MAX:    Max\\: %5.1lf %s" \
+                GPRINT:cpu_usage:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_usage:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_user_usage='${rrdfile}':cpu_user_usage:AVERAGE' \
+				'AREA:cpu_user_usage#990000:user' \
+				'LINE1:cpu_user_usage#990000' \
+				GPRINT:cpu_user_usage:"MAX:          Max\\: %5.1lf %s" \
+                GPRINT:cpu_user_usage:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_user_usage:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_nice_total='${rrdfile}':cpu_nice_total:AVERAGE' \
+				'AREA:cpu_nice_total#0000FF:nice' \
+				'LINE1:cpu_nice_total#0000FF' \
+				GPRINT:cpu_nice_total:"MAX:          Max\\: %5.1lf %s" \
+                GPRINT:cpu_nice_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_nice_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_system_total='${rrdfile}':cpu_system_total:AVERAGE' \
+				'AREA:cpu_system_total#DD9B00:system' \
+				'LINE1:cpu_system_total#DD9B00' \
+				GPRINT:cpu_system_total:"MAX:        Max\\: %5.1lf %s" \
+                GPRINT:cpu_system_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_system_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_irq_total='${rrdfile}':cpu_irq_total:AVERAGE' \
+				'AREA:cpu_irq_total#000000:irq' \
+				'LINE1:cpu_irq_total#000000' \
+				GPRINT:cpu_irq_total:"MAX:           Max\\: %5.1lf %s" \
+                GPRINT:cpu_irq_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_irq_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_softirq_total='${rrdfile}':cpu_softirq_total:AVERAGE' \
+				'AREA:cpu_softirq_total#8E388E:softirq' \
+				'LINE1:cpu_softirq_total#8E388E' \
+				GPRINT:cpu_softirq_total:"MAX:       Max\\: %5.1lf %s" \
+                GPRINT:cpu_softirq_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_softirq_total:"LAST: Current\\: %5.1lf %S\\n" \
+                'HRULE:0#000000' -t "cpu usage - 1 day - 1 minute average"
+        time=604800
+        PIC=/tmp/rrd/cpu_week.png
+        rrdtool graph "${PIC}" -a PNG -s -"${time}" -w 550 -h 240 -v "percentage" \
+                'DEF:cpu_usage='${rrdfile}':cpu_usage:AVERAGE' \
+				'AREA:cpu_usage#00AA00:totalusage' \
+				'LINE1:cpu_usage#00AA00' \
+				GPRINT:cpu_usage:"MAX:    Max\\: %5.1lf %s" \
+                GPRINT:cpu_usage:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_usage:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_user_usage='${rrdfile}':cpu_user_usage:AVERAGE' \
+				'AREA:cpu_user_usage#990000:user' \
+				'LINE1:cpu_user_usage#990000' \
+				GPRINT:cpu_user_usage:"MAX:          Max\\: %5.1lf %s" \
+                GPRINT:cpu_user_usage:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_user_usage:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_nice_total='${rrdfile}':cpu_nice_total:AVERAGE' \
+				'AREA:cpu_nice_total#0000FF:nice' \
+				'LINE1:cpu_nice_total#0000FF' \
+				GPRINT:cpu_nice_total:"MAX:          Max\\: %5.1lf %s" \
+                GPRINT:cpu_nice_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_nice_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_system_total='${rrdfile}':cpu_system_total:AVERAGE' \
+				'AREA:cpu_system_total#DD9B00:system' \
+				'LINE1:cpu_system_total#DD9B00' \
+				GPRINT:cpu_system_total:"MAX:        Max\\: %5.1lf %s" \
+                GPRINT:cpu_system_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_system_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_irq_total='${rrdfile}':cpu_irq_total:AVERAGE' \
+				'AREA:cpu_irq_total#000000:irq' \
+				'LINE1:cpu_irq_total#000000' \
+				GPRINT:cpu_irq_total:"MAX:           Max\\: %5.1lf %s" \
+                GPRINT:cpu_irq_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_irq_total:"LAST: Current\\: %5.1lf %S\\n" \
+				'DEF:cpu_softirq_total='${rrdfile}':cpu_softirq_total:AVERAGE' \
+				'AREA:cpu_softirq_total#8E388E:softirq' \
+				'LINE1:cpu_softirq_total#8E388E' \
+				GPRINT:cpu_softirq_total:"MAX:       Max\\: %5.1lf %s" \
+                GPRINT:cpu_softirq_total:"AVERAGE: Avg\\: %5.1lf %S" \
+                GPRINT:cpu_softirq_total:"LAST: Current\\: %5.1lf %S\\n" \
+                'HRULE:0#000000' -t "cpu usage - 1 week - 1 minute average"
+
+

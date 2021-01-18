@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/fonts/allfonts.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/ora.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/theme.css"/>
+    <!--[if lt IE 9]>
+    <script src="/common/lib/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .icon_margin {
+            display: none;
+        }
+    </style>
+</head>
+<body module="wifi_config" id="mbox_container">
+<div id="theme-wrapper">
+    <!-- header start -->
+    <div class="navbar" id="header-navbar">
+        <div class="container-fluid">
+            <a id="logo" class="navbar-brand">
+                <img src="/images/logo.png" alt="" class="normal-logo logo-white"/>
+            </a>
+            <div class="clearfix">
+                <button class="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bars"></span>
+                </button>
+                <button class="navbar-toggle mode_set" type="button">
+                    <span class="mode_set_text"></span>
+                </button>
+                <div class="nav-no-collapse navbar-left pull-left hidden">
+                    <ul class="nav navbar-nav pull-left">
+                        <li>
+                            <a class="btn" id="make-small-nav">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-no-collapse pull-right" id="header-nav">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="hidden-xs mode_set">
+                            <a href="#" class="mode_set_text"></a>
+                        </li>
+                        <li class="hidden-xs" id="login_out">
+                            <a href="#">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <div id="page-wrapper" class="container-fluid">
+        <div id="nav-col">
+            <div id="col-left" class="col-left-nano">
+                <div id="col-left-inner" class="col-left-nano-content">
+                    <div class="" style="position: relative;" id="seach_box">
+                        <div class="sidebar-search">
+                            <div class="input-group search-form">
+                                <input type="text" class="form-control" id="search_value">
+                                <span class="seach-icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav"></div>
+                </div>
+            </div>
+        </div>
+        <div id="content-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <ol class="breadcrumb">
+                            <li class="litile">
+                                <span sh_lang="home_web"></span>
+                                <span> > </span>
+                                <span sh_lang="cm_wlset"></span>
+                                <span> > </span>
+                                <span sh_lang="local_wireless"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!--left content start-->
+                <div class="col-lg-12">
+                    <div class="main-box">
+                        <div class="main-box-header">
+                            <div class="row list">
+                                <div class="col-lg-4 col-md-6 col-xs-12 col-lg-offset-4 col-md-offset-3 col-xs-offset-0">
+                                    <div class="row text-center">
+                                        <ul class="btn-group text-center" role="tablist" id="wifitab">
+                                            <li href="#settingbox_24g" role="presentation" id="setting_box_24g"
+                                                class="btn btn-primary hide" role="tab" data-toggle="tab"
+                                                aria-controls="setting_24g" aria-expanded="true">
+                                                <a sh_lang="setting_2g4"></a>
+                                            </li>
+                                            <li href="#settingbox_58g" role="presentation" id="setting_box_58g"
+                                                class="btn btn-primary hide" role="tab" data-toggle="tab" aria-controls="setting_58g">
+                                                <a sh_lang="setting_5g8"></a>
+                                            </li>
+                                            <li href="#settingbox_adv" role="presentation" class="btn btn-primary"
+                                                role="tab" data-toggle="tab" aria-controls="settingbox_adv">
+                                                <a sh_lang="index_wl_advanced_set"></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="main-box tab-pane active" id="settingbox_24g">
+                                <div class="main-box-header clearfix">
+                                    <h2 sh_lang="wlan_title_2g4"></h2>
+                                </div>
+                                <div class="main-box-body clearfix">
+                                    <div class="panel-group accordion" id="accordion">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle" data-toggle="collapse"
+                                                       data-parent="#accordion" href="#staffers2g4"
+                                                       id="staffers2g4show" sh_lang="staffers_network">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="staffers2g4" class="panel-collapse collapse in">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlan_switch"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wireless_24g"
+                                                                     class="switch_ext"
+                                                                     et="click tap:changestatus" data-default="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="wireless2g4onoff">
+                                                        <div class="row list">
+                                                            <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                                <span sh_lang="hide_staffers_ssid"></span>
+                                                            </div>
+                                                            <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                            <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                                <div class="orswitch">
+                                                                    <div id="switch_hidessid_24g"
+                                                                         class="switch_ext"
+                                                                         et="click tap:changestatus">
+                                                                        <span class="on">ON</span>
+                                                                        <span class="off">OFF</span>
+                                                                        <div class="switch_with"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row list">
+                                                            <div class="table-respon col-lg-12 col-md-12 col-xs-12">
+                                                                <table class="table table-hover" id="tableadd2g4">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th class="text-center"  style="width: 25%">
+                                                                            <span sh_lang="name_or_ssid"></span>
+                                                                        </th>
+                                                                        <th class="text-center" style="width: 20%"><span
+                                                                                sh_lang="wlsec_encryption"></span>
+                                                                        </th>
+                                                                        <th class="text-center hide ssid_psk" style="width: 25%">
+                                                                            <span sh_lang="ddns_passwd"></span>
+                                                                        </th>
+                                                                        <th class="text-center hide distance_auth" style="width: 25%">
+                                                                            <span sh_lang="auth_range"></span>
+                                                                        </th>
+                                                                        <th class="text-center" style="width: 20%">
+                                                                            <span>LAN/VLAN</span>
+                                                                        </th>
+                                                                        <th>
+
+                                                                        </th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="wifilist_24g"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                                       data-parent="#accordion"
+                                                       href="#mgnt2g4" sh_lang="wireless_mgnt">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="mgnt2g4" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlan_switch"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wireless_mgnt_24g"
+                                                                     class="switch_ext" data-default="0"
+                                                                     et="click tap:changestatus">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="hidden_mgnt_ssid"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_hidessid_mgnt_24g"
+                                                                     class="switch_ext">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="name_or_ssid"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-4 form_right">
+                                                            <span class="tip_name hide" sh_lang="name_or_ssid"></span>
+                                                            <input class="form-control require isSSID"
+                                                                   maxlength="32" id="ssid_mgnt_24g">
+                                                            <p sh_lang="name_or_ssid"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlsec_encryption"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-4 form_right">
+                                                            <select class="form-control" et="change:encryChange_mgnt"
+                                                                    id="encry_mgnt_24g" data-value="24g">
+                                                                <option value="none">NONE</option>
+                                                                <option value="psk2">WPA2-PSK</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ddns_passwd"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-4 form_right">
+                                                            <span class="tip_name hide" sh_lang="ddns_passwd"></span>
+                                                            <input class="form-control require isSSIDPwd"
+                                                                   maxlength="32" id="key_mgnt_24g">
+                                                            <p sh_lang="key_tipd"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default hide">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                                       data-parent="#accordion" href="#guests2g4"
+                                                       sh_lang="guests_network"></a>
+                                                </h4>
+                                            </div>
+                                            <div id="guests2g4" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-4 col-xs-10  col-md-4 col-lg-offset-4 col-xs-offset-1  col-md-offset-4  ">
+                                                            <div class="col-lg-6 col-md-6 col-xs-6 "
+                                                                 style="padding: 6px 12px;">
+                                                                <span sh_lang="wlan_switch"></span>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-xs-6 myswitchbtn_padding">
+                                                                <div id="switch_ac_guest2g4wireless_1"
+                                                                     class="switchopen_1"
+                                                                     et="click tap:guests2g4switch">
+                                                                    <div id="switch_ac_guest2g4wireless_2"
+                                                                         class="switchopen_2"
+                                                                         et="click tap:guests2g4switch"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-4 col-xs-10  col-md-4 col-lg-offset-4 col-xs-offset-1  col-md-offset-4  ">
+                                                            <div class="col-lg-6 col-md-6 col-xs-6 "
+                                                                 style="padding: 6px 12px;">
+                                                                <span sh_lang="name_or_ssid"></span>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-xs-6">
+                                                                <span class="tip_name hide"
+                                                                      sh_lang="name_or_ssid"></span>
+                                                                <input type="text" class="form-control"
+                                                                       id="guests2g4ssid" maxlength="32"
+                                                                       sh_lang="name_or_ssid">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed"
+                                                       data-toggle="collapse" data-parent="#accordion"
+                                                       href="#moreset2g4" id="moreset2g4show"
+                                                       sh_lang="more_setting">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="moreset2g4" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlbasic_country"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control country_change"
+                                                                    et="change:change_country">
+                                                                <option value="US" sh_lang="USA"></option>
+                                                                <option value="CN" sh_lang="CHA"></option>
+                                                                <option value="GB" sh_lang="EUR"></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_channel"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control" id="channels_24g"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_txpower"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control" id="txpower_24g">
+                                                                <option selected="selected" value="1000">100%
+                                                                </option>
+                                                                <option value="750">75%</option>
+                                                                <option value="500">50%</option>
+                                                                <option value="250">25%</option>
+                                                                <option value="125">12.5%</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_wlbandwidth"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control" id="htmode_24g">
+                                                                <option selected="selected" value="HT20">20MHz</option>
+                                                                <option value="HT40">40MHz</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_max_assoc"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <span class="tip_name hide"
+                                                                  sh_lang="ac_group_max_assoc"></span>
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@1_256" id="maxassoc_24g">
+                                                            <p>
+                                                                <span sh_lang="ac_group_max_assoc"></span>
+                                                                <span sh_lang="ac_maxassoc_tips"></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="main-box tab-pane" id="settingbox_58g">
+                                <div class="main-box-header clearfix">
+                                    <h2 sh_lang="wlan_title_5g8"></h2>
+                                </div>
+                                <div class="main-box-body clearfix">
+                                    <div class="panel-group accordion" id="accordion5g8">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle" data-toggle="collapse"
+                                                       data-parent="#accordion5g8" href="#staffers5g8"
+                                                       id="staffers5g8show" sh_lang="staffers_network">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="staffers5g8" class="panel-collapse collapse in">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlan_switch"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wireless_58g"
+                                                                     class="switch_ext" data-default="0"
+                                                                     et="click tap:changestatus">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="hide_staffers_ssid"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_hidessid_58g"
+                                                                     class="switch_ext switchopen"
+                                                                     et="click tap:changestatus">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="wireless5g8onoff">
+                                                        <div class="row list">
+                                                            <div class="table-respon col-lg-12 col-md-12 col-xs-12">
+                                                                <table class="table table-hover" id="tableadd5g8">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th class="text-center"  style="width: 25%">
+                                                                            <span sh_lang="name_or_ssid"></span>
+                                                                        </th>
+                                                                        <th class="text-center" style="width: 20%"><span
+                                                                                sh_lang="wlsec_encryption"></span>
+                                                                        </th>
+                                                                        <th class="text-center hide ssid_psk" style="width: 25%">
+                                                                            <span sh_lang="ddns_passwd"></span>
+                                                                        </th>
+                                                                        <th class="text-center hide distance_auth" style="width: 25%">
+                                                                            <span sh_lang="auth_range"></span>
+                                                                        </th>
+                                                                        <th class="text-center" style="width: 20%">
+                                                                            <span>LAN/VLAN</span>
+                                                                        </th>
+                                                                        <th class="text-center">
+
+                                                                        </th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="wifilist_58g"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed"
+                                                       data-toggle="collapse" data-parent="#accordion5g8"
+                                                       href="#mgnt5g8" sh_lang="wireless_mgnt">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="mgnt5g8" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlan_switch"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wireless_mgnt_58g"
+                                                                     class="switch_ext" data-default="0"
+                                                                     et="click tap:changestatus">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="hidden_mgnt_ssid"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_hidessid_mgnt_58g"
+                                                                     class="switch_ext">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="name_or_ssid"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-4 form_right">
+                                                            <input class="form-control require isALL"
+                                                                   id="ssid_mgnt_58g">
+                                                            <p sh_lang="name_or_ssid"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlsec_encryption"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-4 form_right">
+                                                            <select class="form-control"
+                                                                    et="change:encryChange_mgnt"
+                                                                    id="encry_mgnt_58g" data-value="58g">
+                                                                <option value="none">NONE</option>
+                                                                <option value="psk2">WPA2-PSK</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ddns_passwd"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-4 form_right">
+                                                            <input class="form-control require isSSIDPwd"
+                                                                   maxlength="32" id="key_mgnt_58g">
+                                                            <p sh_lang="key_tipd"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default" style="display: none;">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed"
+                                                       data-toggle="collapse" data-parent="#accordion5g8"
+                                                       href="#guests5g8" sh_lang="guests_network">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="guests5g8" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-xs-10  cl-md-4 col-lg-offset-4 col-xs-offset-1  col-md-offset-4  ">
+                                                            <div class="col-lg-6 col-md-6 col-xs-6 "
+                                                                 style="padding: 6px 12px;">
+                                                                <span sh_lang="wlan_switch"></span>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-xs-6 myswitchbtn_padding">
+                                                                <div id="switch_ac_guest5g8wireless_1"
+                                                                     class="switchopen_1"
+                                                                     et="click tap:guests5g8switch">
+                                                                    <div id="switch_ac_guest5g8wireless_2"
+                                                                         class="switchopen_2"
+                                                                         et="click tap:guests5g8switch"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row list">
+                                                    <div class="col-lg-4 col-xs-10  col-md-4 col-lg-offset-4 col-xs-offset-1  col-md-offset-4  ">
+                                                        <div class="col-lg-6 col-md-6 col-xs-6 "
+                                                             style="padding: 6px 12px;">
+                                                            <span sh_lang="name_or_ssid"></span>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-xs-6">
+                                                            <input type="text" class="form-control"
+                                                                   id="guests5g8ssid" maxlength="32">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed"
+                                                       data-toggle="collapse" data-parent="#accordion5g8"
+                                                       href="#moreset5g8" id="moreset5g8show"
+                                                       sh_lang="more_setting">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="moreset5g8" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlbasic_country"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control country_change"
+                                                                    et="change:change_country">
+                                                                <option value="US" sh_lang="USA"></option>
+                                                                <option value="CN" sh_lang="CHA"></option>
+                                                                <option value="GB" sh_lang="EUR"></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang=" ac_group_channel"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control" id="channels_58g"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_txpower"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control" id="txpower_58g">
+                                                                <option selected="selected" value="1000">100%
+                                                                </option>
+                                                                <option value="750">75%</option>
+                                                                <option value="500">50%</option>
+                                                                <option value="250">25%</option>
+                                                                <option value="125">12.5%</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_wlbandwidth"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <select class="form-control" et="change:change_htmode" id="htmode_58g">
+                                                                <option selected="selected" value="HT20">20MHz</option>
+                                                                <option value="HT40">40MHz</option>
+                                                                <option value="VHT80">80MHz</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="ac_group_max_assoc"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <span class="tip_name hide"
+                                                                  sh_lang="ac_group_max_assoc"></span>
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@1_256"
+                                                                   id="maxassoc_58g">
+                                                            <p>
+                                                                <span sh_lang="ac_group_max_assoc"></span>
+                                                                <span sh_lang="ac_maxassoc_tips"></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="main-box tab-pane" id="settingbox_adv">
+                                <div class="main-box-header clearfix">
+                                    <h2 sh_lang="index_wl_advanced_set"></h2>
+                                </div>
+                                <div class="main-box-body clearfix">
+                                    <div class="panel-group accordion" id="accordionadvance">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle" data-toggle="collapse"
+                                                       data-parent="#accordionadvance"
+                                                       href="#wirelessadvance" id="wirelessadvanceshow"
+                                                       sh_lang=ads_wlset>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="wirelessadvance" class="panel-collapse collapse in">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wladv_short_gi"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_shortgi"
+                                                                     class="switch_ext switchopen"
+                                                                     et="click tap:changestatus" data-value="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wladv_isolate"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_isolate"
+                                                                     class="switch_ext switchopen"
+                                                                     et="click tap:changestatus" data-value="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlbasic_wmm"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wmm" class="switch_ext switchopen"
+                                                                     et="click tap:changestatus" data-value="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlbasic_rekey"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_rekey" class="switch_ext switchopen"
+                                                                     et="click tap:changestatus" data-value="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlbasic_wds"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wds" class="switch_ext switchopen"
+                                                                     et="click tap:changestatus" data-value="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span id="frag_title" sh_lang="wladv_frg_thre"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@256_2346" id="frag">
+                                                            <p>
+                                                                <span sh_lang="wladv_frg_thre"></span>(256~2346)
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span id="rts_title" sh_lang="wladv_rts_thre"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@0_2347" id="rts">
+                                                            <p>
+                                                                <span sh_lang="wladv_rts_thre"></span>(0~2347)
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle collapsed"
+                                                       data-toggle="collapse"
+                                                       data-parent="#accordionadvance"
+                                                       href="#kickoutadvance" id="kickoutadvanceshow"
+                                                       sh_lang="wlroam_setting">
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="kickoutadvance" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlroam_roam"></span>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                                                        <div class="col-lg-2 col-md-3 col-xs-3 form_right">
+                                                            <div class="orswitch">
+                                                                <div id="switch_wlroam"
+                                                                     class="switch_ext"
+                                                                     et="click tap:changestatus" data-default="0">
+                                                                    <span class="on">ON</span>
+                                                                    <span class="off">OFF</span>
+                                                                    <div class="switch_with"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                            <span sh_lang="wlroam_linkquality_period"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@5_600" id="kickout_check_period">
+                                                            <p>
+                                                                <span sh_lang="wlroam_linkquality_period"></span>
+                                                                <span>(5~600)</span>
+                                                                <span sh_lang="setting_seconds"></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row list">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                                <span id="kickout_kickout_period_title"
+                                                                      sh_lang="wlroam_reconnect_period"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@5_1440" id="kickout_kickout_period">
+                                                            <p>
+                                                                <span sh_lang="wlroam_reconnect_period"></span>
+                                                                <span>(5~1440)</span>
+                                                                <span sh_lang="tcpip_minutes"></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mrg-t-lg">
+                                                        <div class="col-lg-5 col-md-4 col-xs-4 form_left text-right">
+                                                                <span id="kickout_signal_flag_title"
+                                                                      sh_lang="wlroam_reconnect_threshold"></span>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-4 col-xs-6 form_right">
+                                                            <input class="form-control require isNUM"
+                                                                   name="_@50_100" id="kickout_signal_flag">
+                                                            <p>
+                                                                <span sh_lang="wlroam_reconnect_threshold"></span>
+                                                                <span>(50~100)</span>
+                                                                dBm
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom: 20px">
+                            <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4 col-xs-8  col-xs-offset-2">
+                                <div class="row text-center">
+                                    <button type="button" class="btn btn-primary" et="click tap:saveConfig" sh_lang="blacklist_save"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="footer-bar" class="col-lg-12">
+                    <p id="footer-copyright" class="col-xs-12" sh_lang="copyright"></p>
+                </div>
+            </div>
+        </div>
+        <!--left content end-->
+    </div>
+</div>
+<div class="set_tips"></div>
+</body>
+</html>
+
+<script type="text/javascript" src="/common/sea.js"></script>
+<script type="text/javascript">
+    var moduleName = document.body.getAttribute("module");
+    if (moduleName) {
+        seajs.use([moduleName, "touch"], function (page) {
+            page.init();
+        });
+    }
+</script>

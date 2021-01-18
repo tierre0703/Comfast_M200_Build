@@ -1,0 +1,76 @@
+#!/bin/sh
+# Copyright (C) 2006 OpenWrt.org
+
+. /etc/diag.sh
+
+board_name=$(cat /tmp/sysinfo/board_name)	
+
+usage() {
+	cat <<EOF
+Usage: $0 [start|stop|done|status|wait_done]
+enables (default), disables wps configuration.
+EOF
+	exit 1
+}
+
+wps_start() {
+	case "$board_name" in
+	cf-e500n | \
+	cf-e510n | \
+	cf-wr800n)
+		set_wps_state start
+	;;
+	esac
+	hostapd_cli wps_pbc
+	wps wait_done &
+}
+
+wps_stop() {
+	case "$board_name" in
+	cf-e500n | \
+	cf-e510n | \
+	cf-wr800n)
+		set_wps_state stop
+	;;
+	esac
+	hostapd_cli wps_cancel
+}
+
+wps_done() {
+	case "$board_name" in
+	cf-e500n | \
+	cf-e510n | \
+	cf-wr800n)	
+		set_wps_state done
+	;;
+	esac
+}
+
+wps_status() {
+	wps_status=$(hostapd_cli wps_get_status | grep 'Status:')
+	echo $wps_status
+}
+
+wps_wait_done() {
+	wps_status=$(hostapd_cli wps_get_status | grep 'Status:')
+
+	while [ "$wps_status" = "PBC Status: Active" ]; do
+		wps_status=$(hostapd_cli wps_get_status | grep 'Status:')
+	done;
+	case "$board_name" in
+	cf-e500n | \
+	cf-e510n | \
+	cf-wr800n)
+		wps_done
+	;;
+	esac
+}
+
+case "$1" in
+	start) wps_start;;
+	stop) wps_stop;;
+	status) wps_status;;
+	done) wps_done;;
+	wait_done) wps_wait_done;;
+	--help|help|*) usage;;
+esac

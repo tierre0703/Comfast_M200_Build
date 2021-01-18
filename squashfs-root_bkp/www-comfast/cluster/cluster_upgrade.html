@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/fonts/allfonts.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/ora.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/theme.css"/>
+    <!--[if lt IE 9]>
+    <script src="/common/lib/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body module="cluster_upgrade" id="mbox_container">
+<div id="theme-wrapper">
+    <!-- header start -->
+    <div class="navbar" id="header-navbar">
+        <div class="container-fluid">
+            <a id="logo" class="navbar-brand">
+                <img src="/images/logo.png" alt="" class="normal-logo logo-white"/>
+            </a>
+            <div class="clearfix">
+                <button class="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bars"></span>
+                </button>
+                <button class="navbar-toggle mode_set" type="button">
+                    <span class="mode_set_text"></span>
+                </button>
+                <div class="nav-no-collapse navbar-left pull-left hidden">
+                    <ul class="nav navbar-nav pull-left">
+                        <li>
+                            <a class="btn" id="make-small-nav">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-no-collapse pull-right" id="header-nav">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="hidden-xs mode_set">
+                            <a href="#" class="mode_set_text"></a>
+                        </li>
+                        <li class="hidden-xs" id="login_out">
+                            <a href="#">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <div id="page-wrapper" class="container-fluid">
+        <div id="nav-col">
+            <div id="col-left" class="col-left-nano">
+                <div id="col-left-inner" class="col-left-nano-content">
+                    <div class="" style="position: relative;" id="seach_box">
+                        <div class="sidebar-search">
+                            <div class="input-group search-form">
+                                <input type="text" class="form-control" id="search_value">
+                                <span class="seach-icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <ol class="breadcrumb">
+                            <li class="litile">
+                                <span sh_lang="home_web"></span>
+                                <span> > </span>
+                                <span sh_lang="index_clusterchild_control"></span>
+                                <span> > </span>
+                                <span sh_lang="index_ac_mul_upgrade"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!--left content start-->
+                <div class="col-lg-12">
+                    <div class="main-box clearfix">
+                        <div class="main-box-header clearfix">
+                            <h2 sh_lang="ac_upload_fw_title"></h2>
+                        </div>
+                        <div class="main-box-body">
+                            <div class="row list">
+                                <div class="col-lg-4 col-md-6 col-xs-10 col-xs-offset-1 col-lg-offset-4 col-md-offset-3">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-5 col-xs-5 form_left text-right">
+                                            <span sh_lang="ac_status"></span>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-xs-7 form_right">
+                                            <input readonly id="status" class="form-selet">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row list hide" id="show_current_file">
+                                <div class="col-lg-4 col-md-6 col-xs-10 col-xs-offset-1 col-lg-offset-4 col-md-offset-3">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-5 col-xs-5 form_left text-right">
+                                            <span sh_lang="ac_uploaded_fw_name"></span>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-xs-7 form_right">
+                                            <input readonly id="fw_name" class="form-selet">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row list">
+                                <div class="col-lg-4 col-md-6 col-xs-10 col-xs-offset-1 col-lg-offset-4 col-md-offset-3">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-5 col-xs-5 form_left text-right">
+                                            <span sh_lang="upload_file_select"></span>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-xs-7 form_right">
+                                            <input type="file" name="upgrade_file" id="upgrade_file" class="form-selet"
+                                                   accept=".bin">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row list">
+                                <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4 col-xs-8  col-xs-offset-2">
+                                    <div class="row">
+                                        <button type="button"
+                                                class="btn btn-primary mrg-b-lg  col-lg-5 col-md-5 col-xs-5"
+                                                id="save" et="click tap:upload_file" sh_lang="ac_upload_fw_title"></button>
+                                        <button type="button" sh_lang="cancel_config"
+                                                class="btn btn-default mrg-b-lg col-lg-5 col-md-5 col-xs-5 col-lg-offset-2 col-md-offset-2 col-xs-offset-2"
+                                                id="cancle"
+                                                et="click tap:doResetConfig"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="main-box clearfix">
+                        <div class="main-box-header clearfix">
+                            <h2 class="pull-left" sh_lang="index_ac_mul_upgrade"></h2>
+                            <div class="pull-right">
+                                <a class="btn btn-primary pull-right danger" et="click tap:saveApUpgradeList">
+                                    <i class="fa fa-cog fa-lg"></i>
+                                    <span sh_lang="index_ac_mul_upgrade"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="main-box-body">
+                            <div class="table-respon">
+                                <table class="table table-hover" id="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center" style="width:10%">
+                                            <input id="allchecked" class="hidden" name="checked-all" type="checkbox"/>
+                                            <label class="label label-info select_laber" for="allchecked"
+                                                   sh_lang="selectall_tab"></label>
+                                        </th>
+                                        <th class="text-center" style="width:6%"><span sh_lang="global_No"></span></th>
+                                        <th class="text-center"><span sh_lang="dhcp_client_name"></span></th>
+                                        <th class="text-center"><span sh_lang="ac_device_model"></span></th>
+                                        <th class="text-center"><span sh_lang="ac_dev_soft_vesion"></span></th>
+                                        <th class="text-center"><span>MAC</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tbody_info"></tbody>
+
+                                </table>
+                            </div>
+                            <div class="holder pull-right mypagination" id="page">
+                                <ul class="PageCode"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--left content end-->
+            </div>
+            <div class="row">
+                <div id="footer-bar" style="opacity: 1;">
+                    <p id="footer-copyright" class="col-xs-12" sh_lang="copyright"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="set_tips"></div>
+</body>
+</html>
+<script type="text/javascript" src="/common/sea.js"></script>
+<script type="text/javascript">
+    var moduleName = document.body.getAttribute("module");
+    if (moduleName) {
+        seajs.use([moduleName, "touch"], function (page) {
+            page.init();
+        });
+    }
+</script>

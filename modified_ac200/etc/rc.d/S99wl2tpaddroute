@@ -1,0 +1,30 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+START=99
+start() {
+	server=`uci get network.l2tp.server 2>/dev/null`
+	if [ -z "$server" ];then
+		exit 0
+	fi
+
+	retry=1
+	while [ $retry -le 3 ]
+	do
+		retry=`expr $retry + 1`
+		wan_gateway=`ifstatus wan | grep nexthop | grep -v 0.0.0.0 | awk -F '"' '{print $4}'`
+		if [ -z "$wan_gateway" ] || [ -f /etc/init.d/wanmacclone ];then
+			sleep 3
+			continue
+		fi
+		break
+	done
+	host_ip=`ping -c 1 -w 1 "$server" | grep PING | egrep "\(.*\)" | cut -d '(' -f2|cut -d ')' -f1`
+
+	if [ -n "$host_ip" ] && [ -n "$wan_gateway" ];then
+		sleep 2
+		route add -net "$host_ip" netmask 255.255.255.255 gw "$wan_gateway"
+	fi
+}
+stop() {
+	echo addpptproute > /dev/null
+}

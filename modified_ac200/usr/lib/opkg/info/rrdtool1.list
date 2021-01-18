@@ -1,0 +1,6 @@
+/usr/bin/rrdtool
+/usr/bin/rrdupdate
+/etc/rrd/graphcpu
+/etc/init.d/rrd
+/etc/rrd/graphinterface
+/etc/rrd/loadrrd

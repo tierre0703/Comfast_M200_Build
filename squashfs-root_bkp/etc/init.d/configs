@@ -1,0 +1,31 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2011 OpenWrt.org
+
+START=98
+STOP=98
+
+. /lib/webcfg/manage_configs
+
+local file_dev_configs="/tmp/sysinfo/dev_configs"
+local file_changeconfig="/etc/changeconfig"
+
+start() {
+	[ -f $file_dev_configs ] || exit 0
+
+	if [ ! -f $file_changeconfig ];then
+		echo "configs:$file_changeconfig not found" > /dev/console
+		configs_type=`cat $file_dev_configs | awk '{print $1}'`
+		configs_file=`cat $file_dev_configs | awk '{print $2}'`
+		line=`hexdump $configs_file | wc -l`
+		if [ $line -gt 20 ];then
+			echo "configs:do revert configs" > /dev/console
+			revert_mtd "revert"
+		else
+			echo "configs:do update configs" > /dev/console
+			update_mtd
+		fi
+	else
+		echo "configs:do check configs" > /dev/console
+		revert_mtd "update"
+	fi
+}

@@ -1,0 +1,10 @@
+Package: ppp-mod-pppoe
+Version: 2.4.7-5
+Depends: libc, kmod-pppoe
+Source: package/network/services/ppp
+License: BSD-4-Clause
+Section: net
+Maintainer: Felix Fietkau <nbd@openwrt.org>
+Architecture: ramips_1004kc
+Installed-Size: 14987
+Description:  This package contains a PPPoE (PPP over Ethernet) plugin for ppp.

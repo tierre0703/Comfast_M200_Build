@@ -1,0 +1,120 @@
+#!/bin/sh
+UCI_LOCK_FILE="/var/lock/uci.lck"
+
+uci_lock_start()
+{
+  for i in $(seq 1 5); do
+	if [ -e $UCI_LOCK_FILE ]; then
+		sleep 1
+		continue
+	else
+		touch $UCI_LOCK_FILE
+		break
+	fi
+  done
+}
+
+uci_lock_end()
+{
+	if [ -e $UCI_LOCK_FILE ]; then
+		rm $UCI_LOCK_FILE
+	fi
+}
+
+workmode=$(cat /tmp/status/workmode)
+
+is_change=0
+gpio2=$(cat /sys/kernel/debug/gpio | grep change_mode0 | grep lo)
+gpio3=$(cat /sys/kernel/debug/gpio | grep change_mode1 | grep lo)
+
+if [[ "$gpio2" == "" &&  "$gpio3" == "" ]]; then #router mode
+	if [ "$workmode" == "router" ]; then
+		exit 0
+	fi
+	echo "router" > /tmp/status/workmode
+	uci_lock_start
+	uci set network.lan.ifname=eth0.1
+	uci set network.workmode=router
+	uci set network.wan.ifname=eth0.2
+	uci set network.wan.type=bridge
+	uci set dhcp.lan.ignore=0
+	uci set wireless.@wifi-iface[1].ApCliEnable=0
+	uci set wireless.@wifi-iface[0].ApCliEnable=0
+	uci_lock_end
+	is_change=1
+	echo "set router mode" > /dev/console
+elif [[ "$gpio2" != "" && "$gpio3" == "" ]]; then #ap mode
+	if [ "$workmode" == "ap" ]; then
+		exit 0
+	fi
+	echo "ap" > /tmp/status/workmode
+	uci_lock_start
+	uci set network.lan.ifname="eth0.2 eth0.1"
+	uci set network.workmode=ap
+	uci set network.wan.ifname=br-lan
+	uci delete network.wan.type
+	uci set dhcp.lan.ignore=1
+	uci set wireless.@wifi-iface[1].ApCliEnable=0
+	uci set wireless.@wifi-iface[0].ApCliEnable=0
+	uci_lock_end
+	is_change=1
+	echo "set ap mode" > /dev/console
+else	#repeater mode
+	wisp_wds=`cat /etc/previous_mode`
+	#wisp_wds is null when not set repeater or bridge
+	if [[ "$workmode" == "$wisp_wds" ]]; then
+		exit 0
+	fi
+	if [[ "$workmode" == "wisp" && ! -e "/etc/previous_mode" ]]; then
+		exit 0
+	fi
+	uci_lock_start
+	if [ ! -e "/etc/previous_mode" ]; then
+		echo "wisp" > /tmp/status/workmode
+		uci set network.lan.ifname="eth0.2 eth0.1"
+		uci set network.workmode=wisp
+		uci delete network.wan.type
+		uci set dhcp.lan.ignore=0
+		echo "set repeater_default mode" > /dev/console
+	elif [ $wisp_wds == "wisp" ]; then
+		echo "wisp" > /tmp/status/workmode
+		uci set network.lan.ifname="eth0.2 eth0.1"
+		uci set network.workmode=wisp
+		uci delete network.wan.type
+		uci set dhcp.lan.ignore=0
+		apclix_enable=$(cat /etc/apclix_enable)
+		if [ "$apclix_enable" == "2" ]; then
+			uci set wireless.@wifi-iface[0].ApCliEnable=0
+			uci set wireless.@wifi-iface[1].ApCliEnable=1
+			uci set network.wan.ifname=apcli0
+		elif [ "$apclix_enable" == "5" ]; then
+			uci set wireless.@wifi-iface[0].ApCliEnable=1
+			uci set wireless.@wifi-iface[1].ApCliEnable=0
+			uci set network.wan.ifname=apclii0
+		fi
+		echo "set repeater mode" > /dev/console
+	else
+		echo "wds" > /tmp/status/workmode
+		uci set network.lan.ifname="eth0.2 eth0.1"
+		uci set network.workmode=wds
+		uci delete network.wan.type
+		uci set dhcp.lan.ignore=1
+		apclix_enable=$(cat /etc/apclix_enable)
+		if [ "$apclix_enable" == "2" ]; then
+			uci set wireless.@wifi-iface[0].ApCliEnable=0
+			uci set wireless.@wifi-iface[1].ApCliEnable=1
+			uci set network.wan.ifname=apcli0
+		elif [ "$apclix_enable" == "5" ]; then
+			uci set wireless.@wifi-iface[0].ApCliEnable=1
+			uci set wireless.@wifi-iface[1].ApCliEnable=0
+			uci set network.wan.ifname=apclii0
+		fi
+		echo "set bridge mode" > /dev/console
+	fi
+	uci_lock_end
+	is_change=1
+fi
+if [[ "$is_change" == "1" ]]; then
+	/etc/init.d/network restart
+fi
+

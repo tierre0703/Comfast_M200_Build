@@ -1,0 +1,13 @@
+/usr/lib/libhttpd.so.0.0.0
+/usr/bin/wifidog
+/usr/lib/libhttpd.so
+/etc/config/wifidog
+/etc/wxdirect/whitelist.domain
+/usr/bin/wifidog-init
+/etc/init.d/wifidog
+/etc/wxdirect/blacklist
+/usr/lib/libhttpd.so.0
+/usr/bin/wdctl
+/etc/wifidog-msg.html
+/etc/wxdirect/whitelist.ip
+/etc/wifidog.conf

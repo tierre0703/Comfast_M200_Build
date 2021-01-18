@@ -1,0 +1,11 @@
+Package: freeradius2-utils
+Version: 2.2.6-1
+Depends: libc, freeradius2-common
+Source: feeds/packages/net/freeradius2
+License: GPL-2.0
+LicenseFiles: COPYRIGHT LICENSE
+Section: net
+Maintainer: Daniel Golle <daniel@makrotopia.org>
+Architecture: ramips_1004kc
+Installed-Size: 37960
+Description:  Misc. client utilities

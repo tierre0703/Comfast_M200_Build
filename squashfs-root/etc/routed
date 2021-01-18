@@ -1,0 +1,120 @@
+#!/bin/sh /etc/rc.common
+
+# Copyright (C) 2006-2011 OpenWrt.org
+
+. /usr/share/libubox/jshn.sh
+
+
+CONFIG_PATH=/www-comfast/cgi-php/bandwidth_config
+
+index=0
+wanname=''
+table_id=200
+
+
+echo "bandwidth management command"
+#############    IP ROUTE Setting        ########################
+# iter through ubus
+for entry in `ubus list | grep wan | cut -d . -f 3`; do
+
+    if [ "$entry" = "wan" ]; then
+        wanname=wan0
+        br_name=wan
+    else
+        wanname=wan${index}
+        br_name=wan${index}
+    fi
+
+
+    #echo $wanname
+    #echo $br_name
+    #echo $table_id
+
+    # cut nexthop
+    nexthop=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["route"][1].nexthop')
+
+    # check rt_table
+    rt_name=$(grep ${wanname} /etc/iproute2/rt_tables | grep -v _${wanname})
+    if [ "$rt_name" == "" ]; then
+        echo ${table_id} ${wanname} >>/etc/iproute2/rt_tables
+    fi
+
+    # this command is bug
+    #grep -q  ${wanname}  /etc/iproute2/rt_tables || echo ${table_id} ${wanname} >>/etc/iproute2/rt_tables
+
+    ip route replace default via ${nexthop} dev br-${br_name} table ${wanname}
+    #echo "ip route replace default via ${nexthop} dev br-${br_name} table ${wanname}"
+
+    index=$((index + 1));
+    table_id=$((table_id + 1));
+done
+###############################################################
+
+##################   READ CONFIG    ##################################
+#reset all config
+#idx=0
+#for entry in `uci show network | grep 'network.@rule' | grep '.src=' | cut -d [ -f 2 | cut -d ] -f 1`; do
+#    echo "delete uci rule ${entry}"
+#    entry=$((entry-idx))
+#    idx=$((idx+1))
+    
+
+#    uci delete network.@rule[${entry}].lookup
+#    uci delete network.@rule[${entry}].src
+#    uci delete network.@rule[${entry}]
+#done
+
+#read config
+if [ ! -f $CONFIG_PATH ]; then
+    echo '{"bm_enabled": 1, "save_data": [], "bm_data":[]}' > $CONFIG_PATH
+fi
+config_data=$(cat $CONFIG_PATH)
+
+json_init
+json_load $config_data
+json_get_var bm_enabled "bm_enabled"
+
+json_init
+json_load $config_data
+json_select "save_data"
+idx=1
+while json_is_a ${idx} object
+do
+    json_select $idx
+    json_get_var bm_id "bm_id"
+    json_get_var bm_wan "bm_wan"
+    json_get_var bm_br_wan "bm_br_wan"
+    json_get_var bm_lansubnet "bm_lansubnet"
+    
+    id=$bm_id
+    wan=$bm_wan
+    br_wan=$bm_br_wan
+    lansubnet=$bm_lansubnet
+
+    # delete ip rule
+    while ip rule delete from ${lansubnet} 2>/dev/null; do true; done
+
+    if [ "$bm_enabled" == 1 ]; then
+        if [ "$bm_wan" != "" ]; then
+    
+            ip rule add from ${lansubnet}  table ${wan}
+        fi
+
+    fi
+
+    json_select ..
+
+    idx=$((idx+1))
+done
+
+
+# uci apply change
+# uci commit network
+
+# 
+
+# ip route apply change
+ip route flush cache
+
+#exit
+echo "set Routing for wan to nexthop table id done"

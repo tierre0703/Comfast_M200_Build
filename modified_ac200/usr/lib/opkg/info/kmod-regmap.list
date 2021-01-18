@@ -1,0 +1,4 @@
+/lib/modules/3.18.9/regmap-spi.ko
+/lib/modules/3.18.9/regmap-i2c.ko
+/etc/modules.d/21-regmap
+/lib/modules/3.18.9/regmap-core.ko

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+fw3_reload_action()
+{
+	local last_restart=0
+
+	now_time=`date +%s`
+	if [ -f /tmp/fw_reload ];then
+		last_restart=`cat /tmp/fw_reload`
+	fi
+
+	if [ $last_restart -gt 0 ];then
+		interval=`expr $now_time - $last_restart`
+		if [ $interval -le 5 ];then
+			[ -f /tmp/fw_delay_reload ] && exit 0
+			touch /tmp/fw_delay_reload
+			sleep 5
+			date +%s > /tmp/fw_reload
+		fi
+	fi
+
+	fw3 -q reload
+
+	[ -f /tmp/fw_delay_reload ] && rm -f /tmp/fw_delay_reload
+	date +%s > /tmp/fw_reload
+}
+
+fw3_reload_action &

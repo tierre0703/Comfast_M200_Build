@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+
+
+START=99
+STEP=3600  # 1hour
+HEARTBEAT=7200
+now=`date +%s`
+
+run_dhcp_cron()
+{
+    curl "http://127.0.0.1:82/cgi-php/client_config.php?method=GET&action=dhcp_client"
+
+}
+
+
+
+start()
+{
+   run_dhcp_cron
+}
+

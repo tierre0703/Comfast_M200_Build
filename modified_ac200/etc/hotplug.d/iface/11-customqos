@@ -1,0 +1,2 @@
+#!/bin/sh
+[ "$ACTION" = ifup ] && /bin/generaterule.sh interface "$INTERFACE"

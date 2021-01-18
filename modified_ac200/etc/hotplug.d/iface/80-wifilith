@@ -1,0 +1,6 @@
+#!/bin/sh
+extiface=`uci get wifilith.guest.extiface 2>/dev/null`
+[ -n "$extiface" -a "$INTERFACE" = "$extiface" -a "$ACTION" = "ifup" ] && {
+	logger -t wifilith "restart service due to guest network coming up..."
+	/etc/init.d/wifilith restart
+}

@@ -1,0 +1,6 @@
+/etc/freeradius2/sites/default
+/etc/init.d/radiusd
+/usr/sbin/radiusd
+/etc/freeradius2/policy.conf
+/etc/freeradius2/clients.conf
+/etc/freeradius2/radiusd.conf

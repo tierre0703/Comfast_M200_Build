@@ -1,0 +1,96 @@
+config system
+	option hostname	COMFAST
+	option timezone	UTC-8
+
+config timeserver ntp
+	list server	0.openwrt.pool.ntp.org
+	list server	1.openwrt.pool.ntp.org
+	list server	2.openwrt.pool.ntp.org
+	list server	3.openwrt.pool.ntp.org
+	option enabled 1
+	option enable_server 0
+
+config language language
+	option language en	
+	option changed 0
+
+config ac ac
+	option ac_identify '1'
+	option ac_enable '1'
+	option user_ac '1'
+	option version '3'
+	option group_id_total '1'
+	option group_id_new '2'
+	list group_id_list '1'
+	option ac_group_version '4'
+	option group1_group_id '1'
+	option group1_group_name 'ac_group_default'
+	option group1_enable '1'
+	option group1_timing_enable '0'
+	option group1_interval_enable '0'
+	option group1_kickout_disable '0'
+	option group1_kickout_check_period '5'
+	option group1_kickout_kickout_period '600'
+	option group1_kickout_signal_flag '65'
+	option group1_wlan_hidden_24g '0'
+	option group1_wlan_hidden_5g '0'
+	option group1_wlan_maxassoc_24g '256'
+	option group1_wlan_maxassoc_5g '256'
+	option group1_wlan_beacon_int '100'
+	option group1_wlan_dtim_period '2'
+	option group1_wlan_isolate '0'
+	option group1_radio_rts '2347'
+	option group1_radio0_phyname 'radio0'
+	option group1_radio0_country 'CN'
+	option group1_radio0_channel '0'
+	option group1_radio0_shortgi '1'
+	option group1_radio0_htmode 'HT40'
+	option group1_radio0_txpower_level '1000'
+	option group1_radio0_is_5g '0'
+	option group1_radio0_wpa_group_rekey '86400'
+	option group1_radio1_phyname 'radio1'
+	option group1_radio1_country 'CN'
+	option group1_radio1_channel '0'
+	option group1_radio1_shortgi '1'
+	option group1_radio1_htmode 'VHT80'
+	option group1_radio1_txpower_level '1000'
+	option group1_radio1_is_5g '1'
+	option group1_radio1_wpa_group_rekey '86400'
+	option group1_radio_num '2'
+	option group1_wlan0_is_5g '0'
+	option group1_wlan0_name 'wlan0'
+	option group1_wlan0_phyname 'radio0'
+	option group1_wlan0_disabled '0'
+	option group1_wlan0_ssid 'COMFAST'
+	option group1_wlan0_encryp_way 'none'
+	option group1_wlan7_is_5g '0'
+	option group1_wlan7_name 'wlan_admin_2g'
+	option group1_wlan7_phyname 'radio0'
+	option group1_wlan7_disabled '1'
+	option group1_wlan7_ssid 'COMFAST_ADMIN_2G'
+	option group1_wlan7_encryp_way 'psk2'
+	option group1_wlan7_key '12345678'
+	option group1_wlan8_is_5g '1'
+	option group1_wlan8_name 'wlan8'
+	option group1_wlan8_phyname 'radio1'
+	option group1_wlan8_disabled '0'
+	option group1_wlan8_ssid 'COMFAST'
+	option group1_wlan8_encryp_way 'none'
+	option group1_wlan15_is_5g '1'
+	option group1_wlan15_name 'wlan_admin_5g'
+	option group1_wlan15_phyname 'radio1'
+	option group1_wlan15_disabled '1'
+	option group1_wlan15_ssid 'COMFAST_ADMIN_5G'
+	option group1_wlan15_encryp_way 'psk2'
+	option group1_wlan15_key '12345678'
+	option group1_timing_enable '1'
+	option group1_timing_weeks '1,2,3,4,5,6,0'
+	option group1_timing_time '03:00'
+
+
+config kickout kickout
+	option disable 0	
+	option check_period 10
+	option kickout_period 3600
+	option signal_flag 85
+	

@@ -1,0 +1,84 @@
+/*page start*/
+.mypagination {
+    padding-top: 15px;
+    height: 45px;
+}
+
+.mypagination div.PageInfo {
+    position: absolute;
+    left: 15px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mypagination div.PageInfo .number {
+    margin: 0px 6px;
+}
+
+.mypagination .PageInfo input {
+    width: 30px;
+    text-align: center;
+    border: 1px solid #eeeeee;
+    margin: 0px 4px;
+}
+
+.mypagination .PageInfo button {
+    margin: 0px 4px;
+    background: #eeeeee;
+    font-size: 12px;
+    padding: 4px;
+}
+
+.mypagination ul.PageCode {
+    position: absolute;
+    right: 15px;
+    text-align: center;
+    color: #ccc;
+}
+
+.mypagination ul.PageCode a {
+    display: inline-block;
+    color: #bababa;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    margin: 0 2px;
+    vertical-align: middle;
+}
+
+.mypagination ul.PageCode a:hover {
+    text-decoration: none;
+    border: 1px solid #ed5c00;
+}
+
+.mypagination ul.PageCode span.current {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 2px;
+    color: #fff;
+    background-color: #ed6c00;
+    border: 1px solid #ed5c00;
+    vertical-align: middle;
+}
+
+.mypagination ul.PageCode span.disabled {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 2px;
+    color: #bfbfbf;
+    background: #f2f2f2;
+    border: 1px solid #bfbfbf;
+    vertical-align: middle;
+}
+
+.mypagination ul.PageCode span.more {
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    padding: 6px 12px;
+    margin: 0 2px;
+    color: #bfbfbf;
+    vertical-align: middle;
+}
+
+/*page end*/

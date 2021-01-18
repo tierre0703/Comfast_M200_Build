@@ -1,0 +1,10 @@
+Package: kmod-ipt-u32
+Version: 3.18.9-1
+Depends: kernel (=3.18.9-1-ce595999c0e8bdf3d1aa795bed43c874), kmod-ipt-core
+Source: package/kernel/linux
+License: GPLv2
+Section: kernel
+Status: unknown hold not-installed
+Architecture: ramips_1004kc
+Installed-Size: 1230
+Description:  Kernel modules for U32

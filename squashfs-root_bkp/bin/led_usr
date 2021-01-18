@@ -1,0 +1,12 @@
+#!/bin/sh
+
+while [ 1 ];do
+	user_existed=`cat /tmp/dhcp.leases 2>/dev/null | wc -l `
+	if [ $user_existed -gt 0 ];then
+		echo 1 > /sys/class/leds/comfast\:blue\:usr/brightness
+		break
+	else
+		echo 0 > /sys/class/leds/comfast\:blue\:usr/brightness
+		sleep 2
+	fi
+done

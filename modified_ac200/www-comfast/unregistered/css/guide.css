@@ -1,0 +1,663 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(102, 102, 102, 0.21);
+    visibility: hidden;
+    opacity: 1;
+    z-index: 20;
+}
+
+.mask_show {
+    visibility: visible;
+}
+
+/*shbox start*/
+.shbox .title, .shbox .del, .shbox .unit {
+    background: #ffffff;
+}
+
+.shbox .onError {
+    background: #ffffff;
+    color: #000000;
+}
+
+.shbox .right .freshSSID {
+    position: absolute;
+    margin-left: 20px;
+    height: 32px;
+}
+
+/*shbox end*/
+
+/*list start*/
+.list .right .freshSSID {
+    float: left;
+}
+
+.list .right .scan_ssid {
+    width: 76%;
+}
+
+/*list end*/
+
+.aside {
+    min-width: 996px;
+    width: 100%;
+    top: 0px;
+    bottom: 0px;
+}
+
+/*content_box start*/
+.content_box {
+    position: absolute;
+    padding-left: 230px;
+    width: 100%;
+    height: 100%;
+    top: 60px;
+    background: #30383b;
+}
+
+.content_box .content {
+    position: relative;
+    min-width: 766px;
+    min-height: 100%;
+    background: #ffffff;
+}
+
+/*content_box end*/
+
+/*radio_tabs start*/
+.radio_tabs {
+}
+
+.radio_tabs li {
+    float: left;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: inline-block;
+    padding: 6px 0px;
+    line-height: 32px;
+}
+
+.radio_tabs li label {
+    cursor: pointer;
+    padding: 0px 8px;
+}
+
+.radio_boxs .tabbox_cont {
+    display: none;
+}
+
+.radio_boxs .cont {
+    margin: 0px 0px 12px 0px;
+}
+
+.three {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.three li {
+    width: 33.33%;
+}
+
+/*radio_tabs end*/
+
+/*wan_seat start*/
+.wan_seat {
+    position: absolute;
+    text-align: right;
+    width: 600px;
+    top: 30%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -o-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+/*wan_seat end*/
+
+.wan_seat .advanced {
+    width: 500px;
+}
+
+.wan_seat .advanced .list {
+    padding: 8px;
+    line-height: 32px;
+    text-align: right;
+}
+
+.wan_seat .advanced .list span {
+    margin-right: 20px;
+}
+
+.wan_seat .advanced .list .option-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    width: 30px;
+    height: 30px;
+    background: #cbd1d8;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    outline: none;
+    position: relative;
+    z-index: 1000;
+}
+
+.wan_seat .advanced .option-input:hover {
+    background: #9faab7;
+}
+
+.wan_seat .advanced .option-input:checked {
+    background: #000000;
+}
+
+.wan_seat .advanced .option-input:checked::before {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    content: '\e608';
+    display: inline-block;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+}
+
+/*=======popBox=======*/
+.c_title {
+    height: 25px;
+    cursor: move;
+}
+
+.c_ml15 {
+    margin-left: 15px;
+}
+
+.c_mask {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgb(0, 0, 0);
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+    z-index: 9999;
+}
+
+.c_cont {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    border: 4px solid #666 \9;
+    border: 4px solid rgba(0, 0, 0, 0.3);
+    background-clip: padding-box;
+    border-radius: 5px;
+}
+
+.c_cont .close {
+    display: inline-block;
+    width: 26px;
+    height: 25px;
+    position: absolute;
+    z-index: 2;
+    right: 0px;
+    top: 6px;
+    font-size: 20px;
+}
+
+.c_cont .close:before {
+    content: "\f00d";
+}
+
+.c_cont .close:hover {
+}
+
+.c_cont .c_btn {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0px 0px 20px;
+}
+
+.c_popBox {
+    padding: 15px 20px 35px;
+    min-width: 400px;
+}
+
+.c_scanCon {
+    width: 900px;
+}
+
+.c_scanCon h4 {
+    padding: 0 0 20px;
+    font-size: 16px;
+}
+
+.c_scanCon h4 button {
+    margin-left: 5px;
+    position: relative;
+    top: -2px;
+    float: right;
+    margin-right: 14px;
+}
+
+.c_scanCon table {
+    width: 98%;
+    font-size: 12px;
+    text-align: center;
+}
+
+.c_scanCon table thead th {
+    background: #EAEAEA;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+}
+
+.tableHead {
+    background: #EAEAEA;
+}
+
+.c_ssidCon {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.c_scanCon .c_ssidCon table {
+    width: 100%;
+}
+
+.c_ssidCon table thead th {
+    background: #fff;
+    padding: 0px;
+    height: 1px;
+    line-height: 1px;
+    opacity: 0;
+}
+
+.c_ssidCon table td {
+    padding: 5px 10px;
+    border-bottom: 1px dotted #ccc;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.c_ssidCon input {
+    padding: 4px 10px;
+}
+
+.c_ssidCon h2 b {
+    font-weight: normal;
+}
+
+.c_ssidCon h2 em, .popMan h2 em {
+    font-size: 16px;
+}
+
+.dtSmall dt {
+    width: 20%;
+}
+
+.dtSmall dd {
+    width: 70%;
+}
+
+.logShow {
+    width: 600px;
+    height: 300px;
+    overflow-y: auto;
+    margin-top: 10px;
+    line-height: 16px;
+}
+
+.mL25 {
+    margin-left: 28px;
+}
+
+.popMan {
+    position: relative;
+}
+
+.popMan h2, .popMan h3, .c_ssidCon h2 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.popMan h3 {
+    padding-left: 91px;
+}
+
+.popMan h4 {
+    width: 100%;
+    background: #fff;
+    text-align: center;
+    font-size: 16px;
+}
+
+.popMan h6 {
+    background: #fff;
+    text-align: center;
+    font-size: 16px;
+}
+
+.popMan p {
+    text-align: center;
+    padding-top: 5px;
+}
+
+.c_double h6 i, .c_double h2 i {
+    font-size: 30px;
+    color: #000000;
+    position: relative;
+    top: 6px;
+}
+
+.c_double h6 em {
+    font-size: 14px;
+    display: block;
+    padding-top: 8px;
+}
+
+.sortImg {
+    position: absolute;
+    left: 14px;
+    bottom: 0px;
+}
+
+.Loadmask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #666666;
+    opacity: 0.2;
+    z-index: 20;
+}
+
+.Loadbox {
+    z-index: 100;
+}
+
+.Loadbox .maxbox {
+    width: 500px;
+    height: 80px;
+    text-align: center;
+    position: fixed;
+    z-index: 60;
+    background: rgba(145, 131, 131, 0.66);
+    color: #ffffff;
+    font-size: 24px;
+    border-radius: 8px;
+    line-height: 80px;
+}
+
+.Loadbox .progressbox {
+    position: absolute;
+    width: 10px;
+    height: 80px;
+    z-index: 30;
+    color: #ffffff;
+    background: #000000;
+    font-size: 24px;
+    border-radius: 8px;
+}
+
+.Loadbox .txtbox {
+    z-index: 99;
+    color: #ffffff;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+/*chk_one*/
+.chk_one {
+    display: none;
+}
+
+.chk_one + label {
+    padding: 8px 0px;
+    border-radius: 7px;
+    display: inline-block;
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: #000000;
+    width: 40px;
+    height: 10px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(245, 146, 146, 0.4);
+}
+
+.chk_one + label:before {
+    content: ' ';
+    position: absolute;
+    background: #FFF;
+    top: 0px;
+    z-index: 99999;
+    left: 0px;
+    width: 16px;
+    color: #FFF;
+    height: 16px;
+    border-radius: 7px;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
+    transition: 1s;
+}
+
+.chk_one + label:after {
+    content: 'off';
+    position: absolute;
+    color: white;
+    font-size: 8px;
+    left: 4px;
+    top: 0px;
+    border-radius: 100px;
+    transition: 1s;
+}
+
+.chk_one:checked + label {
+    background: #000000;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(146, 196, 245, 0.4);
+}
+
+.chk_one:checked + label:after {
+    content: 'on';
+    font-size: 8px;
+    left: 6px;
+    transition: 1s;
+}
+
+.chk_one:checked + label:before {
+    content: ' ';
+    position: absolute;
+    z-index: 99999;
+    left: 24px;
+    transition: 1s;
+}
+
+.chk_one + label:after {
+    line-height: 16px;
+    left: 18px;
+}
+
+/*css3*/
+input, button, select, textarea {
+    outline: none
+}
+
+/*shstep start*/
+.shstep {
+    overflow: hidden;
+}
+
+.shstep ul {
+    list-style: none;
+    display: table;
+    padding-top: 15px;
+    position: relative;
+}
+
+.shstep ul li {
+    display: table-cell;
+    text-align: center;
+    width: 1%;
+    position: relative;
+}
+
+.shstep ul li:before {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    font-size: 0;
+    overflow: hidden;
+    border-top: 5px solid #c5d2d5;
+    position: relative;
+    top: 18px;
+    z-index: 1;
+}
+
+.shstep ul li:first-child:before {
+    width: 0%;
+}
+
+.shstep ul li:before {
+    left: -50%;
+    max-width: 100%;
+    width: 100%;
+}
+
+.shstep ul li i {
+    margin: 10px 0px;
+}
+
+.shstep ul li span {
+    border: 3px solid #ced1d6;
+    color: #c5d2d5;
+    font-size: 18px;
+    border-radius: 100%;
+    background-color: #FFF;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
+    -webkit-box-shadow: -2px 2px 0px #fff, 2px 2px 0px #fff;
+    -moz-box-shadow: -2px 2px 0px #fff, 2px 2px 0px #fff;
+    box-shadow: -2px 2px 0px #fff, 2px 2px 0px #fff;
+}
+
+.shstep ul li em {
+    display: block;
+    margin-top: 4px;
+    max-width: 100%;
+    color: #949ea7;
+    font-size: 16px;
+    z-index: 104;
+    table-layout: fixed;
+    word-wrap: break-word;
+    font-style: normal
+}
+
+.shstep ul li.active span, .shstep ul li.active em, .shstep ul li.active:before, .shstep ul li.complete:before {
+    border-color: #000000;
+    color: #000000;
+}
+
+.shstep ul li.complete span {
+    color: #000000;
+}
+
+/*shstep end*/
+
+/*shbox start*/
+.shbox {
+}
+
+.shbox .shbox_border {
+    position: relative;
+    border: solid 1px #9eb9c2;
+    margin: 12px 0px 12px 0px;
+    border-radius: 4px;
+    width: 100%
+}
+
+.shbox .shbox_border ul {
+    list-style-type: none;
+}
+.shbox .shbox_border>ul {
+    margin-top: 12px;
+    margin-bottom: 24px;
+}
+
+.shbox .title, .shbox .del, .shbox .onError, .shbox .unit {
+    display: block;
+    background: #ffffff;
+    padding: 0px 6px;
+    color: #9eb9c2;
+    font-size: 14px;
+}
+
+.shbox .title {
+    position: absolute;
+    left: 6px;
+    top: -10px;
+}
+
+.shbox .del {
+    position: absolute;
+    right: 6px;
+    top: -10px;
+}
+
+.shbox .unit {
+    position: absolute;
+    right: 6px;
+    top: -10px;
+}
+
+.shbox .onError {
+    position: absolute;
+    right: 6px;
+    top: -10px;
+    font-style: normal;
+}
+
+.shbox .shbox_cont {
+    margin: 12px 0;
+}
+
+.shbox .box_cont {
+    padding: 12px 6px 6px 6px;
+}
+
+/*shbox end*/
+
+@media (max-width: 767px){
+    .three{ white-space:nowrap; width: auto}
+    .three li{ white-space:nowrap; float: left;}
+}

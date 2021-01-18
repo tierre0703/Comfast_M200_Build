@@ -1,0 +1,20 @@
+
+config wifilith 'guest'
+	option extauth 'portal'
+	option extiface 'lan1'
+	option timeout '43200'
+	option enable '0'
+	option ssid 'SOLEUX'
+	option version '1'
+
+config wifilith 'weixin'
+	option authurl 'www.weixin.com'
+	option enable '0'
+
+config local 'type'
+
+config wifilith 'radius'
+	option auth_port '1812'
+	option acct_port '1813'
+	option hb_time '120'
+

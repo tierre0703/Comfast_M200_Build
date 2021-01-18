@@ -1,0 +1,134 @@
+#!/bin/sh
+
+table_id_start=200
+policy_set_iface_route()
+{
+	rt_tables_iface_exist=`cat /etc/iproute2/rt_tables | grep -w ${rt_interface}`
+	if [ -z "$rt_tables_iface_exist" ];then
+		iface_metric=`uci get network.${interface}.metric 2>/dev/null`
+		if [ -z "$iface_metric" ] || [ "$iface_metric" == "" ] || [ "$iface_metric" == "0" ];then
+			exit 0
+		fi
+		echo "$(($table_id_start+$iface_metric)) ${rt_interface}" >> /etc/iproute2/rt_tables
+	fi
+	$IP route flush table ${rt_interface}
+	if [ $action == "ifup" ]; then
+		route_args=$($IP route list dev $device default | head -1 | sed '/.*via \([^ ]*\) .*$/!d;s//via \1/;q' | egrep '[0-9]{1,3}(\.[0-9]{1,3}){3}')
+		route_args="$route_args dev $device"
+		$IP route add table ${rt_interface} default $route_args
+	fi
+}
+
+policy_iface_default()
+{
+	rule_existed=`ip rule list |grep -w ${rt_interface} |wc -l`          
+	if [ $rule_existed -ne 0 ];then
+		ip rule list |grep to |grep -w ${rt_interface}|awk '{print $5}' > /tmp/iplist
+		cat /tmp/iplist | while read myip
+		do                                     
+			ip rule del to $myip table ${rt_interface}
+		done
+		rm /tmp/iplist
+	fi
+}
+
+policy_route_ifupdown()
+{
+	defaultroute=`uci get common.${interface}.defaultroute 2>/dev/null`
+	if [ -n "$defaultroute" ] && [ "$defaultroute" == "1" ];then
+		policy_iface_default
+		exit 0
+	fi
+	
+	policy_set_iface_route
+	isptype=`uci get common.${interface}.isptype 2>/dev/null`
+	if [ -z "$isptype" ];then
+		exit 0
+	fi
+	isp_prefix="/etc/mwanisp/"
+	isp_file=${isp_prefix}${isptype}
+	
+	if [ ! -f ${isp_file} ];then
+		exit 0
+	fi
+	if [ $action == "ifdown" ];then
+		policy_iface_default
+	else
+		cat ${isp_file} | while read myip
+		do
+			[ -f /tmp/kill_wanruleadd ] && exit 0
+			rule_existed=`ip rule list |grep -w ${rt_interface} |grep $myip| wc -l`
+			if [ $rule_existed -eq 0 ];then
+				ip rule add to $myip table ${rt_interface} pref 1
+			fi
+		done
+	fi
+}
+
+policy_flush_all_wan()
+{
+	if [ $# -eq "1" ];then
+		wan_msg=$1
+	else
+		wan_msg=" "
+	fi
+	cat /etc/iproute2/rt_tables |grep "rt_" | grep "$wan_msg" |awk '{print $2}' >/tmp/wanlist
+	cat /tmp/wanlist | while read mywan
+	do
+		interface=${mywan:3}
+		rt_interface=rt_${interface}
+		policy_iface_default
+	done
+	pptp_up=`ifconfig |grep "pptp"`
+	if [ -n "$pptp_up" ];then
+		ACTION=ifup INTERFACE=pptp DEVICE=pptp-pptp /sbin/hotplug-call iface
+	fi
+	l2tp_up=`ifconfig |grep "l2tp"`
+	if [ -n "$l2tp_up" ];then
+		ACTION=ifup INTERFACE=l2tp DEVICE=l2tp-l2tp /sbin/hotplug-call iface
+	fi
+}
+if [ $# -eq "2" ] && [ $1 == "flushall" ] ;then
+	policy_flush_all_wan $2
+	exit 0
+elif [ $# -eq "2" ] && [ $2 == "ifdown" ];then
+	interface=$1
+	action=$2
+elif [ $# -eq "3" ];then
+	interface=$1
+	device=$2
+	action=$3
+elif [ $# -eq "1" ] && [ $1 == "flushall" ];then
+	policy_flush_all_wan
+	exit 0
+else
+	echo "parameter error"
+	exit 0
+fi
+
+[ -x /usr/sbin/ip ] || exit 1
+local IP rt_interface
+IP="/usr/sbin/ip -4"
+rt_interface=rt_${interface}
+
+#/usr/sbin/qosset_custom
+# policy enable:continue,disable:exit. 
+enable_policy=`uci get common.policy.enable 2>/dev/null`
+enable_policy_wan=`uci get common.policy.enable_policy 2>/dev/null`
+policy_line_enable=`uci get common.${interface}.policy_line_enable 2>/dev/null`
+if [ -z $enable_policy ] || [ $enable_policy -eq 0 ] || [ -z $enable_policy_wan ] || [ $enable_policy_wan -eq 0 ] || [ -z $policy_line_enable ] || [ $policy_line_enable -eq 0 ] ;then
+	policy_iface_default
+	exit 0
+fi
+
+if [ $action == "ifup" ]; then
+	[ -n "$device" ] || exit 0
+fi
+
+case "$action" in
+	ifup|ifdown)
+		policy_route_ifupdown
+	;;
+esac
+
+exit 0

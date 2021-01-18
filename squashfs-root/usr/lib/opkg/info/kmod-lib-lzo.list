@@ -1,0 +1,3 @@
+/etc/modules.d/lib-lzo
+/lib/modules/3.18.9/lzo_decompress.ko
+/lib/modules/3.18.9/lzo_compress.ko

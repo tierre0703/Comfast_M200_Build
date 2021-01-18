@@ -1,0 +1,13 @@
+Package: isc-dhcp-server-ipv4
+Version: 4.3.3-1
+Depends: libc
+Source: package/network/isc-dhcp
+License: BSD-3-Clause
+LicenseFiles: LICENSE
+Section: net
+Maintainer: Antony Antony <antony@phenome.org>
+Architecture: ramips_1004kc
+Installed-Size: 642111
+Description:  implements the Dynamic Host Configuration Protocol (DHCP) and the Internet
+ Bootstrap Protocol (BOOTP).
+ This package is compiled with IPv4 support only.

@@ -1,0 +1,122 @@
+#!/bin/sh
+
+local configs_type
+local configs_file
+local tmp_configs_file
+local file_dev_configs="/tmp/sysinfo/dev_configs"
+local file_changeconfig="/etc/changeconfig"
+local file_bakup="/tmp/bak"
+local file_bakup_size="/tmp/bak_size"
+local file_bakup_md5sum="/tmp/bak_md5sum"
+
+local file_rev_bakup="/tmp/rev_bak"
+local file_rev_bakup_size="/tmp/rev_bak_size"
+local file_rev_bakup_md5sum="/tmp/rev_bak_md5sum"
+
+configs_type=`cat $file_dev_configs | awk '{print $1}'`
+configs_file=`cat $file_dev_configs | awk '{print $2}'`
+tmp_configs_file=/tmp/bakup_configs.file
+
+remove_update_files()
+{
+	rm -f $file_bakup
+	rm -f $file_bakup_size
+	rm -f $file_bakup_md5sum
+}
+
+remove_revert_files()
+{
+	rm -f $file_rev_bakup
+	rm -f $file_rev_bakup_size
+	rm -f $file_rev_bakup_md5sum
+}
+
+update_safe_exit()
+{
+	remove_update_files
+	exit 0
+}
+
+revert_safe_exit()
+{
+	remove_revert_files
+	update_mtd
+}
+
+create_config_file()
+{
+	touch $file_changeconfig 2>/dev/null
+	[ -f $file_changeconfig ] && return 0
+	sleep 1
+	touch $file_changeconfig 2>/dev/null
+	[ -f $file_changeconfig ] && return 0
+	return 1
+}
+
+#action : revert 	recovery last bakup config
+#		  update 	update current configs
+revert_mtd()
+{
+	local action
+
+	[ $# -ne 1 ] && exit 0
+	action=$1
+	[ -f $file_rev_bakup ] && echo "reverting now" && exit 0
+	cp $configs_file $tmp_configs_file
+
+	dd if=$tmp_configs_file of=$file_rev_bakup_size bs=1 count=64 1>/dev/null 2>/dev/null
+	dd if=$tmp_configs_file of=$file_rev_bakup_md5sum bs=1 skip=64 count=64 1>/dev/null 2>/dev/null
+	rev_bak_size_str=`cat $file_rev_bakup_size`
+	rev_bak_md5sum_str=`cat $file_rev_bakup_md5sum`
+	dd if=$tmp_configs_file of=$file_rev_bakup bs=1 skip=128 count=$rev_bak_size_str 1>/dev/null 2>/dev/null
+	rev_bak_md5sum_str_now=`md5sum $file_rev_bakup | awk '{print $1}' 2>/dev/null`
+	if [ -z "$rev_bak_size_str" ] || [ -z "$rev_bak_md5sum_str" ] || [ -z "$rev_bak_md5sum_str_now" ];then
+		echo "configs:revert size:$$rev_bak_size_str md5:$rev_bak_md5sum_str confis_md5:$$rev_bak_md5sum_str_now" > /dev/console
+		revert_safe_exit
+	fi
+	if [ "$rev_bak_md5sum_str_now" == "$rev_bak_md5sum_str" ];then
+		if [ "$action" == "revert" ];then
+			sysupgrade -r $file_rev_bakup && \
+			mtd erase $configs_file && \
+			echo "configs:recover config and reboot!" > /dev/console && \
+			remove_revert_files && \
+			reboot && \
+			exit 0
+		else
+			remove_revert_files
+			exit 0
+		fi
+	fi
+	revert_safe_exit
+}
+
+update_mtd()
+{
+	[ -f $file_bakup ] && echo "updating now" && exit 0
+
+	rm $tmp_configs_file -fr
+	create_config_file
+	[ $? -ne 0 ] && update_safe_exit
+
+	sysupgrade -b $file_bakup 2>/dev/null
+
+	bak_size_str=`ls -l $file_bakup |awk '{print $5}'`
+	bak_md5sum_str=`md5sum $file_bakup | awk '{print $1}' 2>/dev/null`
+	if [ -z "$bak_size_str" ] || [ -z "$bak_md5sum_str" ];then
+		echo "configs:bakup size:$bak_size_str md5:$bak_md5sum_str" > /dev/console
+		update_safe_exit
+	fi
+
+	echo $bak_size_str > $file_bakup_size
+	echo $bak_md5sum_str > $file_bakup_md5sum
+
+	dd if=/dev/zero of=$tmp_configs_file bs=64K count=1 1>/dev/null 2>/dev/null && \
+	dd if=$file_bakup_size of=$tmp_configs_file bs=1 count=64 1>/dev/null 2>/dev/null && \
+	dd if=$file_bakup_md5sum of=$tmp_configs_file bs=1 seek=64 count=64 1>/dev/null 2>/dev/null && \
+	dd if=$file_bakup of=$tmp_configs_file bs=1 seek=128 count=$bak_size_str 1>/dev/null 2>/dev/null
+
+	sleep 1 && \
+	mtd write $tmp_configs_file $configs_file 1>/dev/null 2>/dev/null
+
+	update_safe_exit
+}

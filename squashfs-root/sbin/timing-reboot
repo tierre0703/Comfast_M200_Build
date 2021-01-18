@@ -1,0 +1,27 @@
+#!/bin/sh
+#For timing reboot apply
+
+crontabs_file='/etc/crontabs/root'
+
+timing_enable=`uci get common.reboot.timing_enable 2>/dev/null`
+timing_weeks=`uci get common.reboot.timing_weeks 2>/dev/null`
+timing_time=`uci get common.reboot.timing_time 2>/dev/null`
+interval_enable=`uci get common.reboot.interval_enable 2>/dev/null`
+
+hour=`echo $timing_time | cut -d : -f 1`
+min=`echo $timing_time | cut -d : -f 2`
+
+[ -f /tmp/time_index ] && rm /tmp/time_index
+[ -f $crontabs_file ] && sed -i '/reboot.sh/d' $crontabs_file 2>/dev/null
+
+[ -n $timing_enable ] && [ $timing_enable = 1 ] && {
+	echo $min $hour \* \* $timing_weeks reboot.sh timing_reboot >>  $crontabs_file
+}
+
+[ -n $interval_enable ]  && [ $interval_enable = 1 ] && {
+	echo 0 \*/1 \* \* \* /sbin/reboot.sh interval_reboot>> $crontabs_file
+}
+
+[ -f /etc/init.d/cron ] && /etc/init.d/cron restart
+
+exit 0

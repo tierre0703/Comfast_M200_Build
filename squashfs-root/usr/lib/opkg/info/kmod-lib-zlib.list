@@ -1,0 +1,3 @@
+/lib/modules/3.18.9/zlib_inflate.ko
+/lib/modules/3.18.9/zlib_deflate.ko
+/etc/modules.d/lib-zlib

@@ -1,0 +1,16 @@
+
+config dhcpd 'lan'
+        option interface 'lan'
+        option start '100'
+        option limit '500'
+        option leasetime '7200'
+        option domain 'COMFAST'
+        option ignore '0'
+
+config dhcpd 'lan1'
+        option interface 'lan1'
+        option start '100'
+        option limit '500'
+        option leasetime '7200'
+        option domain 'COMFAST'
+        option ignore '0'

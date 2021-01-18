@@ -1,0 +1,102 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+START=99
+USE_PROCD=1
+EXTRA_COMMANDS="status"
+EXTRA_HELP="        status Print the status of the service"
+
+config_load()
+{
+	rm -f /etc/wifidog.conf
+	
+	enabled=$(uci get wifidog.wifidog.enabled)
+	gateway_id=$(uci get wifidog.wifidog.gateway_id 2>/dev/null)
+	gateway_interface=$(uci get wifidog.wifidog.gateway_interface) 
+	gateway_externalface=$(uci get wifidog.wifidog.gateway_externalface)
+	gateway_address=$(uci get network.lan.ipaddr)
+	html_message_file=$(uci get wifidog.wifidog.html_message_file)
+	hostname=$(uci get wifidog.wifidog.hostname) 
+	httpport=$(uci get wifidog.wifidog.httpport) 
+	path=$(uci get wifidog.wifidog.path) 
+	daemon=$(uci get wifidog.wifidog.daemon)
+	gateway_port=$(uci get wifidog.wifidog.gateway_port)
+	httpd_name=$(uci get wifidog.wifidog.httpd_name)
+	httpd_max_conn=$(uci get wifidog.wifidog.httpd_max_conn)
+	httpd_realm=$(uci get wifidog.wifidog.httpd_realm)
+	httpd_user_name=$(uci get wifidog.wifidog.httpd_username)
+	httpd_password=$(uci get wifidog.wifidog.httpd_password)
+	check_interval=$(uci get wifidog.wifidog.check_interval)
+	client_timeout=$(uci get wifidog.wifidog.client_timeout)
+	populart_servers=$(uci get wifidog.wifidog.popular_servers)
+	trusted_web_list=$(uci get wifidog.wifidog.trusted_web_list)
+	trusted_mac_list=$(uci get wifidog.wifidog.trusted_mac_list)
+	firewall_rule_set=$(uci get wifidog.wifidog.firewall_rule_set)
+	firelwall_rule=$(uci get wifidog.wifidog.firewall_rule)
+
+	if [ "$enabled" -eq '0' ];then
+		exit;
+	fi
+         
+echo "
+GatewayID $gateway_id
+GatewayInterface $gateway_interface
+ExternalInterface $gateway_externalface
+AuthServer {
+     Hostname $hostname
+     SSLAvailable no
+     SSLPort
+     HTTPPort $httpport
+     Path $path
+}
+
+GatewayPort $gateway_port
+CheckInterval $check_interval
+ClientTimeout $client_timeout
+HTTPDMaxConn $httpd_max_conn
+PopularServers $populart_servers
+TrustedMACList $trusted_mac_list
+TrustedWEBList $trusted_web_list
+FirewallRuleSet validating-users {
+    FirewallRule allow to 0.0.0.0/0
+}
+
+FirewallRuleSet known-users {
+    FirewallRule allow to 0.0.0.0/0
+}
+
+FirewallRuleSet auth-is-down {
+  FirewallRule allow to 0.0.0.0/0
+}
+
+FirewallRuleSet unknown-users {
+    FirewallRule allow udp port 53
+    FirewallRule allow tcp port 53
+    FirewallRule allow udp port 67
+    FirewallRule allow tcp port 67
+}
+
+FirewallRuleSet locked-users {
+    FirewallRule block to 0.0.0.0/0
+}
+" >> /etc/wifidog.conf
+}
+
+start_service() {
+	config_load
+	enabled=`uci get wifidog.wifidog.enabled`
+	if [ x"$enabled" = "x1" ];then
+		[ -f /tmp/needsleep_wifidog ] && sleep 10
+	fi
+    procd_open_instance
+    # -s: log to syslog
+    # -f: run in foreground
+    procd_set_param command /usr/bin/wifidog -s -f
+    procd_set_param respawn # respawn automatically if something died
+    procd_set_param file /etc/wifidog.conf
+    procd_close_instance
+	[ -f /tmp/needsleep_wifidog ] && rm -f /tmp/needsleep_wifidog
+}
+
+status() {
+    /usr/bin/wdctl status
+}

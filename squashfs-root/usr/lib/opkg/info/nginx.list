@@ -1,0 +1,11 @@
+/etc/nginx/nginx.conf
+/etc/nginx/fastcgi_params
+/etc/nginx/koi-win
+/etc/nginx/ssl/cflogin.key
+/etc/nginx/win-utf
+/usr/sbin/nginx
+/etc/nginx/koi-utf
+/etc/init.d/nginx
+/etc/nginx/ssl/cflogin.pem
+/etc/nginx/mime.types
+/usr/sbin/nginx.postinstall

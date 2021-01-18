@@ -1,0 +1,10 @@
+Package: ipsec-tools
+Version: 0.8.2-2
+Depends: libc, libopenssl, kmod-ipsec
+Source: feeds/packages/net/ipsec-tools
+License: BSD-3-Clause
+Section: net
+Maintainer: Noah Meyerhans <frodo@morgul.net>
+Architecture: ramips_1004kc
+Installed-Size: 261470
+Description:  IPsec management tools

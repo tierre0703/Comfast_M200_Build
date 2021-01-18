@@ -1,0 +1,11 @@
+Package: freeradius2
+Version: 2.2.6-1
+Depends: libc, libltdl, libreadline, freeradius2-common
+Source: feeds/packages/net/freeradius2
+License: GPL-2.0
+LicenseFiles: COPYRIGHT LICENSE
+Section: net
+Maintainer: Daniel Golle <daniel@makrotopia.org>
+Architecture: ramips_1004kc
+Installed-Size: 136084
+Description:  A flexible RADIUS server (version 2)

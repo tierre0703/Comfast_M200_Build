@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/fonts/allfonts.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/ora.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/theme.css"/>
+
+    <!--[if lt IE 9]>
+    <script src="/common/lib/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body module="guide" id="mbox_container">
+<div id="theme-wrapper">
+    <!-- header start -->
+    <div class="navbar" id="header-navbar">
+        <div class="container-fluid">
+            <div id="logo" class="navbar-brand">
+                <img src="/images/logo.png" alt="" class="normal-logo logo-white"/>
+                <span>Advance Gateway Router: SLX-M200</span>
+            </div>
+            <div class="clearfix">
+                <button class="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bars"></span>
+                </button>
+                <button class="navbar-toggle mode_set" type="button">
+                    <span class="mode_set_text"></span>
+                </button>
+                <div class="nav-no-collapse navbar-left pull-left hidden">
+                    <ul class="nav navbar-nav pull-left">
+                        <li>
+                            <a class="btn" id="make-small-nav">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-no-collapse pull-right" id="header-nav">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="hidden-xs mode_set">
+                            <a href="#" class="mode_set_text"></a>
+                        </li>
+                        <li class="hidden-xs" id="login_out">
+                            <a href="#">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <div id="page-wrapper" class="container-fluid">
+        <div id="nav-col">
+            <div id="col-left" class="col-left-nano">
+                <div id="col-left-inner" class="col-left-nano-content">
+                    <div class="" style="position: relative;" id="seach_box">
+                        <div class="sidebar-search">
+                            <div class="input-group search-form">
+                                <input type="text" class="form-control" id="search_value">
+                                <span class="seach-icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content-wrapper">
+
+                <div class="col-lg-12">
+                    <div class="row">
+                        <ol class="breadcrumb">
+                            <li class="litile">
+                                <a href="/index.html"><span sh_lang="home_web"></span></a>
+                                <span> > </span>
+                                <a href="/guide/guide.html"><span sh_lang="index_setup_wizard"></span></a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-lg-12 ">
+                    <div class="main-box clearfix">
+                        <div class="row text-center pad-ls">
+                            <div class="col-xs-12 col-sm-4  col-sm-offset-2 guide_c">
+                                <a href="/guide/router.html">
+                                    <img src="/images/router.gif" class="img-responsive" >
+                                    <p sh_lang="menu_routermoed"></p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 guide_c">
+                                <a href="/guide/ap.html">
+                                    <img src="/images/ap.gif" class="img-responsive">
+                                    <p sh_lang="menu_apmode"></p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="footer-bar" style="opacity: 1;">
+                    <p id="footer-copyright" class="col-xs-12" sh_lang="copyright"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript" src="/js/sea.js"></script>
+<script type="text/javascript">
+    var moduleName = document.body.getAttribute("module");
+    if (moduleName) {
+        seajs.use([moduleName, 'jquery', 'mbox', 'util', 'function',"touch", 'dropdown', 'collapse', 'transition'], function (page) {
+            page.init();
+        });
+    }
+</script>

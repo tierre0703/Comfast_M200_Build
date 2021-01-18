@@ -1,6 +1,7 @@
-
 config remote 'remote'
 	option port '80'
 	option ipaddr '0.0.0.0'
-	option enable '1'
+	option enable '0'
+
+config 1 'disable_remote_control'
 

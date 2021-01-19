@@ -21,7 +21,7 @@ a {
 }
 
 .login_logo {
-    background: none repeat scroll 0 0 #515151;
+    background: none repeat scroll 0 0 #f5f5f5;
     color: #fff;
     display: block;
     font-size: 2em;
@@ -29,6 +29,9 @@ a {
     padding: 35px 0;
     text-align: center;
     text-transform: uppercase;
+    border: 1px solid #e1e1e1;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
 }
 
 .login_logo > img {

@@ -61,6 +61,8 @@ h3 .small {
 .container-fluid {
     width: 100%;
     padding: 0;
+    height: 70px;
+    padding-top: 5px;
 }
 
 .nav > li {
@@ -196,6 +198,7 @@ h3 .small {
     padding: 15px 8px 35px 8px;
     margin-left: 220px;
     min-height: 1000px;
+    height: max-content;
 }
 
 @media (max-width: 767px) {
@@ -1559,6 +1562,7 @@ a.table-link.link:hover {
 
 
 #footer-bar {
+	display:none;
     background: #fff;
     font-size: 1em;
     height: 36px;
@@ -2529,4 +2533,12 @@ fieldset.groupbox-border span {
   
   .cursor-follow > tbody > tr.highlight {
       background-color:lightyellow;
+  }
+  
+  .logout-btn {
+	color: #515151;
+  }
+  
+  .logout-btn:hover {
+	background: #f5f5f5;
   }

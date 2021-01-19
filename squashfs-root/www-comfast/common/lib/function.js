@@ -17,8 +17,8 @@ define(function (require, exports) {
         click_href();
 
         f.getSHConfig('bandwidth_config.php?method=GET&action=bm_config', function(data){
-            bm_enabled = data.bm_enabled || false;
-            device_info.mwan = bm_enabled == 0 ? 1 : 0;
+            bm_enabled = data.bm_enabled || 0;
+            //device_info.mwan = bm_enabled == 0 ? 1 : 0;
         }, false);
         if (device.wifi == "1") {
             d("#mode_set").removeClass("hidden");
@@ -105,6 +105,8 @@ define(function (require, exports) {
             if ((m.vlan && device_info.vlan != m.vlan) || (m.ac && device_info.ac != m.ac) || (m.mwan && device_info.mwan != m.mwan) || (m.lan && device_info.lan != m.lan)) {
                 return;
             }
+            
+            if(m.urls.indexOf("qos_mwan") >= 0 && bm_enabled == 1) return;
             if(n == m.childs.length - 1)
             {
                 noborder = " noborder";
@@ -137,6 +139,8 @@ define(function (require, exports) {
         d.each(data, function(n, m){
             if(m.mwan && device_info.mwan != m.mwan)
             return;
+            
+            if(m.urls.indexOf("qos_mwan") >= 0 && bm_enabled == 1) return;
 
             sh_lang = eval(m.name);
             if(this_url.indexOf(m.urls) > -1)
@@ -203,8 +207,7 @@ define(function (require, exports) {
 
                         d.each(m.childs, function(n_child, m_child)
                         {
-                            if(m_child.mwan && device_info.mwan != m_child.mwan)
-                            return;
+                            if(m_child.urls.indexOf("qos_mwan") >= 0 && bm_enabled == 1) return;
 
                             sh_lang_child = eval(m_child.name);
                             if(n_child == m.childs.length - 1)

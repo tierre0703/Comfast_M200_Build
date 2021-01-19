@@ -166,6 +166,17 @@ define(function (require, exports) {
                 ac_enable = data.ac_enable.ac_enable;
             }
         }, false);
+        
+        
+        f.getSHConfig('client_config.php?method=GET&action=client_info', function(data){
+            var dhcp_clients = data || [];
+            var client_count = 0;
+            d.each(dhcp_clients, function(dhcp_index, dhcp){
+            client_count++;
+            });
+            d("#online_devices").text(client_count);
+               
+        });
 
         f.getMConfig('network_config', function (data) {
             if (data.errCode == 0) {
@@ -176,7 +187,7 @@ define(function (require, exports) {
 					dhcp_num += " " + user_sum_num_clients;
 
                 //d("#online_devices").text(data.dhcp.num || "0");
-                d("#online_devices").text(dhcp_num);
+                //d("#online_devices").text(dhcp_num);
                 acmodel(data.ac_ap_status);
                 wan_list = data.wanlist;
                 portarr = data.wanlist.concat(data.lanlist);
@@ -555,6 +566,8 @@ define(function (require, exports) {
         var text_html  = "";
         var wan_num = 0;
         time_lapse = (new Date()).getTime();
+        
+        var online_wan_num = 0;
 
         d.each(wan_speed_list, function(n, m){
             wan_ifname = m.wan_ifname;
@@ -567,6 +580,8 @@ define(function (require, exports) {
                     return false;
                 }
             });
+            
+            if(online_status == true) online_wan_num++;
             
             var t_num = m.wan_ifname.substr(3);
             wan_num = t_num == "" ? 1 : parseInt(t_num) + 1;
@@ -633,6 +648,16 @@ define(function (require, exports) {
             $('#rx_rate_' + wan_ifname).easyPieChart({barColor: color_green, size:120});
             $('#tx_rate_' + wan_ifname).easyPieChart({barColor: color_purple, size:120});
         });
+        
+        if(online_wan_num == 0) {
+        	d('.left-content-panel').css('width', '0%');
+        	d('.right-content-panel').css('width', '100%');
+        }
+        else
+        {
+        	d('.left-content-panel').css('width', '33.3%');
+        	d('.right-content-panel').css('width', '66.6%');
+        }
 
     }
 

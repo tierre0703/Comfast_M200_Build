@@ -2,13 +2,13 @@
 /* header start */
 
 #header-navbar {
-    background: #515151;
+    background: #f5f5f5;
     color: #262626;
     box-shadow: 0px 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 #header-navbar .nav > li > a {
-    color: #ffffff;
+    color: #515151;
 }
 
 .navbar-nav .open .dropdown-menu {
@@ -23,7 +23,7 @@
 #header-navbar .nav .open > a:focus,
 .navbar-toggle:hover,
 .navbar-toggle:focus{
-    background: #df6706;
+    background: #f5f5f5;
 }
 
 /* content start */

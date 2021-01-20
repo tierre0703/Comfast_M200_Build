@@ -192,42 +192,10 @@ function mask2cidr($mask){
         }
     }
  }
-
-
-
-if(!file_exists($CONFIG_PATH))
-{
-    $cmd = sprintf("touch %s", $CONFIG_PATH);
-    shell_exec($cmd);
-}
-
-if(!file_exists($DHCP_CLIENT))
-{
-    file_put_contents($DHCP_CLIENT, "[]");
-}
-
-if(!file_exists($CLIENT_QOS_PATH))
-{
-    file_put_contents($CLIENT_QOS_PATH, "[]");
-}
-
-
-if($method=="GET")
-{
-    if($action == "quantity_qos_list")
-    {
-        $str_client_qos = file_get_contents($CLIENT_QOS_PATH);
-
-        /**
-         * {'mac': '11:22:33:44:55:66', 'download_limit': 1000, 'upload_limit': 1000 }
-         */
-
-        header("Content-Type: application/json");
-        echo $str_client_qos;
-    }
-    else if($action == "dhcp_client")
-    {
-        /**
+ 
+ function func_get_client_list() [
+ $DHCP_CLIENT = "/www-comfast/cgi-php/dhcp_client";
+ /**
          * 1. poll dhcp
          * 2. poll arp
          */
@@ -413,17 +381,61 @@ if($method=="GET")
 
             if($clients[$key]['expiretime'] < $time &&  $clients[$key]['type'] == 'dhcp')
             {
-                echo $clients[$key]['ip'] . " removed" . "\n";
+                //echo $clients[$key]['ip'] . " removed" . "\n";
                 unset($clients[$key]);
             }
          }
          file_put_contents($DHCP_CLIENT, json_encode($clients));
+ }
+
+
+
+if(!file_exists($CONFIG_PATH))
+{
+    $cmd = sprintf("touch %s", $CONFIG_PATH);
+    shell_exec($cmd);
+}
+
+if(!file_exists($DHCP_CLIENT))
+{
+    file_put_contents($DHCP_CLIENT, "[]");
+}
+
+if(!file_exists($CLIENT_QOS_PATH))
+{
+    file_put_contents($CLIENT_QOS_PATH, "[]");
+}
+
+
+if($method=="GET")
+{
+    if($action == "quantity_qos_list")
+    {
+        $str_client_qos = file_get_contents($CLIENT_QOS_PATH);
+
+        /**
+         * {'mac': '11:22:33:44:55:66', 'download_limit': 1000, 'upload_limit': 1000 }
+         */
+
+        header("Content-Type: application/json");
+        echo $str_client_qos;
+    }
+    else if($action == "dhcp_client")
+    {
+        
+        func_get_client_list();
     }
     else if($action == "client_info")
     {
         header("Content-Type: application/json");
         $ret = file_get_contents($DHCP_CLIENT);
         $clients = json_decode($ret, true);
+        if(count($clients) == 0) 
+        {
+			func_get_client_list();
+			$ret = file_get_contents($DHCP_CLIENT);
+			$clients = json_decode($ret, true);
+		}
         echo json_encode($clients);
     }
     else if($action == "client_info2")

@@ -21,6 +21,7 @@ define(function (require, exports) {
     var wan_speed_history = [];
     var time_lapse = 0;
     var wan_connect_status = [];
+    var bm_conf;
 
     exports.init = function () {
         e.plugInit(et, start_model);
@@ -52,6 +53,10 @@ define(function (require, exports) {
                 //color_purple = data.color12;
             }
         });
+        
+        f.getSHConfig('bandwidth_config.php?method=GET&action=bm_config', function(data){
+	    bm_conf = data || {};
+	}, false);
 
         f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
             lan_list = data || [];
@@ -501,9 +506,51 @@ define(function (require, exports) {
                     return false;
                 }
             });
+            
+            
+            var link_speed = 0, manual_speed = 0, auto_speed = 0, speed = 0;
+            var online_status = false;
+            var status = 'online';
+            d.each(wan_connect_status, function(con_idx, con_status){
+                if(con_status.wan_ifname == wan_ifname)
+                {
+	            status = con_status.status;
+                    online_status = con_status.up;
+                    link_speed = (con_status.speed || 0) * 1000;
+                    return false;
+                }
+            });
+            
+            if(status != "online")
+            {
+            	speed = link_speed;
+            }
+            else
+            {
+		    //check bm_enabled
+		    var bm_enabled = bm_conf.bm_enabled || 0;
+		    //if bm enabled, check manual, auto speed
+		    if(bm_enabled == 1) {
+		    	var wan_data = bm_conf.wan_data || [];
+		    	d.each(wan_data, function(wan_index, wan_status){
+		    		if(wan_ifname == wan_status.ifname){
+		    			if(wan_status.isAutocheck == 0) {
+		    				manual_speed = (wan_status.manual_speed || 0);            			
+		    				speed = manual_speed;
+		    			} else {
+		    				auto_speed = (parseInt(m.download_limit || 0));
+		    				speed = auto_speed;
+		    			}
+		    		}
+		    	});            
+		    }
+            
+            }
+            
+            
 
-            var wan_bandwdith_speed_download = m.download_limit == 0 ? parseInt(wan_speed_history[history_idx].wan_download / 1000) : parseInt(m.download_limit / 1000);
-            var wan_bandwidth_speed_upload = m.upload_limit == 0 ? parseInt(wan_speed_history[history_idx].wan_upload/ 1000) : parseInt(m.upload_limit / 1000);
+            var wan_bandwdith_speed_download = speed == 0 ? parseInt(wan_speed_history[history_idx].wan_download / 1000) : parseInt(speed / 1000);
+            var wan_bandwidth_speed_upload = speed == 0 ? parseInt(wan_speed_history[history_idx].wan_upload/ 1000) : parseInt(speed / 1000);
            
             if(history_idx == -1) return;
             var wan_name = wan_speed_history[history_idx].wan_name;
@@ -573,13 +620,17 @@ define(function (require, exports) {
             wan_ifname = m.wan_ifname;
             
             var online_status = false;
+            var speed = 0;
             d.each(wan_connect_status, function(con_idx, con_status){
                 if(con_status.wan_ifname == wan_ifname)
                 {
                     online_status = con_status.up;
+                    speed = con_status.speed;
                     return false;
                 }
             });
+            
+            
             
             if(online_status == true) online_wan_num++;
             

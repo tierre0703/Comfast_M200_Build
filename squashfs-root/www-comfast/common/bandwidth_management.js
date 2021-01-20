@@ -305,8 +305,8 @@ define(function (require, exports) {
                     }
                     else
                     {
-                        upload_limit = wan_info.upload_limit_auto * 110 / 100; //usually 110%
-                        download_limit = wan_info.download_limit_auto * 110 / 100;
+                        upload_limit = (wan_info.upload_limit_auto || 0) * 110 / 100; //usually 110%
+                        download_limit = (wan_info.download_limit_auto || 0) * 110 / 100;
                     }
                     return false;
                 }
@@ -756,16 +756,20 @@ define(function (require, exports) {
             var download_limit = m.download / 1000; //m.network_speed_value_manual;
             var upload_limit = m.upload / 1000;
 
-            var download_limit_auto = m.download_limit_auto / 1000;
-            var upload_limit_auto = m.upload_limit_auto / 1000;
-            var date = new Date(m.test_time * 1000);
+            var download_limit_auto = (m.download_limit_auto || 0)/ 1000;
+            var upload_limit_auto = (m.upload_limit_auto || 0) / 1000;
+            var date = new Date((m.test_time || 0) * 1000);
             var year = checkTime(date.getFullYear());
-            var month = checkTime(date.getMonth());
-            var day = checkTime(date.getDay());
+            var month = checkTime(date.getMonth() + 1);
+            var day = checkTime(date.getDate());
             var h = checkTime(date.getHours());
-            var m = checkTime(date.getMinutes());
+            var mm = checkTime(date.getMinutes());
             var s = checkTime(date.getSeconds());
-            var time_limit_auto = ""+ month +  "/" + day +  "/" + year + " " + h + ":" + m + ":" + s;
+            var time_limit_auto = ""+ month +  "/" + day +  "/" + year + " " + h + ":" + mm + ":" + s;
+            
+            if(typeof m.test_time == 'undefined' ){
+            time_limit_auto = "";
+            }
 
 
 
@@ -793,11 +797,16 @@ define(function (require, exports) {
                         </div> 
                         <div class="row light-border">
                             <div id="container_limit_manual_${wan_ifname}" class="row list main-box-body ${wan_isAutocheck ? " hide" : ""}">  
-                                <div class="col-lg-9 col-sm-9 col-xs-9 text-right"> 
+                                <div class="col-lg-6 col-sm-6 col-xs-6 text-right"> 
                                     <input type="text" value="${download_limit}" placeholder="For Manual:Input value box" class="form-control require isNULL isALL" id="text_limit_manual_${wan_ifname}" data-value='${wan_ifname}' et="click change:func_manual_config_change" /> 
                                 </div>  
                                 <div class="col-lg-3 col-sm-3 col-xs-3 form_left text-left">  
                                     <span sh_lang="Mbps">${Mbps}</span>  
+                                </div>  
+                                <div class="col-lg-3 col-sm-3 col-xs-3 form_left text-left">  
+                                	<a id="save_manual_${wan_ifname}" data-value='${wan_ifname}'  class="bm_btn btn btn-primary beforebtn pull-right" et="click tap:save_wan_manual">  
+                                    <span>Apply</span>  
+                                </a> 
                                 </div>  
                             </div>  
                             <div id="container_limit_auto_${wan_ifname}" class="row mrg-t-sm main-box-body clearfix ${wan_isAutocheck ? "" : " hide"}">  
@@ -863,6 +872,10 @@ define(function (require, exports) {
             };
 
             $('#scheduler_' + wan_ifname).wickedpicker(option);
+            
+            $('#text_limit_manual_' +wan_ifname).on('change', function(){
+            	$('#save_manual_' + wan_ifname).addClass('active');
+            });
         });
     }
 
@@ -962,8 +975,8 @@ define(function (require, exports) {
                         }
                         else
                         {
-                            upload_limit = wan_info.upload_limit_auto * 110 / 100; //usually 110%
-                            download_limit = wan_info.download_limit_auto * 110 / 100;
+                            upload_limit = (wan_info.upload_limit_auto || 0 ) * 110 / 100; //usually 110%
+                            download_limit = (wan_info.download_limit_auto || 0) * 110 / 100;
                         }
                         return false;
                     }
@@ -1072,6 +1085,65 @@ define(function (require, exports) {
                 d(btn_name).removeClass('active');
             }
         });        
+    }
+    
+    et.save_wan_manual = function(evt) {
+    
+    var ifname = d(evt).attr('data-value');
+    
+    	d.each(bm_info.wan_data, function(wan_index, wan_data){
+    	
+    		if(wan_data.ifname == ifname) {
+    		
+    		var str = d('#text_limit_manual_' + wan_data.ifname).val();
+    		if(str == ""){
+    			h.ErrorTip(tip_num++, "Invalid WAN Interface Speed Limit.");
+    			return false;
+    		}
+    		
+    		var bandwidth_speed = parseInt(str);
+    		if(bandwidth_speed == 0) {
+    			h.ErrorTip(tip_num++, "Invalid WAN Interface Speed Limit.");
+    			return false;
+    		}
+    		var speed = 1000;
+    		d.each(wan_up_status, function(up_index, up_status){
+    			if(up_status.ifname == ifname){
+    				speed = up_status.speed;  				
+	    			return false;	
+    			}
+    		});
+    		
+    		if(bandwidth_speed > speed) {
+    			h.ErrorTip(tip_num++, "Input value is bigger than LINK Speed.");
+    			return false;
+    		}
+    		
+    		
+    		            var arg = {};// wan_data;
+			    arg.download = parseInt(d('#text_limit_manual_' + wan_data.ifname).val())* 1000;
+			    arg.download = arg.download.toString();
+			    arg.upload = parseInt(d('#text_limit_manual_' + wan_data.ifname).val()) * 1000;
+			    arg.upload = arg.upload.toString();
+			    arg.hostname = wan_data.descname;
+			    arg.macaddr = wan_data.macaddr;
+			    arg.macclone = wan_data.macclone;
+			    arg.name = wan_data.name.toUpperCase();
+			    arg.phy_interface = wan_data.phy_interface;
+			    arg.proto = wan_data.proto;
+			    arg.real_num = wan_data.real_num;
+			    arg.action="edit";
+			    f.setMConfig('multi_pppoe', arg, function (data) {
+			     if (data.errCode != 0) {
+				h.ErrorTip(tip_num++, data.errCode);
+			    } else {
+				h.SetOKTip(tip_num++, set_success);
+			    }}, false);
+			   d(evt).removeClass('active');
+    			return false;
+    		}
+        }, false);	
+    
     }
 
     et.scheduler_change = function(evt){
@@ -1250,17 +1322,26 @@ define(function (require, exports) {
             } else {
             }
 
-            var rx_rate = parseInt(parseInt(data.rx_rate) / 1000);
-            var last_time = parseInt(data.test_time);
+            var rx_rate = parseInt(parseInt(data.rx_rate || "0") / 1000);
+            var last_time = parseInt(data.test_time || "0");
 
             var date = new Date(last_time * 1000);
             var year = checkTime(date.getFullYear());
-            var month = checkTime(date.getMonth());
-            var day = checkTime(date.getDay());
+            var month = checkTime(date.getMonth() + 1);
+            var day = checkTime(date.getDate());
             var h = checkTime(date.getHours());
             var m = checkTime(date.getMinutes());
             var s = checkTime(date.getSeconds());
             var updated_time = ""+ month +  "/" + day +  "/" + year + " " + h + ":" + m + ":" + s;
+            
+            if(typeof data.rx_rate == 'undefined') {
+            	rx_rate = "0";
+            }
+            if(typeof data.test_time == 'undefined') {
+            	updated_time = "";
+            }
+
+
 
 
             d("#text_limit_auto_" + wan_name).html(rx_rate);

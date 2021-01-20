@@ -110,15 +110,22 @@ define(function (require, b) {
         arg.disable = d("#control_enable").val();
         set_control_config(arg)
     };
+    
+    function gohref(){
+       f.getSHConfig('remote_config.php', function(data){}, false);
+    	window.location.href = "";
+    }
 
     function set_config(arg) {
         f.setMConfig('remote', arg, function (data) {
             if (data.errCode != 0) {
                 h.ErrorTip(tip_num++, data.errCode);
             } else {
+            
                 h.SetOKTip(tip_num++, set_success);
                 refresh_init();
                 setTimeout(reset_lock_web, 3000)
+                setTimeout(gohref, 2000);
             }
         })
     }
@@ -129,6 +136,9 @@ define(function (require, b) {
                 h.ErrorTip(tip_num++, data.errCode);
                 lock_web = false;
             } else {
+            
+            
+            
                 h.SetOKTip(tip_num++, set_success);
                 refresh_init();
                 setTimeout(reset_lock_web, 3000)

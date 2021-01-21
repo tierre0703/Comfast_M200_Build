@@ -142,6 +142,7 @@ start()
 		if [ -n "$remoteip" ] && [ "$remoteip" != "0.0.0.0" ];then
 			sed -i '/listen 80/a\deny all;' ${nginxconfig}
 			sed -i "/listen 80/a\allow ${remoteip};" ${nginxconfig}
+			sed -i "/listen 80/a\allow 127.0.0.1;" ${nginxconfig}
 			allow_wan_ip
 			allow_lan_ip
 			allow_vlan_ip

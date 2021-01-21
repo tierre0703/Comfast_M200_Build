@@ -193,7 +193,7 @@ function mask2cidr($mask){
     }
  }
  
- function func_get_client_list() [
+ function func_get_client_list() {
  $DHCP_CLIENT = "/www-comfast/cgi-php/dhcp_client";
  /**
          * 1. poll dhcp

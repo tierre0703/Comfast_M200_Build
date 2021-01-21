@@ -752,7 +752,7 @@ define(function (require, b) {
     }
 
     function set_config(arg) {
-
+		run_waitMe('ios');
         f.setMConfig('vlan_config', arg, function (data) {
             if (data.errCode != 0) {
                 h.ErrorTip(tip_num++, data.errCode);
@@ -863,7 +863,6 @@ define(function (require, b) {
                     ];
     
                     f.setSHConfig('intervlan.php?method=SET&action=save_data', intervlan_arg, function(data){
-    
                     }, false);
                    
                 }
@@ -889,23 +888,42 @@ define(function (require, b) {
                         vlans: iface_list
                     };
                     f.setSHConfig('bandwidth_config.php?method=SET&action=bm_set_data', del_arg, function(data){
-
+							
                     }, false);
-    
                 }
 
                 h.SetOKTip(tip_num++, set_success);
                 refresh_init();
+				release_loading(false); 
                 setTimeout(reset_lock_web, 500);
             }
 
         });
 
-        
+
     }
 
     function reset_lock_web() {
         lock_web = false;
+    }
+    
+    
+    //loading finished
+    function release_loading(bshowTip)
+    {
+        $('#page-wrapper').waitMe('hide');
+        if(bshowTip)
+            h.SetOKTip(tip_num++, set_success);
+    }
+
+    //
+    function run_waitMe(effect){
+		$('#page-wrapper').waitMe({
+			effect: effect,
+			text: please_waiting,
+			bg: 'rgba(255,255,255,0.7)',
+			color:'#000'
+		});
     }
 
     b.init = init;

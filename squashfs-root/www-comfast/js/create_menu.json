@@ -217,12 +217,6 @@
         "name": "remote_set",
         "urls": "/service/service_manage.html",
         "childs": ""
-      },
-      
-      {
-        "name": "upnp_setup",
-        "urls": "/service/service_upnp.html",
-        "childs": ""
       }
     ]
   },

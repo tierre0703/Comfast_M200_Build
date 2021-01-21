@@ -3,6 +3,7 @@
 START=99
 
 start() {
+	curl "http://127.0.0.1/cgi-php/qos_config.php"
 	/bin/generaterule.sh "all"
 }
 

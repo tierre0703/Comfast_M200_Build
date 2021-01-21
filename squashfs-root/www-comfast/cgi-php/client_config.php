@@ -430,7 +430,7 @@ if($method=="GET")
         header("Content-Type: application/json");
         $ret = file_get_contents($DHCP_CLIENT);
         $clients = json_decode($ret, true);
-        if(count($clients) == 0) 
+        //if(count($clients) == 0) 
         {
 			func_get_client_list();
 			$ret = file_get_contents($DHCP_CLIENT);

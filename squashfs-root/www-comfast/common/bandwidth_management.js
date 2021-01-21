@@ -677,7 +677,25 @@ define(function (require, exports) {
             var vlan_descname = m.vlan_descname;
             var _wan_ifname = m.wan_ifname;
             var pecentage = m.allocation_rate;
+            var wan_speed = 0;
             var speed_limit = (typeof m.limit_down_rate == 'undefined' )? 0 : m.limit_down_rate;
+            
+            d.each(bm_info.wan_data, function(wan_index, wan_info){
+				
+				if(wan_info.ifname == _wan_ifname) {
+					if(wan_info.isAutocheck == 0) {
+						wan_speed = wan_info.download;
+					}
+					else
+					{
+						wan_speed = wan_info.download_limit_auto
+					}
+					
+					return false;
+				}
+            
+            });
+            speed_limit = wan_speed * pecentage / 100;
 
             text_html += ` <div class="col-sm-2_5 border padding-r-md padding-l-md">
             <div class="">
@@ -1089,7 +1107,7 @@ define(function (require, exports) {
     
     et.save_wan_manual = function(evt) {
     
-    var ifname = d(evt).attr('data-value');
+		var ifname = d(evt).attr('data-value');
     
     	d.each(bm_info.wan_data, function(wan_index, wan_data){
     	
@@ -1119,7 +1137,16 @@ define(function (require, exports) {
     			return false;
     		}
     		
-    		
+    		d.each(bm_info.wan_data, function(wan_index, wan_data){
+            if(ifname == wan_data.ifname)
+            {
+				var speed = parseInt(d('#text_limit_manual_' + wan_data.ifname).val())* 1000 ;
+                bm_info.wan_data[wan_index].upload = speed;
+                bm_info.wan_data[wan_index].download = speed;
+                return false;
+            }
+
+        });
     		            var arg = {};// wan_data;
 			    arg.download = parseInt(d('#text_limit_manual_' + wan_data.ifname).val())* 1000;
 			    arg.download = arg.download.toString();
@@ -1133,6 +1160,8 @@ define(function (require, exports) {
 			    arg.proto = wan_data.proto;
 			    arg.real_num = wan_data.real_num;
 			    arg.action="edit";
+			    
+			    run_waitMe('ios');
 			    f.setMConfig('multi_pppoe', arg, function (data) {
 			     if (data.errCode != 0) {
 				h.ErrorTip(tip_num++, data.errCode);
@@ -1140,6 +1169,37 @@ define(function (require, exports) {
 				h.SetOKTip(tip_num++, set_success);
 			    }}, false);
 			   d(evt).removeClass('active');
+			    setTimeout(function(){
+					
+					
+					// retrive bm_conf data
+					bm_info_to_bm_conf();
+					//retrieve ip limit data and save
+					bm_info_to_ip_limit();
+					//wan data save
+					bm_info_wan_save();
+
+			 
+					f.setSHConfig('bandwidth_config.php?method=SET&action=bm_save_data', bm_conf, function (data){
+					   
+
+						if (data.errCode != 0) {
+							h.ErrorTip(tip_num++, data.errCode);
+							lock_web = false;
+						} else {
+							h.SetOKTip(tip_num++, set_success);
+							set_change_flag(false, false);
+							//refresh_init();
+							setTimeout(reset_lock_web, 3000);
+						}
+						setTimeout(function(){
+							refresh_init();
+							release_loading(false);
+						}, 20000);
+					});
+					
+					
+				}, 5000);
     			return false;
     		}
         }, false);	

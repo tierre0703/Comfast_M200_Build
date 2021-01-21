@@ -235,6 +235,10 @@ define(function (require, b) {
                 this_html += '<td class="tbl_DownloadLimit">' + (limit_download != "" ? g.bytesTosize(parseInt(limit_download) * 1024 * 1024, 2) : "")  + '</td>';
     
             }
+            
+            this_html += '<td class="tbl_UploadRateLimit">' + (limit_uprate == '' ? '---' : limit_uprate  + " Mbps") || '---' + '</td>';
+            this_html += '<td class="tbl_DownloadRateLimit">' + (limit_downrate == '' ? '---' : limit_downrate + " Mbps") || '---' + '</td>';
+
             this_html += '<td class="tbl_OnlineTime">' + (uptime ? g.formatTime(parseInt(uptime)) : acconfig_offline) + '</td>';
             this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
             this_html += '<a data-toggle="modal" data-target="#modal_filter" class="table-link danger"  et="click tap:filtermac"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + blacklist_add + '" class="fa fa-arrow-circle-up fa-stack-1x fa-inverse"></i></span></a></td>';
@@ -263,6 +267,8 @@ define(function (require, b) {
                     {type: 'traffic', targets: 3},
                     null,
                     null,
+                    {"orderable": false},
+                    {"orderable": false},
                     {"orderable": false},
                     {"orderable": false},
                     {"orderable": false},
@@ -323,7 +329,7 @@ define(function (require, b) {
                 var td_name = d(m).val();
                 d('#table').find('.' + td_name).show();
                 dropdown_list.push(td_name);
-
+                
             });
 
         }
@@ -334,7 +340,6 @@ define(function (require, b) {
                 d(m).attr('data-value', 0);
                 var td_name = d(m).val();
                 d('#table').find('.' + td_name).hide();
-
             });
        }
        d.cookie('dropdown_list', JSON.stringify(dropdown_list));

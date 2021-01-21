@@ -15,6 +15,7 @@ define(function (require, b) {
     var action, iplimit, qos_info;
     var this_table, lock_web = false, tip_num = 0, default_num = 10;
     var bm_conf = {bm_enabled: 0};
+    var lan_list, vlan_config;
 
     function init() {
         d('.select_line').val(default_num);
@@ -34,20 +35,30 @@ define(function (require, b) {
         var tmp_endip = tmp_iparr[0] + '.' + tmp_iparr[1] + '.' + tmp_iparr[2] + '.100';
         d('#defaut_ip_tip').html('(' + tmp_startip + '-' + tmp_endip + ')');
         
+        f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
+            lan_list = data || [];
+        },false);
+        
+        f.getMConfig('vlan_config', function (data) {
+            if (data && data.errCode == 0) {
+                vlan_config = data.vlan || [];
+            }
+         }, false);
+        
         f.getSHConfig('bandwidth_config.php?method=GET&action=bm_config', function(data){
             if(data){
                 bm_conf = data;
                 if(bm_conf.bm_enabled == 1)
                 {
-                    d('#btn_add_list').addClass('disabled');
-                    d('#btn_del_select').addClass('disabled');
-                    d('#header_tr_edit').addClass('hide');
+                    //d('#btn_add_list').addClass('disabled');
+                    //d('#btn_del_select').addClass('disabled');
+                    //d('#header_tr_edit').addClass('hide');
                 }
                 else
                 {
-                    d('#btn_add_list').removeClass('disabled');
-                    d('#btn_del_select').removeClass('disabled');
-                    d('#header_tr_edit').removeClass('hide');
+                    //d('#btn_add_list').removeClass('disabled');
+                    //d('#btn_del_select').removeClass('disabled');
+                    //d('#header_tr_edit').removeClass('hide');
                 }
             }
         }, false);
@@ -86,12 +97,44 @@ define(function (require, b) {
             } else {
                 enable_str = status_disabled;
             }
+            
+            var devip = (m.ip.indexOf("-") == -1 ) ? m.ip : m.ip.split("-")[0];
+            
+            
+            var dec_ip = IpSubnetCalculator.toDecimal(devip);
+            var vlan_name = "Default VLAN";
+            var vlan_iface = "";
+
+            d.each(vlan_config, function(vlan_index, vlan_info){
+                var calc_data = IpSubnetCalculator.calculateCIDRPrefix(vlan_info.ipaddr, vlan_info.netmask);
+                if(dec_ip >= calc_data.ipLow && dec_ip <= calc_data.ipHigh)
+                {
+                    //this ip is in this vlan_config
+                    vlan_name = vlan_info.desc == "" ? vlan_info.iface.toUpperCase() : vlan_info.desc.toUpperCase();
+                    vlan_iface = vlan_info.iface;
+                    return false;
+                }
+            });
+
+            
+            d.each(lan_list, function(lan_index, lan_info){
+                if(lan_info.ipaddr == "" || lan_info.netmask == "") return;
+                var calc_data = IpSubnetCalculator.calculateCIDRPrefix(lan_info.ipaddr, lan_info.netmask);
+                if(dec_ip >= calc_data.ipLow && dec_ip <= calc_data.ipHigh)
+                {
+                    //this ip is in this vlan_config
+                    vlan_name = lan_info.hostname == "" ? lan_info.ifname.toUpperCase() : lan_info.hostname.toUpperCase();
+                    vlan_iface = lan_info.ifname.toUpperCase();
+                    return false;
+                }
+            });
 
             this_html += '<tr class="text-center">';
             this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
             this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
             this_html += '<td>' + (n + 1) + '</td>';
             this_html += '<td class="limit_ip">' + m.ip + '</td>';
+            this_html += '<td class="limit_vlan">' + vlan_name + '</td>';
             this_html += '<td class="limit_uprate" data-value="'  + m.uprate / 1000 +  '" >' + m.uprate / 1000 + 'Mb/s</td>';
             this_html += '<td class="limit_downrate" data-value="'  + m.downrate / 1000 +  '">' + m.downrate / 1000 + 'Mb/s</td>';
             this_html += '<td >' + mode_str + '</td>';
@@ -99,14 +142,16 @@ define(function (require, b) {
             this_html += '<td >' + enable_str + '</td>';
             this_html += '<td class="limit_share hide">' + m.share + '</td>';
             this_html += '<td class="limit_enable hide">' + m.enable + '</td>';
-            if(bm_conf.bm_enabled == 1)
+            
+            
+            /*if(bm_conf.bm_enabled == 1)
             {
                 //this_html += '<td></td>';
                 this_html += '<td  class="hide"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
                 this_html += '<a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="' + global_delete + '" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
 
             }
-            else
+            else */
             {
                 this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
                 this_html += '<a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="' + global_delete + '" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
@@ -120,6 +165,7 @@ define(function (require, b) {
                 "columns": [
                     {"orderable": false},
                     {"orderable": false},
+                    null,
                     null,
                     null,
                     null,
@@ -191,8 +237,8 @@ define(function (require, b) {
     };
 
     et.add_list = function () {
-        if(bm_conf.bm_enabled == 1)
-            return;
+        //if(bm_conf.bm_enabled == 1)
+        //    return;
         action = "add";
         g.clearall();
     };
@@ -239,8 +285,8 @@ define(function (require, b) {
     };
 
     et.del_select = function () {
-        if(bm_conf.bm_enabled == 1)
-            return;
+        //if(bm_conf.bm_enabled == 1)
+         //   return;
         action = 'del';
         var a = {}, this_checked;
         a.list = '';
@@ -305,8 +351,12 @@ define(function (require, b) {
                 h.ErrorTip(tip_num++, data.errCode);
             } else {
                 h.SetOKTip(tip_num++, set_success);
-                refresh_init();
-                setTimeout(reset_lock_web, 3000);
+                
+                setTimeout(function(){
+					f.getSHConfig('qos_config.php', function(data){}, false);
+					refresh_init();
+					reset_lock_web();
+				}, 3000);
             }
         });
     }

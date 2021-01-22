@@ -595,6 +595,8 @@ define(function (require, exports) {
             bm_info.bm_data[vlan_index].vlan_netmask = vlan_data.netmask;
             var calc_data = IpSubnetCalculator.calculateCIDRPrefix(vlan_data.ipaddr, vlan_data.netmask);
             var vlan_subnet = calc_data.ipLowStr + '/' + calc_data.prefixSize;
+			var ip_text = IpSubnetCalculator.toString(calc_data.ipLow + 1) + '-' + IpSubnetCalculator.toString(calc_data.ipHigh - 1); 
+			bm_info.bm_data[vlan_index].ip_limit_ip = ip_text;
             bm_info.bm_data[vlan_index].subnet = vlan_subnet;
             bm_info.bm_data[vlan_index].wan_ifname = "";
             bm_info.bm_data[vlan_index].wan_descname = "";
@@ -625,8 +627,6 @@ define(function (require, exports) {
 
                     //ip limit
                     //var ip_text = calc_data.ipLowStr + '-' + calc_data.ipHighStr;
-                    var ip_text = IpSubnetCalculator.toString(calc_data.ipLow + 1) + '-' + IpSubnetCalculator.toString(calc_data.ipHigh - 1); 
-                    bm_info.bm_data[vlan_index].ip_limit_ip = ip_text;
                     bm_info.bm_data[vlan_index].limit_up_rate = 0; //(typeof rule_data.limit_up_rate == 'undefined') ? 0 : rule_data.limit_up_rate;
                     bm_info.bm_data[vlan_index].limit_down_rate = 0; //(typeof rule_data.limit_down_rate == 'undefined') ? 0 : rule_data.limit_down_rate;  //we will use down rate as base limit
                     bm_info.bm_data[vlan_index].allocation_rate =(typeof rule_data.allocation_rate == 'undefined') ? 0 : rule_data.allocation_rate;

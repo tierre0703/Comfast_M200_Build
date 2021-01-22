@@ -114,6 +114,12 @@ else if($action == "set") {
 	//parse post data
 	$post_data = json_decode(file_get_contents('php://input', true), true);
 	$operate = $post_data['operate'];
+	if(empty($post_data['ip']) || $post_data['ip'] == "") {
+		header("Content-Type: application/json");
+		$response = array("errCode"=>0);
+		echo json_encode($response);
+		exit();
+	}
 	if($operate == 'add') {
 		$real_num = 0;
 		

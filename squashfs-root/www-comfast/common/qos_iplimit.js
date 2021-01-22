@@ -351,7 +351,7 @@ define(function (require, b) {
                 h.ErrorTip(tip_num++, data.errCode);
             } else {
                 h.SetOKTip(tip_num++, set_success);
-                f.getSHConfig('qos_config.php?action=arrange', function(data){}, false);
+                //f.getSHConfig('qos_config.php?action=arrange', function(data){}, false);
 					refresh_init();
 					reset_lock_web();
                 //setTimeout(function(){

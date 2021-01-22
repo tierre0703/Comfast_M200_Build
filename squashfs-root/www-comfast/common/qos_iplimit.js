@@ -351,12 +351,12 @@ define(function (require, b) {
                 h.ErrorTip(tip_num++, data.errCode);
             } else {
                 h.SetOKTip(tip_num++, set_success);
-                
-                setTimeout(function(){
-					f.getSHConfig('qos_config.php', function(data){}, false);
+                f.getSHConfig('qos_config.php?action=arrange', function(data){}, false);
 					refresh_init();
 					reset_lock_web();
-				}, 3000);
+                //setTimeout(function(){
+					
+				//}, 3000);
             }
         });
     }

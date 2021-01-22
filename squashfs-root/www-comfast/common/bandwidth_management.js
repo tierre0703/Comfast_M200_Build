@@ -210,11 +210,13 @@ define(function (require, exports) {
                    arg.comment = iplimit[_ip_index].comment; //vlan_info.descname + "limit " + parseInt(download_limit * allocation_rate / 100 / 1000) + "Mbps";
                    //arg.comment = arg.comment.substr(0, 20);
                    arg.share = iplimit[_ip_index].share; //"0";
-                   f.setMConfig('qos_ip_limit', arg, function (data) {
+                   //f.setMConfig('qos_ip_limit', arg, function (data) {
                        //deletion result
 
-                   }, false);
+                   //}, false);
                
+               f.setSHConfig('qos_config.php?action=set', arg, function(data){
+						},false);
             }
             else
             {
@@ -341,10 +343,14 @@ define(function (require, exports) {
                         arg.comment = comments; //vlan_info.descname + "limit " + parseInt(download_limit * allocation_rate / 100 / 1000) + "Mbps";
                         arg.comment = arg.comment.substr(0, 20);
                         arg.share = "0";
-                        f.setMConfig('qos_ip_limit', arg, function (data) {
+                        //f.setMConfig('qos_ip_limit', arg, function (data) {
                             //deletion result
     
-                        }, false);
+                        //}, false);
+                        
+                        f.setSHConfig('qos_config.php?action=set', arg, function(data){
+						},false);
+
                     }
                 }
                 //else { // skip }
@@ -356,9 +362,12 @@ define(function (require, exports) {
                     var arg = {};
                     arg.list = "" + real_num + ",";
                     arg.operate = "del";
-                    f.setMConfig('qos_ip_limit', arg, function (data) {
+                    //f.setMConfig('qos_ip_limit', arg, function (data) {
                         //deletion result
-                    }, false);
+                    //}, false);
+					f.setSHConfig('qos_config.php?action=set', arg, function(data){
+					},false);
+
                 }
                 else
                 {//edit
@@ -384,9 +393,12 @@ define(function (require, exports) {
                         arg.comment = comments;//vlan_info.descname + "limit " + parseInt(download_limit * allocation_rate/ 100 / 1000) + "Mbps";
                         arg.comment = arg.comment.substr(0, 20);
                         arg.share = "0";
-                        f.setMConfig('qos_ip_limit', arg, function (data) {
+                        //f.setMConfig('qos_ip_limit', arg, function (data) {
                             //deletion result
-                        }, false);
+                        //}, false);
+                        f.setSHConfig('qos_config.php?action=set', arg, function(data){
+						},false);
+
                     }
                 }
             }

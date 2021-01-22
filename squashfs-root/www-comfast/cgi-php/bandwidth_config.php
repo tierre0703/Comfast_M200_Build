@@ -1276,10 +1276,9 @@ else if($method == "SET")
         //func_set_config(json_encode($post_data));
         $CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
         file_put_contents($CONFIG_PATH, json_encode($post_data));
-        shell_exec("(sleep 5; /etc/init.d/firewall restart) > /dev/null &");
-
+        shell_exec("(sleep 5; /etc/init.d/firewall restartall) > /dev/null &");
         set_cron($post_data);
-        //shell_exec("/etc/init.d/network restart > /dev/null &");
+        //shell_exec("/etc/init.d/network restartall > /dev/null &");
         //shell_exec("/etc/init.d/network restart");
 
         $response = array("errCode"=>0);

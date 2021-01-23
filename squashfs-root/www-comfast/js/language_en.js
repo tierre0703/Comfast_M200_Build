@@ -1343,8 +1343,8 @@ var static_route_netmask_error = 'target ip and netmask conflict';
 var static_route_ip_tip = 'Destination network address repetition';
 
 /*route_router.html*/
-var index_route_route = 'Directed Route';
-var routeroute_header = 'Directed Route Settings';
+var index_route_route = 'Traffic Rule';
+var routeroute_header = 'Traffic Rule Settings';
 
 /*vlan.html*/
 var index_vlan = 'VLAN Setup';

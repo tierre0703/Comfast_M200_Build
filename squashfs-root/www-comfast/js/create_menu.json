@@ -28,7 +28,12 @@
       "name": "traffic_network_stat",
       "urls": "/dashboard/dashboard_traffic.html",
       "childs": ""
-    }
+    },
+	{
+		"name": "index_route_route",
+		"urls": "/dashboard/dashboard_route.html",
+		"childs": ""
+	}
     ]
   },
   {
@@ -67,11 +72,6 @@
       {
         "name": "index_static_route",
         "urls": "/network/network_static.html",
-        "childs": ""
-      },
-      {
-        "name": "index_route_route",
-        "urls": "/network/network_route.html",
         "childs": ""
       },
       {

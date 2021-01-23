@@ -13,7 +13,7 @@ define(function (require, b) {
     require('tabletool')(d);
 
     var iface_to_name = {}, action, more_iface, static_route;
-    var this_table, lock_web = false, tip_num = 0, default_num = 10;
+    var this_table, lock_web = false, tip_num = 0, default_num = 0;
 
     function init() {
         d('.select_line').val(default_num);
@@ -62,11 +62,15 @@ define(function (require, b) {
             this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
             this_html += '<td>' + (n + 1) + '</td>';
             this_html += '<td class="start_ip">' + ip_arr[0] + '</td>';
-            this_html += '<td class="end_ip">' + ip_arr[1] + '</td>';
+            
+            //this_html += '<td class="end_ip">' + ip_arr[1] + '</td>';
             this_html += '<td class="name" >' + iface_to_name[m.iface] + '</td>';
             this_html += '<td class="dest_alias">' + m.desc + '</td>';
             this_html += '<td class="iface hidden" >' + m.iface + '</td>';
-            this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link"><span class="fa-stack" et="click tap:editConfig"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a></td>';
+            
+            var status = "Enabled";
+            this_html += '<td class="">' + status + '</td>';
+            this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link"><span class="fa-stack" et="click tap:editConfig"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="Delete" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);
@@ -131,7 +135,7 @@ define(function (require, b) {
         action = 'edit';
         d('#real_num').val(d(evt).parents('tr').find('.real_num').html());
         d('#start_ip').val(d(evt).parents('tr').find('.start_ip').html());
-        d('#end_ip').val(d(evt).parents('tr').find('.end_ip').html());
+        //d('#end_ip').val(d(evt).parents('tr').find('.end_ip').html());
         d('#iface').val(d(evt).parents('tr').find('.iface').html().toLowerCase());
         d('#dest_alias').val(d(evt).parents('tr').find('.dest_alias').html());
     };
@@ -151,7 +155,7 @@ define(function (require, b) {
         }
     };
 
-    et.del_select = function () {
+    et.apply_select = function () {
         action = 'del';
         var a = {}, this_checked;
         a.del_list = '';

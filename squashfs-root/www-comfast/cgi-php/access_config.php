@@ -8,7 +8,8 @@ $action = !empty($_GET["action"]) ? $_GET["action"] : "";
 function get_arp_table()
 {
     $cmd = sprintf('arp -a | grep -e "0x2"');
-    $arp_data = shell_exec("arp -a");
+    //$arp_data = shell_exec("arp -a");
+    $arp_data = shell_exec("cat /proc/net/arp");
     //echo urlencode($arp_data);
     $arp_array = explode("\n", $arp_data);
     $mac_array = array();
@@ -18,7 +19,8 @@ function get_arp_table()
         if(count($arp_tokens) < 5) continue;
         $mac_addr = $arp_tokens[3];
         if(preg_match('/^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$/', $mac_addr) != 1) continue;
-        $arp_ip = $arp_tokens[1];
+        if($mac_addr == "00:00:00:00:00:00") continue;
+        $arp_ip = $arp_tokens[0];
         $arp_ip = str_replace("(", "", $arp_ip);
         $arp_ip = str_replace(")", "", $arp_ip);
         $mac_array[$arp_ip] = $mac_addr; 
@@ -33,7 +35,9 @@ function find_mac_addr($target_ip)
     shell_exec($cmd);
     //arp parsing
     $cmd = sprintf('arp -a | grep -e "0x2"');
-    $arp_data = shell_exec("arp -a");
+    //$arp_data = shell_exec("arp -a");
+        $arp_data = shell_exec("cat /proc/net/arp");
+
     //echo urlencode($arp_data);
     
     $arp_array = explode("\n", $arp_data);
@@ -44,7 +48,9 @@ function find_mac_addr($target_ip)
         if(count($arp_tokens) < 5) continue;
         $mac_addr = $arp_tokens[3];
         if(preg_match('/^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$/', $mac_addr) != 1) continue;
-        $arp_ip = $arp_tokens[1];
+        if($mac_addr == "00:00:00:00:00:00") continue;
+
+        $arp_ip = $arp_tokens[0];
         $arp_ip = str_replace("(", "", $arp_ip);
         $arp_ip = str_replace(")", "", $arp_ip);
         if($arp_ip == $target_ip)
@@ -63,7 +69,9 @@ function write_access_control_device($target_ip, $bAllow)
     shell_exec($cmd);
     //arp parsing
     $cmd = sprintf('arp -a | grep -e "0x2"');
-    $arp_data = shell_exec("arp -a");
+    //$arp_data = shell_exec("arp -a");
+        $arp_data = shell_exec("cat /proc/net/arp");
+
     //echo urlencode($arp_data);
     
     $arp_array = explode("\n", $arp_data);
@@ -74,7 +82,9 @@ function write_access_control_device($target_ip, $bAllow)
         if(count($arp_tokens) < 5) continue;
         $mac_addr = $arp_tokens[3];
         if(preg_match('/^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$/', $mac_addr) != 1) continue;
-        $arp_ip = $arp_tokens[1];
+        if($mac_addr == "00:00:00:00:00:00") continue;
+
+        $arp_ip = $arp_tokens[0];
         $arp_ip = str_replace("(", "", $arp_ip);
         $arp_ip = str_replace(")", "", $arp_ip);
         $mac_array[$arp_ip] = $mac_addr; 
@@ -135,7 +145,9 @@ function write_access_control()
 
     //arp parsing
     $cmd = sprintf('arp -a | grep -e "0x2"');
-    $arp_data = shell_exec("arp -a");
+    //$arp_data = shell_exec("arp -a");
+    $arp_data = shell_exec("cat /proc/net/arp");
+
     //echo urlencode($arp_data);
     
     $arp_array = explode("\n", $arp_data);
@@ -144,8 +156,11 @@ function write_access_control()
     {
         $arp_tokens = preg_split('/\s+/', $arp_val);
         if(count($arp_tokens) < 5) continue;
+
         $mac_addr = $arp_tokens[3];
-        $arp_ip = $arp_tokens[1];
+
+        if($mac_addr == "00:00:00:00:00:00") continue;
+        $arp_ip = $arp_tokens[0];
         $arp_ip = str_replace("(", "", $arp_ip);
         $arp_ip = str_replace(")", "", $arp_ip);
         $mac_array[$arp_ip] = $mac_addr; 

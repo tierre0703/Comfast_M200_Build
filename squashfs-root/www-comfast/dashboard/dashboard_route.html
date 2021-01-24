@@ -125,10 +125,12 @@
                                     <i class="fa fa-plus-circle fa-lg"></i>
                                     <span sh_lang="global_add"></span>
                                 </a>
+                                <!--
                                 <a class="btn btn-primary pull-right afterbtn mrg-h-lg" et="click tap:apply_select">
                                     <i class="fa fa-save fa-lg"></i>
                                     <span>APPLY(selected rules)</span>
                                 </a>
+                                -->
                             </div>
                         </div>
                         <div class="main-box-body">
@@ -136,11 +138,6 @@
                                 <table class="table table-hover" id="table">
                                     <thead>
                                     <tr>
-                                        <th class="hidden"></th>
-                                        <th class="text-center" style="width:10%">
-                                            <input id="allchecked" class="hidden_over" name="checked-all" type="checkbox"/>
-                                            <label class="label label-info select_laber" for="allchecked" sh_lang="selectall_tab"></label>
-                                        </th>
                                         <th class="text-center">
                                             <span style="min-width:60px" sh_lang="global_No"></span>
                                         </th>
@@ -164,9 +161,14 @@
                                         <th class="text-center" style="width:8%">
                                             <span style="min-width:60px" sh_lang="edit_title"></span>
                                         </th>
+                                        <th class="hidden"></th>
+                                        <th class="text-center hidden" style="width:10%">
+                                            <input id="allchecked" class="hidden_over" name="checked-all" type="checkbox"/>
+                                            <label class="label label-info select_laber" for="allchecked" sh_lang="selectall_tab"></label>
+                                        </th>
                                     </tr>
                                     </thead>
-                                    <tbody id="tbody_info"></tbody>
+                                    <tbody id="tbody_info" style="border-bottom: 1px solid #CCC;"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -207,7 +209,7 @@
                     <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
                         <span class="tip_name hide" sh_lang="firewall_start_ip"></span>
                         <input type="text" class="form-control require isIPSection" id="start_ip">
-                        <p sh_lang="ipex"></p>
+                        <p>192.168.0.100,192.168.0.101<br/>192.168.0.101-192.168.0.110</p>
                     </div>
                 </div>
                 <!--
@@ -244,7 +246,7 @@
                         <span>Status</span>
                     </div>
                     <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
-						<select class="form-control" id="enable" et="change:enableConfig">
+						<select class="form-control" id="enable">
 							<option value="1" sh_lang="status_enabled">Enabled</option>
 							<option value="0" sh_lang="status_disabled">Disabled</option>
 						</select>

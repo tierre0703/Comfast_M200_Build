@@ -1,0 +1,3 @@
+
+config map 'rule_list'
+	option list '0,'

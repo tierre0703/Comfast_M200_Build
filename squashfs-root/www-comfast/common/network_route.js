@@ -27,6 +27,7 @@ define(function (require, b) {
     }
 
     function refresh_init() {
+		/*
         f.getMConfig('direction_routing', function (data) {
             if (data.errCode == 0) {
                 more_iface = data.wanlist;
@@ -35,13 +36,32 @@ define(function (require, b) {
                 showtable();
             }
         });
+        */
+        f.getMConfig('multi_pppoe', function (data) {
+            if (data.errCode == 0) {
+                more_iface = data.wanlist || [];
+                ifaceoption(more_iface);
+			}
+		}, false);
+		
+		f.getSHConfig('dirroute_config.php?method=GET&action=read_conf', function(data){
+                static_route = data || [];
+                showtable();
+		},false);
+        
     }
 
     function ifaceoption(moreiface) {
         var this_html = '';
         d.each(moreiface, function (n, m) {
-            this_html += '<option value="' + m.iface + '" >' + m.name.toUpperCase() + '</option>';
-            iface_to_name[m.iface] = m.name.toUpperCase();
+			var wan_name = m[0].name.toUpperCase();
+			
+			if(typeof m[0].dhcp != 'undefined') {
+				wan_name = (m[0].name.toUpperCase() + "(" + (m[0].dhcp.hostname || "") + ")");
+			}
+			//var wan_name = (m[0].dhcp.hostname == "") ? (m[0].name.toUpperCase() ) : (m[0].name.toUpperCase() + "(" + (m[0].dhcp.hostname || "") + ")");
+            this_html += '<option value="' + m[0].iface + '" >' + wan_name + '</option>';
+            iface_to_name[m[0].iface] = wan_name;
         });
         d('#iface').html(this_html);
     }
@@ -53,24 +73,24 @@ define(function (require, b) {
         d('#table').dataTable().fnDestroy();
 
         d.each(static_route, function (n, m) {
-            var ip_arr = m.ipaddr.split('-');
-            if (ip_arr.length < 2) {
-                ip_arr[1] = ip_arr[0];
-            }
-            this_html += '<tr class="text-center">';
-            this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
-            this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
-            this_html += '<td>' + (n + 1) + '</td>';
-            this_html += '<td class="start_ip">' + ip_arr[0] + '</td>';
+			
+            var ip_arr = m.ipaddr;
+            var color = m.enable == "1" ? 'style="background-color: #DEEAF6"' : 'style="background-color: #FFDEDD"';
+            this_html += '<tr class="text-center" ' + color + '>';
+            this_html += '<td style="padding:2px;" >' + (n + 1) + '</td>';
+            this_html += '<td style="padding:2px;"  class="start_ip">' + ip_arr + '</td>';
             
             //this_html += '<td class="end_ip">' + ip_arr[1] + '</td>';
-            this_html += '<td class="name" >' + iface_to_name[m.iface] + '</td>';
-            this_html += '<td class="dest_alias">' + m.desc + '</td>';
-            this_html += '<td class="iface hidden" >' + m.iface + '</td>';
+            this_html += '<td style="padding:2px;" class="name" >' + iface_to_name[m.iface] + '</td>';
+            this_html += '<td style="padding:2px;" class="dest_alias">' + m.desc + '</td>';
             
-            var status = "Enabled";
-            this_html += '<td class="">' + status + '</td>';
-            this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link"><span class="fa-stack" et="click tap:editConfig"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="Delete" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
+            var status = m.enable == "1" ? "Enabled" : "Disabled";
+            this_html += '<td style="padding:2px;">' + status + '</td>';
+            this_html += '<td style="padding:2px;" ><a data-toggle="modal" data-target="#modal_one" class="table-link"><span class="fa-stack" et="click tap:editConfig"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="Delete" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
+            this_html += '<td style="padding:2px;" class="real_num hidden" >' + m.real_num + '</td>';
+            this_html += '<td style="padding:2px;"  class="hidden"><input class="row-checkbox" type="checkbox" /></td>';
+            this_html += '<td style="padding:2px;" class="iface hidden" >' + m.iface + '</td>';
+            this_html += '<td style="padding:2px;"  class="enable hidden">' + m.enable + '</td>';
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);
@@ -79,13 +99,14 @@ define(function (require, b) {
             this_table = d('#table').DataTable({
                 "bDestroy": true,
                 "columns": [
+                    {"orderable": true},
+                    {"orderable": true},
+                    {"orderable": true},
+                    {"orderable": true},
+                    {"orderable": true},
                     {"orderable": false},
                     {"orderable": false},
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
+                    {"orderable": false},
                     {"orderable": false},
                     {"orderable": false}
                 ],
@@ -94,7 +115,10 @@ define(function (require, b) {
                     d(":checkbox", d('#table_wrapper')).prop('checked', false);
                 }
             });
-            this_table.page.len(default_num).draw();
+            if(default_num > 0)
+				this_table.page.len(default_num).draw();
+			else 
+				this_table.page.len(static_route.length).draw();
         }
     }
 
@@ -121,7 +145,10 @@ define(function (require, b) {
 
     et.displayline = function (evt) {
         default_num = d(evt).val();
-        this_table.page.len(default_num).draw();
+        if(default_num > 0)
+			this_table.page.len(default_num).draw();
+		else
+			this_table.page.len(static_route.length).draw();
         d(evt).blur();
     };
 
@@ -138,6 +165,7 @@ define(function (require, b) {
         //d('#end_ip').val(d(evt).parents('tr').find('.end_ip').html());
         d('#iface').val(d(evt).parents('tr').find('.iface').html().toLowerCase());
         d('#dest_alias').val(d(evt).parents('tr').find('.dest_alias').html());
+        d('#enable').val(d(evt).parents('tr').find('.enable').html());
     };
 
     et.saveConfig = function () {
@@ -169,6 +197,13 @@ define(function (require, b) {
         a.action = action;
         set_config(a);
     };
+    
+    et.delete_row = function(evt) {
+		var arg = {};
+		arg.action = 'del';
+		arg.del_list = d(evt).parents('tr').find('.real_num').html() +  ",";
+		set_config(arg);
+	}
 
     function set_volide() {
         var arg = {}, error_falg = 0, ip_arr = [], start_ip, end_ip;
@@ -184,8 +219,9 @@ define(function (require, b) {
             arg.real_num = parseInt(d("#real_num").val());
         }
         start_ip = d("#start_ip").val();
-        end_ip = d("#end_ip").val();
+        //end_ip = d("#end_ip").val();
 
+	/*
         if (h.ip2int(start_ip) > h.ip2int(end_ip)) {
             var tmp_num;
             tmp_num = start_ip;
@@ -199,12 +235,14 @@ define(function (require, b) {
         } else {
             ip_arr[0] = start_ip;
             ip_arr[1] = end_ip;
-        }
+        } */
 
-        arg.ipaddr = ip_arr.join('-');
+        //arg.ipaddr = ip_arr.join('-');
+        arg.ipaddr = start_ip;
 
         arg.iface = d("#iface").val();
         arg.desc = d("#dest_alias").val();
+        arg.enable = d('#enable').val();
 
         d.each(static_route, function (n, m) {
             if (arg.real_num == m.real_num) return true;
@@ -222,7 +260,7 @@ define(function (require, b) {
     }
 
     function set_config(arg) {
-        f.setMConfig('direction_routing', arg, function (data) {
+		f.setSHConfig('dirroute_config.php?method=SET&action=save_conf', arg, function (data){
             if (data.errCode != 0) {
                 h.ErrorTip(tip_num++, data.errCode);
                 lock_web = false;

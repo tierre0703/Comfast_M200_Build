@@ -69,6 +69,7 @@ function mask2cidr($mask){
 
 
 function get_interfaces() {
+		$table_id_start = 320;
         $wan_list = array();
         $str_wans = shell_exec("ubus list | grep network.interface.wan | cut -d . -f 3");
         $wans = explode("\n", $str_wans);
@@ -79,12 +80,14 @@ function get_interfaces() {
 			if($wan == "") continue;
             $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][1].nexthop'", $wan);
             $nexthop = shell_exec($cmd);
+            $nexthop = str_clean($nexthop);
             
             $table_id = ($wan == "wan") ? $table_id_start : (intval(substr($wan, 3)) + $table_id_start);
             $interfaces[] = array(
 				'iface'=>$wan,
 				'nexthop'=>$nexthop,
-				'table_id'=>$table_id
+				'table_id'=>$table_id,
+				'dt_table'=>("dt_" . $wan)
             );			
 		}
 		
@@ -92,6 +95,7 @@ function get_interfaces() {
 }
 
 function parse_ip_list($ipAddr) {
+	$retVal = array();
 	$ip_list = explode(",", $ipAddr);
 	foreach($ip_list as $k=>$ip) {
 		if(strpos($ip, "-") >= -1) {
@@ -102,59 +106,84 @@ function parse_ip_list($ipAddr) {
 			
 			$start_numip = ip2long($start_ip);
 			$end_numip = ip2long($end_ip);
+			for($i = $start_numip; $i < $end_numip; $i++) {
+				
+				$retVal[] = long2ip($i);	
+			}
 		}
 		else if(strpos($ip, "/") >= -1 ) {
-			
+			$retVal[] = $ip;
+		}
+		else
+		{
+			$retVal[] = $ip;
 		}
 	}
+	
+	return $retVal;
 }
 
 function policy_set_iface_route()
 {
 	$interfaces = get_interfaces();
-	
-	foreach($interfaces $k=>$interface) {
-		$cmd = sprintf("cat /etc/iproute2/rt_tables | grep -w dt_%s", $interface);
+	foreach($interfaces as $k=>$interface) {
+		$cmd = sprintf("cat /etc/iproute2/rt_tables | grep -w %s", $interface['dt_table']);
 		$rt_table = shell_exec($cmd);
 		$rt_table = str_clean($rt_table);
 		if($rt_table == "") {
-			
+			$cmd = sprintf("echo \"%d %s\" >> /etc/iproute2/rt_tables", $interface['table_id'], $interface['dt_table']);
+			shell_exec($cmd);
 		}
 	}
 	
-	
-	rt_tables_iface_exist=`cat /etc/iproute2/rt_tables | grep -w ${rt_interface}`
-	if [ -z "$rt_tables_iface_exist" ];then
-		iface_metric=`uci get network.${interface}.metric 2>/dev/null`
-		if [ -z "$iface_metric" ] || [ "$iface_metric" == "" ] || [ "$iface_metric" == "0" ];then
-			exit 0
-		fi
-		echo "$(($table_id_start+$iface_metric)) ${rt_interface}" >> /etc/iproute2/rt_tables
-	fi
-	$IP route flush table ${rt_interface}
-	route_args=$($IP route list dev $device default | head -1 | sed '/.*via \([^ ]*\) .*$/!d;s//via \1/;q' | egrep '[0-9]{1,3}(\.[0-9]{1,3}){3}')
-	[ x"$route_args" = "x" ] && exit 0
-	route_args="$route_args dev $device"
-	$IP route add table ${rt_interface} default $route_args
+	foreach ($interfaces as $k=>$interface) {
+		//ip route
+		$cmd = sprintf("ip route flush table %s", $interface['dt_table']);
+		shell_exec($cmd);
+		$cmd = sprintf("ip route replace default via %s dev br-%s table %s", $interface['nexthop'], $interface['iface'], $interface['dt_table']);
+		shell_exec($cmd);
+	}
 }
 
 
 function set_rules() {
+	
+	policy_set_iface_route();
+	delete_rules();
+	
+	
+	$rules = get_conf();
+	
+	foreach($rules as $k=>$rule) {
+		$enable = intval($rule['enable']);
+		if($enable == 0) continue;
+		
+		$ipaddr = $rule['ipaddr'];
+		$iface = $rule['iface'];
+		$ip_list = parse_ip_list($ipaddr);
+		foreach($ip_list as $ip_index=>$ip){
+			$cmd = sprintf("ip rule add from %s table dt_%s", $ip, $iface );
+			shell_exec($cmd);
+		}
+	}
 }
+
 
 function delete_rules() {
 	$wan_list = get_interfaces();
 	
 	foreach($wan_list as $k=>$wan_info)
 	{
-		$wan_interface= $wan_info['iface'];
-		$cmd = sprintf("ip rule list | grep -w dt_%s", $wan_interface);
+		$wan_interface= $wan_info['dt_table'];
+		$cmd = sprintf("ip rule list | grep -w %s", $wan_interface);
 		$str_iplist = shell_exec($cmd);
 		$ip_list = explode("\n", $str_iplist);
 		foreach($ip_list as $ip_index =>$ip) {
 			$ip = str_clean($ip);
-			$cmd = sprintf("ip rule del from %s table %s 2>/dev/null", $ip, $wan_interface);
-			shell_exec($cmd);
+			 $val = substr($ip, strpos($ip, "from "));
+			 if($val == "") continue;
+			 $cmd = sprintf("ip rule delete %s", $val);
+			 shell_exec($cmd);
 		}
 	}
 }
@@ -179,23 +208,9 @@ function get_real_nums() {
 	return $real_nums;
 }
 
-
-if(!file_exists($CONFIG_PATH)) {
-	$cmd = sprintf("touch %s", $CONFIG_PATH);
-}
-
-$str_rules = file_get_contents($CONFIG_PATH);
-if($str_rules == "") {
-	shell_exec("uci set traffic_rule.rule_list=map");
-	shell_exec("uci set traffic_rule.rule_list.list='0,'");
-	shell_exec("uci commit traffic_rule");
-}
-
-
-if($method == "GET") {
-	if($action == "read_conf")
-	{
-		$retData = array();
+function get_conf() {
+	
+	$retdata = array();
 		
 		$real_nums = get_real_nums();
 		foreach($real_nums as $k=>$real_num) {
@@ -210,17 +225,41 @@ if($method == "GET") {
 
 			$cmd = sprintf("uci get traffic_rule.rule_%d.iface", $real_num);
 			$iface = shell_exec($cmd); $iface = str_clean($iface);
+
+			$cmd = sprintf("uci get traffic_rule.rule_%d.enable", $real_num);
+			$enable = shell_exec($cmd); $enable = str_clean($enable);
 			
 			$retdata[]= array(
 				'real_num'=>$real_num, 
 				'ipaddr'=>$ipaddr,
 				'iface'=>$iface,
-				'desc'=>$desc
+				'desc'=>$desc,
+				'enable'=>$enable
 			);
 		}
+	return $retdata;
+}
+
+
+if(!file_exists($CONFIG_PATH)) {
+	$cmd = sprintf("touch %s", $CONFIG_PATH);
+}
+
+$str_rules = file_get_contents($CONFIG_PATH);
+if(str_clean($str_rules) == "") {
+	shell_exec("uci set traffic_rule.rule_list=map");
+	shell_exec("uci set traffic_rule.rule_list.list='0,'");
+	shell_exec("uci commit traffic_rule");
+}
+
+
+if($method == "GET") {
+	if($action == "read_conf")
+	{
+		$retdata = get_conf();
 		
 		header("Content-Type: application/json");
-		echo json_encode($retData);
+		echo json_encode($retdata);
 	}
 }
 else if($method == "SET")
@@ -242,10 +281,12 @@ else if($method == "SET")
 			$real_num = 1;
 			if(count($real_nums) == 0) {
 				$real_num = 1;
+				$real_nums[] = $real_num;
 			}
 			else
 			{
-				$real_num = intval($real_nums[count($reaul_nums) - 1]) + 1;
+				$real_num = intval($real_nums[count($real_nums) - 1]) + 1;
+				$real_nums[] = $real_num;
 			}
 			
 			$ipaddr = $post_data['ipaddr'];
@@ -259,6 +300,10 @@ else if($method == "SET")
 			$cmd = sprintf("uci set traffic_rule.rule_%s.ipaddr='%s'", $real_num, $ipaddr); shell_exec($cmd);
 			$cmd = sprintf("uci set traffic_rule.rule_%s.iface='%s'", $real_num, $iface); shell_exec($cmd);
 			$cmd = sprintf("uci set traffic_rule.rule_%s.enable='%s'", $real_num, $enable); shell_exec($cmd);
+			
+			$cmd = sprintf("uci set traffic_rule.rule_list.list='%d,%s,'", count($real_nums), implode(",", $real_nums));
+			shell_exec($cmd);
+			
 			
 		}
 		else if($action == "edit") {
@@ -286,7 +331,7 @@ else if($method == "SET")
 				$cmd = sprintf("uci delete traffic_rule.rule_%s.ipaddr", $num); shell_exec($cmd);
 				$cmd = sprintf("uci delete traffic_rule.rule_%s.enable", $num); shell_exec($cmd);
 				$cmd = sprintf("uci delete traffic_rule.rule_%s.iface", $num); shell_exec($cmd);
-				$cmd = sprintf("uci delete traffic_rule.rule_%s", $num);
+				$cmd = sprintf("uci delete traffic_rule.rule_%s", $num); shell_exec($cmd);
 			}
 			
 			//set num
@@ -304,18 +349,20 @@ else if($method == "SET")
 					}
 				}
 				
-				if($bFound == true) 
+				if($bFound == false) 
 					$deleted_nums[] = $real_num;
 			}
-			sprintf("uci set traffic_rule.rule_list.list='%d,%s,'", count($deleted_nums), implode(",", $deleted_nums));
+			$cmd = sprintf("uci set traffic_rule.rule_list.list='%d,%s,'", count($deleted_nums), implode(",", $deleted_nums));
+			shell_exec($cmd);
 			
 		}
 		
 		shell_exec("uci commit traffic_rule");
-
+		
+		set_rules();
 		
         header("Content-Type: application/json");
-        echo json_ecode(array("errCode"=>0));
+        echo json_encode(array("errCode"=>0));
 	}
 }
 

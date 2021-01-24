@@ -14,6 +14,7 @@ define(function (require, exports) {
     var color_purple = "#9b59b6";
     var flow_data_store = [], data_rx = 0, data_tx = 0;
     var lan_list;
+    var wan_ext_info;
 
     var wan_list = [];
     var wan_full_list = [];
@@ -53,6 +54,10 @@ define(function (require, exports) {
                 //color_purple = data.color12;
             }
         });
+        
+        f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
+			wan_ext_info = data || [];
+		},false);
         
         f.getSHConfig('bandwidth_config.php?method=GET&action=bm_config', function(data){
 	    bm_conf = data || {};
@@ -265,6 +270,13 @@ define(function (require, exports) {
                     return false;
                 }
             });
+            
+            d.each(wan_ext_info, function(ext_index, ext_info){
+				if(used_info.iface == ext_info.iface) {
+					description = ext_info.hostname;
+					return false;
+				}
+			});
 
             d.each(lan_list, function(lan_index, lan_info){
                 if(lan_info.ifname == used_info.iface)
@@ -650,6 +662,15 @@ define(function (require, exports) {
             wan_speed_history[n].wan_descname = "";
             wan_speed_history[n].wan_upload = 0;
             wan_speed_history[n].wan_download = 0;
+            
+            var descname = "";
+            d.each(wan_ext_info, function(ext_index, ext_info) {
+					if(wan_ifname == ext_info.iface){
+						descname = ext_info.hostname;
+						return false;
+					}
+			});
+			
 
             d.each(wan_full_list, function(wan_index, wan_data){
                 if(wan_data[0].iface == wan_ifname)
@@ -660,7 +681,7 @@ define(function (require, exports) {
                     wan_data[0].download = wan_data[0].download == "" ? 1000 : wan_data[0].download;
                     wan_speed_history[n].wan_upload =  parseInt(wan_data[0].upload);
                     wan_speed_history[n].wan_download =  parseInt(wan_data[0].download);
-                    wan_speed_history[n].wan_descname = propto_model.hostname;
+                    wan_speed_history[n].wan_descname = descname; //propto_model.hostname;
                     return false;
                 }
                 

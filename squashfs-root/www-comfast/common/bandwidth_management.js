@@ -21,6 +21,7 @@ define(function (require, exports) {
     var ip_rules = [];
     var speedtest_result = [];
     var timezoneOffset = 0;
+    var wan_ext_info;
 
     var default_max_network_speed = 100 * 1024 * 1024; //100Mbps
 
@@ -409,6 +410,10 @@ define(function (require, exports) {
         //refresh timezoneoffset
         var curTime = new Date();
         timezoneOffset = curTime.getTimezoneOffset();
+        f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
+			wan_ext_info = data || [];
+		},false);
+        
         f.getSHConfig('bandwidth_config.php?method=GET&action=wan_status', function(data){
             wan_up_status = data;
         },false);
@@ -536,7 +541,17 @@ define(function (require, exports) {
             bm_info.wan_data[bm_wan_idx].mtu =  wan_data[wan_num].mtu;
             bm_info.wan_data[bm_wan_idx].upload =  wan_data[wan_num].upload;
             bm_info.wan_data[bm_wan_idx].download =  wan_data[wan_num].download;
-            bm_info.wan_data[bm_wan_idx].descname = propto_model.hostname;
+            
+            var description = "";
+             d.each(wan_ext_info, function(ext_index, ext_info){
+				if(wan_data[wan_num].iface == ext_info.iface) {
+					description = ext_info.hostname;
+					return false;
+				}
+			});
+            
+            
+            bm_info.wan_data[bm_wan_idx].descname = description; //propto_model.hostname;
             bm_info.wan_data[bm_wan_idx].phy_interface = wan_data[wan_num].phy_interface;
             bm_info.wan_data[bm_wan_idx].real_num = wan_data[wan_num].real_num;
 

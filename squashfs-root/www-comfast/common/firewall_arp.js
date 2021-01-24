@@ -14,7 +14,8 @@ define(function (require, b) {
 
     var wan_list, lan_list, vlan_list, arpbind_info, arp_info, this_ifname = {}, optflag, client_info;
     var this_table, lock_web = false, tip_num = 0, default_num = 0;
-
+	var wan_ext_info;
+    
     function init() {
         d('.select_line').val(default_num);
         e.plugInit(et, start_model);
@@ -27,6 +28,10 @@ define(function (require, b) {
     }
 
     function refresh_init() {
+		
+		f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
+			wan_ext_info = data || [];
+		},false);
         arpbind_info = [];
         f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
             lan_list = data || [];
@@ -139,6 +144,7 @@ define(function (require, b) {
 
             var desc = (client_data.remark || "");
 
+			/*
             d.each(wan_list, function (x, one_line) {
                 d.each(one_line, function (n, m_line) {
                     if(m.ifname == m_line.iface){
@@ -148,7 +154,15 @@ define(function (require, b) {
                     }
                 })
             });
+            */
 
+
+			d.each(wan_ext_info, function(ext_index, ext_info){
+				if(m.ifname  == ext_info.iface) {
+					desc = ext_info.hostname;
+					return false;
+				}
+			});
 
 
 

@@ -12,6 +12,8 @@ define(function (require, b) {
 
     var wanlists_info, lanlists_info, vlanlists_info, localauth, action_flag = 'edit', list_num = 0, wan_num, real_num, gloable_iface = "wan", gloable_ifname = "eth0", set_time;
     var lock_web = false, tip_num = 0;
+    
+    var wan_extra_info;
 
     function init() {
         e.plugInit(et, start_model);
@@ -26,6 +28,10 @@ define(function (require, b) {
     function refresh_init() {
         wan_num = 0;
         action_flag = 'edit';
+        
+        f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
+			wan_extra_info = data || [];
+		},false);
 
         f.getMConfig('multi_pppoe', function (data) {
             if (data.errCode == 0) {
@@ -54,7 +60,7 @@ define(function (require, b) {
             return;
         }
         if (device.mwan == 1) {
-            d("#more_line").removeClass("hidden");
+            //d("#more_line").removeClass("hidden");
             d.each(wanlists_info, function (n, m) {
                 if (n == list_num) {
                     this_html += '<li class="active">';
@@ -102,6 +108,16 @@ define(function (require, b) {
         d("#mtu").val(wanlists_info[list_num][wan_num].mtu || '');
         d("#upload").val(wanlists_info[list_num][wan_num].upload / 1000 || '1000');
         d("#download").val(wanlists_info[list_num][wan_num].download / 1000 || '1000');
+        
+        var iface = wanlists_info[list_num][wan_num].iface || "";
+        var wan_hostname = "";
+        d.each(wan_extra_info, function(ex_index, ex_info){
+			if(ex_info.iface == iface) {
+				wan_hostname = ex_info.hostname;
+				return false;
+			}
+		});
+		d('#wan_hostname').val(wan_hostname);
 
         if (proto != '') {
             d("#ipaddr").val(proto_model.ipaddr || '');
@@ -342,6 +358,14 @@ define(function (require, b) {
     }
 
     function set_config(arg) {
+		
+		var iface = wanlists_info[list_num][wan_num].phy_interface;
+		var wan_hostname = d('#wan_hostname').val();
+		var ext_arg = {iface:iface, hostname:wan_hostname};
+		f.setSHConfig('network_config.php?method=SET&action=wan_info', ext_arg, function (data){
+		}, false);
+		
+		
         f.setMConfig('multi_pppoe', arg, function (data) {
             if (data.errCode != 0) {
                 h.ErrorTip(tip_num++, data.errCode);

@@ -155,7 +155,7 @@
                                             <select class="form-control" id="proto" et="change:wanTypeConfig">
                                                 <option value="static" sh_lang="tcpip_wan_type_static_ip"></option>
                                                 <option value="dhcp" sh_lang="tcpip_wan_type_client"></option>
-                                                <option value="pppoe">PPPoE</option>
+                                                <!--<option value="pppoe">PPPoE</option>-->
                                             </select>
                                             <p sh_lang="wan_link_mode"></p>
                                         </div>
@@ -244,6 +244,7 @@
                                         </div>
                                     </div>
                                     <div id="dhcp_div" class="hide">
+										<!--
                                         <div class="row list">
                                             <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
                                                 <span sh_lang="dhcp_hostname"></span>
@@ -255,6 +256,7 @@
                                                 <p sh_lang="dhcp_hostname_tips"></p>
                                             </div>
                                         </div>
+                                        -->
                                         <div class="row list">
                                             <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
                                                 <span sh_lang="tcpip_wan_ip"></span>
@@ -318,6 +320,17 @@
                                             </div>
                                         </div>
                                     </div>
+									<div class="row list">
+										<div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+											<span sh_lang="dhcp_hostname"></span>
+										</div>
+										<div class="col-lg-3 col-sm-4 col-xs-7 form_right">
+											<span class="tip_name hide" sh_lang="dhcp_hostname"></span>
+											<input type="text" class="form-control require isNULL isEnglish"
+												   id="wan_hostname">
+											<p sh_lang="dhcp_hostname_tips"></p>
+										</div>
+									</div>
                                     <div class="row list">
                                         <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
                                             <span sh_lang="flow_up"></span>

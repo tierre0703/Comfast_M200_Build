@@ -73,11 +73,6 @@
         "name": "index_static_route",
         "urls": "/network/network_static.html",
         "childs": ""
-      },
-      {
-        "name": "auto_redial",
-        "urls": "/network/network_redial.html",
-        "childs": ""
       }
     ]
   },

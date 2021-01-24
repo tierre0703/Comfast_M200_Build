@@ -81,6 +81,11 @@ function get_interfaces() {
             $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][1].nexthop'", $wan);
             $nexthop = shell_exec($cmd);
             $nexthop = str_clean($nexthop);
+            if($nexthop == "") {
+				$cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][0].nexthop'", $wan);
+				$nexthop = shell_exec($cmd);
+				$nexthop = str_clean($nexthop);
+            }
             
             $table_id = ($wan == "wan") ? $table_id_start : (intval(substr($wan, 3)) + $table_id_start);
             $interfaces[] = array(

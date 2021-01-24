@@ -14,6 +14,7 @@ define(function (require, b) {
 
     var iface_to_name = {}, action, more_iface, static_route;
     var this_table, lock_web = false, tip_num = 0, default_num = 0;
+    var wan_ext_info;
 
     function init() {
         d('.select_line').val(default_num);
@@ -37,6 +38,10 @@ define(function (require, b) {
             }
         });
         */
+         f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
+			wan_ext_info = data || [];
+		},false);
+		
         f.getMConfig('multi_pppoe', function (data) {
             if (data.errCode == 0) {
                 more_iface = data.wanlist || [];
@@ -56,8 +61,17 @@ define(function (require, b) {
         d.each(moreiface, function (n, m) {
 			var wan_name = m[0].name.toUpperCase();
 			
-			if(typeof m[0].dhcp != 'undefined') {
-				wan_name = (m[0].name.toUpperCase() + "(" + (m[0].dhcp.hostname || "") + ")");
+			var description = "";
+			 d.each(wan_ext_info, function(ext_index, ext_info){
+				if(m[0].iface == ext_info.iface) {
+					description = ext_info.hostname;
+					return false;
+				}
+			});
+			
+			
+			if(description != "") {
+				wan_name = (m[0].name.toUpperCase() + "(" + description + ")");
 			}
 			//var wan_name = (m[0].dhcp.hostname == "") ? (m[0].name.toUpperCase() ) : (m[0].name.toUpperCase() + "(" + (m[0].dhcp.hostname || "") + ")");
             this_html += '<option value="' + m[0].iface + '" >' + wan_name + '</option>';

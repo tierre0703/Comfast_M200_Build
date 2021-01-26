@@ -244,6 +244,11 @@ define(function (require, exports) {
             arg.name = wan_data.name.toUpperCase();
             arg.phy_interface = wan_data.phy_interface;
             arg.proto = wan_data.proto;
+			    if(arg.proto == 'static') {
+					arg.ipaddr = wan_data.ipaddr;
+					arg.gateway = wan_data.gateway;
+					arg.netmask = wan_data.netmask;
+				}
             arg.real_num = wan_data.real_num;
             arg.action="edit";
             f.setMConfig('multi_pppoe', arg, function (data) {
@@ -532,10 +537,13 @@ define(function (require, exports) {
             bm_info.wan_data[bm_wan_idx].proto = wan_data[wan_num].proto;
             bm_info.wan_data[bm_wan_idx].connection_status = online;
             proto = wan_data[wan_num].proto;
-            propto_model =  wan_data[wan_num][proto];
+            proto_model =  wan_data[wan_num][proto];
             
             bm_info.wan_data[bm_wan_idx].real_num =  wan_data[wan_num].real_num;
-            bm_info.wan_data[bm_wan_idx].ipaddr =  wan_data[wan_num].ipaddr;
+            bm_info.wan_data[bm_wan_idx].ipaddr =  proto_model.ipaddr;//wan_data[wan_num].ipaddr;
+            bm_info.wan_data[bm_wan_idx].gateway =  proto_model.gateway; //wan_data[wan_num].gateway;
+            bm_info.wan_data[bm_wan_idx].netmask = proto_model.netmask;
+            
             bm_info.wan_data[bm_wan_idx].macaddr =  wan_data[wan_num].macaddr;
             bm_info.wan_data[bm_wan_idx].macclone =  wan_data[wan_num].macclone;
             bm_info.wan_data[bm_wan_idx].mtu =  wan_data[wan_num].mtu;
@@ -1185,6 +1193,11 @@ define(function (require, exports) {
 			    arg.name = wan_data.name.toUpperCase();
 			    arg.phy_interface = wan_data.phy_interface;
 			    arg.proto = wan_data.proto;
+			    if(arg.proto == 'static') {
+					arg.ipaddr = wan_data.ipaddr;
+					arg.gateway = wan_data.gateway;
+					arg.netmask = wan_data.netmask;
+				}
 			    arg.real_num = wan_data.real_num;
 			    arg.action="edit";
 			    

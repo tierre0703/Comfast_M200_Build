@@ -156,6 +156,13 @@ function func_set_config($data)
             $nexthop = shell_exec($cmd);
             $nexthop = trim($nexthop);
             $nexthop = str_clean($nexthop);
+            if($nexthop == "") {
+				$cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][0].nexthop'", $ubus_wan);
+				$nexthop = shell_exec($cmd);
+				$nexthop = trim($nexthop);
+				$nexthop = str_clean($nexthop);
+				
+			}
             $cmd = sprintf("grep -q %s /etc/iproute2/rt_tables || echo %s %s >>/etc/iproute2/rt_tables", $wan, $id, $wan);
             shell_exec($cmd);
             $cmd = sprintf("ip rule add from %s table %s", $lansubnet, $wan);
@@ -294,6 +301,13 @@ function func_set_routing_temp($id, $wan, $ubus_wan, $br_wan, $lansubnet)
         $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][1].nexthop'", $ubus_wan);
         $nexthop = shell_exec($cmd);
         $nexthop = str_clean($nexthop);
+        
+        if($nexthop == "") {
+			$cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][0].nexthop'", $ubus_wan);
+			$nexthop = shell_exec($cmd);
+			$nexthop = str_clean($nexthop);
+			
+		}
         echo $nexthop;
         $cmd = sprintf("grep -q %s /etc/iproute2/rt_tables || echo %s %s >>/etc/iproute2/rt_tables", $wan, $id, $wan);
         shell_exec($cmd);
@@ -501,6 +515,12 @@ if($method == "GET")
         $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][1].nexthop'", $wan_name);
         $nexthop = shell_exec($cmd);
         $nexthop = str_clean($nexthop);
+        
+        if($nexthop == "") {
+	        $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][0].nexthop'", $wan_name);
+			$nexthop = shell_exec($cmd);
+			$nexthop = str_clean($nexthop);
+		}
 
         $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"ipv4-address\"][0].address'",$wan_name);
         $wan_ip = shell_exec($cmd);
@@ -823,6 +843,13 @@ else if($method == "SET")
         $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][1].nexthop'", $target_wan_name);
         $nexthop = shell_exec($cmd);
         $nexthop = str_clean($nexthop);
+        
+        if($nexthop == "") {
+			$cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"route\"][0].nexthop'", $target_wan_name);
+			$nexthop = shell_exec($cmd);
+			$nexthop = str_clean($nexthop);
+			
+		}
 
 
         if(count($t_wan_list) == 0)

@@ -16,6 +16,7 @@ define(function (require, b) {
     var this_table, lock_web = false, tip_num = 0, default_num = 10;
     var bm_conf = {bm_enabled: 0};
     var lan_list, vlan_config;
+    var bm_enabled = false;
 
     function init() {
         d('.select_line').val(default_num);
@@ -50,15 +51,17 @@ define(function (require, b) {
                 bm_conf = data;
                 if(bm_conf.bm_enabled == 1)
                 {
-                    //d('#btn_add_list').addClass('disabled');
-                    //d('#btn_del_select').addClass('disabled');
-                    //d('#header_tr_edit').addClass('hide');
+                    d('#btn_add_list').addClass('disabled');
+                    d('#btn_del_select').addClass('disabled');
+                    d('#header_tr_edit').addClass('hide');
+                    bm_enabled = true;
                 }
                 else
                 {
-                    //d('#btn_add_list').removeClass('disabled');
-                    //d('#btn_del_select').removeClass('disabled');
-                    //d('#header_tr_edit').removeClass('hide');
+                    d('#btn_add_list').removeClass('disabled');
+                    d('#btn_del_select').removeClass('disabled');
+                    d('#header_tr_edit').removeClass('hide');
+                    bm_enabled =  false;
                 }
             }
         }, false);
@@ -144,14 +147,14 @@ define(function (require, b) {
             this_html += '<td class="limit_enable hide">' + m.enable + '</td>';
             
             
-            /*if(bm_conf.bm_enabled == 1)
+            if(bm_conf.bm_enabled == 1)
             {
                 //this_html += '<td></td>';
                 this_html += '<td  class="hide"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
                 this_html += '<a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="' + global_delete + '" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
 
             }
-            else */
+            else 
             {
                 this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
                 this_html += '<a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="' + global_delete + '" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
@@ -251,6 +254,7 @@ define(function (require, b) {
 
         d('#limit_uprate').val(d(evt).parents('tr').find('.limit_uprate').attr('data-value'));
         d('#limit_downrate').val(d(evt).parents('tr').find('.limit_downrate').attr('data-value'));
+ 
         
         d('#limit_comment').val(d(evt).parents('tr').find('.limit_comment').html());
         d('#limit_share').val(d(evt).parents('tr').find('.limit_share').html());

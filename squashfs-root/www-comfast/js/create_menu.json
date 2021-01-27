@@ -266,6 +266,11 @@
         "name": "ping_test",
         "urls": "/tools/tools_ping.html",
         "childs": ""
+      },
+      {
+        "name": "system_info",
+        "urls": "/tools/tools_info.html",
+        "childs": ""
       }
     ]
   }

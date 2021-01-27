@@ -22,6 +22,7 @@ define(function (require, b) {
     var sortCol=1, sortDir= "asc";
 
     var selectedRow = "";
+    var bm_conf = false;
 
     function init() {
         d('.select_line').val(default_num);
@@ -44,7 +45,19 @@ define(function (require, b) {
     }
 
     function refresh_init() {
-        
+         f.getSHConfig('bandwidth_config.php?method=GET&action=bm_config', function(data){
+            if(data){
+                bm_conf = data;
+                if(bm_conf.bm_enabled == 1)
+                {
+                    bm_enabled = true;
+                }
+                else
+                {
+                    bm_enabled = false;
+                }
+            }
+        }, false);
 
         f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
             lan_list = data || [];
@@ -415,6 +428,11 @@ define(function (require, b) {
         d('#limit_real_num').val(d(evt).parents('tr').find('.limit_real_num').html() || '');
         d('#limit_uprate').val(d(evt).parents('tr').find('.limit_uprate').html() || '');
         d('#limit_downrate').val(d(evt).parents('tr').find('.limit_downrate').html() || '');
+        if(bm_enabled == true) {
+			d('#limit_uprate').prop('disabled', true);
+			d('#limit_downrate').prop('disabled', true);
+			
+		}
 
         d('#limit_download_quantity').val(d(evt).parents('tr').find('.limit_download').html() || '');
         d('#limit_upload_quantity').val(d(evt).parents('tr').find('.limit_upload').html() || '');

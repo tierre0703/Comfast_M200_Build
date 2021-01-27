@@ -44,10 +44,31 @@ if($method == "GET") {
 		$retdata = get_interfaces();
 		echo json_encode($retdata);
 	}
+	else if($action == "system_info")
+	{
+		header("Content-Type: application/json");
+		
+		$hostname = shell_exec("uci get system.@system[0].hostname");
+		$hostname = str_clean($hostname);
+		$retdata = array('hostname'=>$hostname);
+		echo json_encode($retdata);
+		
+	}
 
 }
 else if($method == "SET") {
-	if($action == "wan_info"){
+	if($action == "system_info") {
+		$post_data = json_decode(file_get_contents('php://input', true), true);
+		$hostname = $post_data['hostname'];
+		
+		$cmd = sprintf("uci set system.@system[0].hostname='%s'", $hostname); shell_exec($cmd);
+		shell_exec("/etc/init.d/system restart > /dev/null &");
+
+		$retdata = array('errCode'=>0);
+		header("Content-Type: application/json");
+		echo json_encode($retdata);
+	}
+	else if($action == "wan_info"){
 		
 		
 		$post_data = json_decode(file_get_contents('php://input', true), true);

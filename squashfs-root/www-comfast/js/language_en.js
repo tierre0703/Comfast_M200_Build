@@ -58,7 +58,7 @@ var cluster_queued_stauts = 'Waiting';
 var fw_Firewallsettings = 'Firewall Settings';
 var wlantype = 'Connection Type';
 var System_Information = 'System Information';
-var System_Tools = 'System Tools';
+var System_Tools = 'System';
 var softwareInfo = 'SW Info';
 var ledcontrol = 'Light Feature';
 var deviceInfo = 'Device Info';
@@ -2160,4 +2160,6 @@ var ip_not_found = "Target IP not found";
 var device_macaddr = "MAC Address";
 
 var bm_already_enabled = "Not available when Bandwidth Management enabled";
+
+var system_info = "System Info";
 /*auth all*/

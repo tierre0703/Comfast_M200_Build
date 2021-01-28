@@ -8,7 +8,7 @@ now=`date +%s`
 
 run_dhcp_cron()
 {
-    curl "http://127.0.0.1:82/cgi-php/client_config.php?method=GET&action=dhcp_client"
+    curl -s "http://127.0.0.1:82/cgi-php/client_config.php?method=GET&action=dhcp_client"
 
 }
 

@@ -64,6 +64,14 @@ define(function (require, b) {
     et.log_now = function () {
         getlogs();
     };
+    
+    et.refresh_log = function () {
+			
+			var arg = {};
+			f.setSHConfig('network_config.php?method=SET&action=clear_log',arg, function (data) {
+			}, false);
+			setTimeout(getlogs, 3000);
+	}
 
     function format_time(time) {
         var null_index = 0;

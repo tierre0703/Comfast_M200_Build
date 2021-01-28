@@ -21,25 +21,25 @@ function str_clean($str)
  }
  function get_arp_bind_list()
  {
-    $ret = shell_exec("curl \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=arp_bind_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
+    $ret = shell_exec("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=arp_bind_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
     return $ret;
  }
 
  function get_arp_list()
  {
-    $ret = shell_exec("curl \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=arp_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
+    $ret = shell_exec("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=arp_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
     return $ret;
  }
 
  function get_dhcp_list()
  {
-     $ret = shell_exec("curl \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=dhcp_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
+     $ret = shell_exec("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=dhcp_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
      return $ret;
  }
 
  function get_dhcp_static_list()
  {
-     $ret = shell_exec("curl \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=dhcp_static_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
+     $ret = shell_exec("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=dhcp_static_list\" --header \"Content-Type: application/json\" --request POST --data '{}'");
      return $ret;
  }
  
@@ -97,7 +97,7 @@ function mask2cidr($mask){
 
  function get_lan_vlan_config()
  {
-     $ret = shell_exec("curl \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=lan_dhcp_config\" --header \"Content-Type: application/json\" --request POST --data '{}'");
+     $ret = shell_exec("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=GET&section=lan_dhcp_config\" --header \"Content-Type: application/json\" --request POST --data '{}'");
      $config = json_decode($ret, true);
      $lan_data = !empty($config['lanlist']) ? $config['lanlist'] : [];
      $vlan_data = !empty($config['vlanlist']) ? $config['vlanlist']: [];

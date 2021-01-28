@@ -84,6 +84,9 @@ else if($method == "SET") {
 		header("Content-Type: application/json");
 		echo json_encode($retdata);
 		
+	} else if($action="clear_log")
+	{
+		shell_exec("/etc/init.d/log restart > /dev/null &");
 	}
 
 }

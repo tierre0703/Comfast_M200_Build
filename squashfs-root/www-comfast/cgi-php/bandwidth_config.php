@@ -1084,7 +1084,7 @@ else if($method == "SET")
                                     $arg_data["comment"] = "";
                                     $arg_data["share"] = "0";
 
-                                    $cmd = sprintf("curl  \"%s\" --header \"Content-Type: application/json\" --request POST --data '%s'", $qos_url, json_encode($arg_data));
+                                    $cmd = sprintf("curl -s  \"%s\" --header \"Content-Type: application/json\" --request POST --data '%s'", $qos_url, json_encode($arg_data));
                                     $cmd_ret = shell_exec($cmd);
                                 }
                                 else
@@ -1104,7 +1104,7 @@ else if($method == "SET")
                                     $arg_data["uprate"] = strval($uprate);
                                     $arg_data["comment"] = $comment;//vlan_info.descname + "limit " + parseInt(download_limit * allocation_rate/ 100 / 1000) + "Mbps";
                                     $arg_data["share"] = "0";
-                                    $cmd = sprintf("curl  \"%s\"  --header \"Content-Type: application/json\" --request POST --data '%s'", $qos_url, json_encode($arg_data));
+                                    $cmd = sprintf("curl -s \"%s\"  --header \"Content-Type: application/json\" --request POST --data '%s'", $qos_url, json_encode($arg_data));
                                     $cmd_ret = shell_exec($cmd);
                                 }
 
@@ -1177,7 +1177,7 @@ else if($method == "SET")
                                 $arg_data["comment"] = "";
                                 $arg_data["share"] = "0";
 
-                                $cmd = sprintf("curl  \"http://127.0.0.1/cgi-bin/mbox-config?method=SET&section=qos_ip_limit\" --header \"Content-Type: application/json\" --request POST --data '%s'", json_encode($arg_data));
+                                $cmd = sprintf("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=SET&section=qos_ip_limit\" --header \"Content-Type: application/json\" --request POST --data '%s'", json_encode($arg_data));
                                 echo $cmd;
                                 $cmd_ret = shell_exec($cmd);
                                 echo $cmd_ret;
@@ -1198,7 +1198,7 @@ else if($method == "SET")
                                 $arg_data["uprate"] = strval($uprate);
                                 $arg_data["comment"] = $comment;//vlan_info.descname + "limit " + parseInt(download_limit * allocation_rate/ 100 / 1000) + "Mbps";
                                 $arg_data["share"] = "0";
-                                $cmd = sprintf("curl  \"http://127.0.0.1/cgi-bin/mbox-config?method=SET&section=qos_ip_limit\" --header \"Content-Type: application/json\" --request POST --data '%s'", json_encode($arg_data));
+                                $cmd = sprintf("curl -s \"http://127.0.0.1/cgi-bin/mbox-config?method=SET&section=qos_ip_limit\" --header \"Content-Type: application/json\" --request POST --data '%s'", json_encode($arg_data));
                                 echo $cmd;
 
                                 $cmd_ret = shell_exec($cmd);

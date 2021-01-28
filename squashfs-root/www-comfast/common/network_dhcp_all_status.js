@@ -18,6 +18,8 @@ define(function (require, b) {
     var dhcp_clients = [];
     var arp_bind_list;
     var arp_list;
+    
+    var selected_vlan = '';
 
     function init() {
         d('.select_line').val(default_num);
@@ -57,6 +59,7 @@ define(function (require, b) {
                 double_support = data.double_support;
                 dev_vlan_type = data.vlan_itype;
                 vlan_config = data.vlan || [];
+                showVlanList();
             }
          }, false);
 
@@ -73,6 +76,32 @@ define(function (require, b) {
             }
         });
     }
+    
+    function showVlanList() {
+		
+		var txt_html = "";
+			var vlan_name = "Default VLAN";
+            var vlan_iface = "";
+            
+            txt_html += '<option value="">ALL</option>';
+
+            d.each(vlan_config, function(vlan_index, vlan_info){
+				vlan_name = vlan_info.desc == "" ? vlan_info.iface : vlan_info.desc;
+				vlan_iface = vlan_info.iface;
+				txt_html += '<option value="' + vlan_iface + '">' + vlan_name + '</option>';
+            });
+
+            d.each(lan_list, function(lan_index, lan_info){
+				vlan_name = lan_info.hostname == "" ? lan_info.ifname.toUpperCase() : lan_info.hostname;
+				vlan_iface = lan_info.ifname.toUpperCase();
+				txt_html += '<option value="' + vlan_iface + '">' + vlan_name + '</option>';
+            });
+            
+            d('.select_vlan').html(txt_html);
+            
+            d('.select_vlan').select(selected_vlan);
+	
+	}
 
     function refresh_DList() {
         var static_flag;
@@ -107,10 +136,10 @@ define(function (require, b) {
             this_html += '<tr class="text-center">';
             //this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
            // this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
-            this_html += '<td>' + (n + 1) + '</td>';
-            this_html += '<td class="src_ip">' + m.ip + '</td>';
-            this_html += '<td class="src_mac" >' + m.mac.toUpperCase() + '</td>';
-            this_html += '<td class="src_name" >' + (m.commentname || "*") + '</td>';
+            this_html += '<td class="text-left">' + (n + 1) + '</td>';
+            this_html += '<td class="src_ip text-left">' + m.ip + '</td>';
+            this_html += '<td class="src_mac text-left" >' + m.mac.toUpperCase() + '</td>';
+            this_html += '<td class="src_name text-left" >' + (m.commentname || "*") + '</td>';
 
             var additional_info = {};
             d.each(dhcp_clients, function(client_index, client_info){
@@ -131,7 +160,7 @@ define(function (require, b) {
                 }
 
             });
-            this_html += '<td class="tbl_Description"><span class="hidden">' + (arp_data.remark || "") + '</span><input type="text" value="' + (arp_data.remark || "") + '" style="min-width:170px;border:1px solid #ffffff;" id="description_' + n + '" class="input_description border_light_grey text-center" et="blur:changeDescription" /></td>';
+            this_html += '<td class="tbl_Description"><span class="hidden">' + (arp_data.remark || "") + '</span><input type="text" value="' + (arp_data.remark || "") + '" style="min-width:170px;border:1px solid #ffffff;" id="description_' + n + '" class="input_description border_light_grey text-left" et="blur:changeDescription" /></td>';
 
 
 
@@ -165,24 +194,23 @@ define(function (require, b) {
 
 
 
-            this_html += '<td class="src_vlan_name">' + vlan_name.toUpperCase() +'</td>';
-            this_html += '<td class="src_timestring" >' + (m.rest_time_string || "") + '</td>';
-            this_html += '<td>' + (m.type.toUpperCase() || "") + '</td>';
+            this_html += '<td class="src_vlan_name text-left">' + vlan_name.toUpperCase() +'</td>';
+            this_html += '<td class="src_timestring text-left" >' + (m.rest_time_string || "") + '</td>';
+            this_html += '<td class="text-left">' + (m.type.toUpperCase() || "") + '</td>';
             var status = additional_info.status || 'online';
             if(status == 'online')
             {
-                this_html +='<td><span class="dot-blue"></span></td>';
+                this_html +='<td class="text-left"><span class="dot-blue"></span></td>';
             }
             else if(status == "offline")
             {
-                this_html +='<td><span class="dot-red"></span></td>';
+                this_html +='<td class="text-left"><span class="dot-red"></span></td>';
             }
             else{
-                this_html += '<td><span class="dot-green"></span></td>';
+                this_html += '<td class="text-left"><span class="dot-green"></span></td>';
             }
 
-           // this_html += '<td><a class="table-link"><span class="fa-stack" et="click tap:bindthis"><i class="fa fa-square fa-stack-2x"></i><i title="' + dhcp_list_add_static + '" class="fa fa-link fa-stack-1x fa-inverse"></i></span></a>' +
-                '</td>';
+           // this_html += '<td><a class="table-link"><span class="fa-stack" et="click tap:bindthis"><i class="fa fa-square fa-stack-2x"></i><i title="' + dhcp_list_add_static + '" class="fa fa-link fa-stack-1x fa-inverse"></i></span></a>' + '</td>';
             this_html += "<td class='hidden src_arp_real_num'>" + (arp_data.real_num || "") + "</td>"
             this_html += "<td class='hidden src_iface'>" + vlan_iface + "</td>";
             this_html += '</tr>';
@@ -269,6 +297,46 @@ define(function (require, b) {
             d(evt).blur();
         }
     };
+    
+    et.displayvlan = function(evt) {
+		selected_vlan = d(evt).val();
+		
+		d('#tbody_info tr').each(function(){
+				var iface = d(this).find(".src_iface").text();
+				if(selected_vlan == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(iface != selected_vlan) {
+					d(this).hide();
+				}
+				else
+				{
+					d(this).show();
+				}
+			});
+		/*
+		if(selected_vlan == "") {
+			this_table.clear();
+			if(default_num > 0)
+                this_table.page.len(default_num).draw();
+            else
+                this_table.page.len(status_array.length).draw();
+		}
+		else
+		{
+			//this_table.columns(10).search(selected_vlan, true, false).draw();
+			
+			var filterData = this_table.column(10).data().filter(function(value, index) {
+					return value == selected_vlan ? true : false;
+				})
+			this_table.clear();
+			this_table.rows.add(filterData);
+			this_table.draw();
+		}
+		* */
+	}
 
     et.refresh_list = function () {
         d('#tbody_info').html('');

@@ -1,0 +1,7 @@
+version: M200-v3.0.8
+Changes:
+1. System Info Page Inserted
+2. Device HostName Edit functionality Inserted
+3. IpLimit, LocalNetMonitor Page disabling of speed limit when bandwidth enabled
+4. Bug Fix for ip routes' nexthop issue in Static WANs
+5. Bug Fix for WAN conf saving error in Static WAN

@@ -130,9 +130,9 @@ define(function (require, b) {
                 all_vlan_iface.push(m.iface);
             }
             used_vlan.push(m.port);
-            this_html += '<tr class="text-center">';
+            this_html += '<tr class="text-left">';
             this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
-            this_html += '<td><input class="row_checkbox" type="checkbox" /></td>';
+            this_html += '<td class="text-center"><input class="row_checkbox" type="checkbox" /></td>';
             this_html += '<td>' + (n + 1) + '</td>';
             this_html += '<td class="vlan_name">' + m.iface.toUpperCase() + '</td>';
             this_html += '<td class="vlan_id">' + m.id + '</td>';
@@ -208,7 +208,7 @@ define(function (require, b) {
             //intervlan
             this_html += '<td class="vlan_intervlan">' + vlan_intervlan +  '</td>';
 
-            this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '"  class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a></td>';
+            this_html += '<td class="text-center"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '"  class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a></td>';
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);

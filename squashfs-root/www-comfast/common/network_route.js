@@ -90,21 +90,21 @@ define(function (require, b) {
 			
             var ip_arr = m.ipaddr;
             var color = m.enable == "1" ? 'style="background-color: #DEEAF6"' : 'style="background-color: #FFDEDD"';
-            this_html += '<tr class="text-center" ' + color + '>';
-            this_html += '<td style="padding:2px;" >' + (n + 1) + '</td>';
-            this_html += '<td style="padding:2px;"  class="start_ip">' + ip_arr + '</td>';
+            this_html += '<tr class="text-left" ' + color + '>';
+            this_html += '<td class="tbl" >' + (n + 1) + '</td>';
+            this_html += '<td class="start_ip tbl">' + ip_arr + '</td>';
             
             //this_html += '<td class="end_ip">' + ip_arr[1] + '</td>';
-            this_html += '<td style="padding:2px;" class="name" >' + iface_to_name[m.iface] + '</td>';
-            this_html += '<td style="padding:2px;" class="dest_alias">' + m.desc + '</td>';
+            this_html += '<td class="name tbl" >' + iface_to_name[m.iface] + '</td>';
+            this_html += '<td class="dest_alias tbl">' + m.desc + '</td>';
             
             var status = m.enable == "1" ? "Enabled" : "Disabled";
-            this_html += '<td style="padding:2px;">' + status + '</td>';
-            this_html += '<td style="padding:2px;" ><a data-toggle="modal" data-target="#modal_one" class="table-link"><span class="fa-stack" et="click tap:editConfig"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="Delete" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
-            this_html += '<td style="padding:2px;" class="real_num hidden" >' + m.real_num + '</td>';
-            this_html += '<td style="padding:2px;"  class="hidden"><input class="row-checkbox" type="checkbox" /></td>';
-            this_html += '<td style="padding:2px;" class="iface hidden" >' + m.iface + '</td>';
-            this_html += '<td style="padding:2px;"  class="enable hidden">' + m.enable + '</td>';
+            this_html += '<td class="tbl">' + status + '</td>';
+            this_html += '<td class="text-center tbl" ><a data-toggle="modal" data-target="#modal_one" class="table-link"><span class="fa-stack" et="click tap:editConfig"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="Delete" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
+            this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
+            this_html += '<td class="hidden"><input class="row-checkbox" type="checkbox" /></td>';
+            this_html += '<td class="iface hidden" >' + m.iface + '</td>';
+            this_html += '<td class="enable hidden">' + m.enable + '</td>';
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);

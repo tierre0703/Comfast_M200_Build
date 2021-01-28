@@ -117,12 +117,12 @@ define(function (require, b) {
         var this_html = '';
 
         d.each(arpbind_info, function (n, m) {
-            this_html += '<tr class="text-center">';
+            this_html += '<tr class="text-left">';
             this_html += '<td class="arp_rnum hidden">' + m.real_num + '</td>';
             if (m.static != '0') {
-                this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
+                this_html += '<td class="text-center"><input class="row-checkbox" type="checkbox" /></td>';
             } else {
-                this_html += '<td><input disabled type="checkbox" /></td>';
+                this_html += '<td class="text-center"><input disabled type="checkbox" /></td>';
             }
             this_html += '<td>' + (n + 1) + '</td>';
             this_html += '<td class="arp_ipaddr">' + m.ip + '</td>';
@@ -171,11 +171,11 @@ define(function (require, b) {
 
             if (m.static != '0') {
                 this_html += '<td class="arp_bind" data-value="1" sh_lang="arp_binded">' + arp_binded + '</td>';
-                this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:unbind"><i class="fa fa-square fa-stack-2x"></i><i title="' + mwan_unbind + '" class="fa fa-unlink fa-stack-1x fa-inverse"></i></span></a>' +
+                this_html += '<td class="text-center"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link danger"><span class="fa-stack" et="click tap:unbind"><i class="fa fa-square fa-stack-2x"></i><i title="' + mwan_unbind + '" class="fa fa-unlink fa-stack-1x fa-inverse"></i></span></a>' +
                     '</td>';
             } else {
                 this_html += '<td class="arp_bind" data-value="0" sh_lang="arp_unbind">' + arp_unbind + '</td>';
-                this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:addConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link link"><span class="fa-stack" et="click tap:bind"><i class="fa fa-square fa-stack-2x"></i><i title="' + mwan_bind + '" class="fa fa-link fa-stack-1x fa-inverse"></i></span></a></td>';
+                this_html += '<td class="text-center"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:addConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a><a class="table-link link"><span class="fa-stack" et="click tap:bind"><i class="fa fa-square fa-stack-2x"></i><i title="' + mwan_bind + '" class="fa fa-link fa-stack-1x fa-inverse"></i></span></a></td>';
             }
             this_html += '<td class="arp_network hidden">' + m.ifname + '</td>';
             this_html += '</tr>';

@@ -132,9 +132,9 @@ define(function (require, b) {
                 }
             });
 
-            this_html += '<tr class="text-center">';
+            this_html += '<tr class="text-left">';
             this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
-            this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
+            this_html += '<td class="text-center"><input class="row-checkbox" type="checkbox" /></td>';
             this_html += '<td>' + (n + 1) + '</td>';
             this_html += '<td class="limit_ip">' + m.ip + '</td>';
             this_html += '<td class="limit_vlan">' + vlan_name + '</td>';
@@ -143,22 +143,23 @@ define(function (require, b) {
             this_html += '<td >' + mode_str + '</td>';
             this_html += '<td class="limit_comment">' + m.comment + '</td>';
             this_html += '<td >' + enable_str + '</td>';
-            this_html += '<td class="limit_share hide">' + m.share + '</td>';
-            this_html += '<td class="limit_enable hide">' + m.enable + '</td>';
             
             
             if(bm_conf.bm_enabled == 1)
             {
                 //this_html += '<td></td>';
-                this_html += '<td  class="hide"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
+                this_html += '<td  class="hide text-center"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
                 this_html += '<a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="' + global_delete + '" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
 
             }
             else 
             {
-                this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
+                this_html += '<td class="text-center"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
                 this_html += '<a class="table-link danger"><span class="fa-stack" et="click tap:delete_row"><i class="fa fa-square fa-stack-2x"></i><i title="' + global_delete + '" class="fa fa-trash-o fa-stack-1x fa-inverse"></i></span></a></td>';
             }
+            this_html += '<td class="limit_share hide">' + m.share + '</td>';
+            this_html += '<td class="limit_enable hide">' + m.enable + '</td>';
+
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);

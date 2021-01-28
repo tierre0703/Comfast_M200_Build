@@ -214,10 +214,10 @@ define(function (require, b) {
                 }
             }
 
-            this_html += '<tr class="text-center ' + selected + '">';
+            this_html += '<tr class="text-left ' + selected + '">';
             this_html += '<td class="hide limit_real_num">' + limit_real_num || '' + '</td>';
             this_html += '<td>' + (n + 1) + '</td>';
-            this_html += '<td class="dev_ip tbl_IPAddress">' + devip + '</td>';
+            this_html += '<td class="dev_ip tbl_IPAddress text-left">' + devip + '</td>';
             
             d.each(arpbind_info, function(arp_index, arp_info){
                 if(mac.toLowerCase() == arp_info.mac.toLowerCase())
@@ -230,12 +230,12 @@ define(function (require, b) {
 
             this_html += '<td class="dev_description tbl_Description">' + (arp_data.remark || "*") + '</td>';
             this_html += '<td class="dev_clientname tbl_ClientName">' + (client.commentname || "*") + '</td>';
-            this_html += '<td class="dev_vlan tbl_VLAN">' + (vlan_name.toUpperCase()) + '</td>';
+            this_html += '<td class="dev_vlan tbl_VLAN text-left">' + (vlan_name.toUpperCase()) + '</td>';
             
-            this_html += '<td class="tbl_UploadRate">' + g.bytesTosizePerSec(txrate, 2) + '</td>';
-            this_html += '<td class="tbl_DownloadRate">' + g.bytesTosizePerSec(rxrate, 2) + '</td>';
-            this_html += '<td class="tbl_TotalUpload">' + g.bytesTosize(upload, 2) + '</td>';
-            this_html += '<td class="tbl_TotalDownload">' + g.bytesTosize(download, 2) + '</td>';
+            this_html += '<td class="tbl_UploadRate text-left">' + g.bytesTosizePerSec(txrate, 2) + '</td>';
+            this_html += '<td class="tbl_DownloadRate text-left">' + g.bytesTosizePerSec(rxrate, 2) + '</td>';
+            this_html += '<td class="tbl_TotalUpload text-left">' + g.bytesTosize(upload, 2) + '</td>';
+            this_html += '<td class="tbl_TotalDownload text-left">' + g.bytesTosize(download, 2) + '</td>';
             if(limit_upload == "" && limit_download == "")
             {
                 this_html += '<td class="tbl_UploadLimit">Unlimited</td>';
@@ -253,7 +253,7 @@ define(function (require, b) {
             //this_html += '<td class="tbl_DownloadRateLimit">' + (limit_downrate == '' ? '---' : limit_downrate + " Mbps") || '---' + '</td>';
 
             this_html += '<td class="tbl_OnlineTime">' + (uptime ? g.formatTime(parseInt(uptime)) : acconfig_offline) + '</td>';
-            this_html += '<td><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
+            this_html += '<td class="text-center"><a data-toggle="modal" data-target="#modal_one" class="table-link" et="click tap:editConfig"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + edit + '" class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>';
             this_html += '<a data-toggle="modal" data-target="#modal_filter" class="table-link danger"  et="click tap:filtermac"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i title="' + blacklist_add + '" class="fa fa-arrow-circle-up fa-stack-1x fa-inverse"></i></span></a></td>';
             this_html += '<td class="hide filter_mac">' + mac + '</td>';
             this_html += '<td class="hide limit_uprate">' + limit_uprate || '' + '</td>';

@@ -110,7 +110,16 @@
                 <div class="col-lg-12">
                     <div class="main-box clearfix">
                         <div class="main-box-header clearfix">
-                            <h2 class="pull-left hidden" sh_lang="msg_list"></h2>
+                            <!--<h2 class="pull-left hidden" sh_lang="msg_list"></h2>-->
+							<div class="pull-left filter-block">
+								<h5 class="pull-left">VLAN filter: </h5>
+								<div class="pull-left mrg-l-sm">
+                            		<div class="input-group">
+										<select class="form-control select_vlan" et="change:displayvlan">
+										</select>
+									</div>
+								</div>
+                            </div>
                             <div class="pull-right filter-block">
                                 <div class=" pull-left">
                                     <div class="input-group">
@@ -143,32 +152,32 @@
                                             <input id="allchecked" class="hidden_over" name="checked-all" type="checkbox"/>
                                             <label class="label label-info select_laber" for="allchecked" sh_lang="selectall_tab"></label>
                                         </th> -->
-                                        <th class="text-center" style="width:10%">
-                                            <span style="min-width:66px" sh_lang="global_No"></span>
+                                        <th class="text-left">
+                                            <span style="min-width:30px" sh_lang="global_No"></span>
                                         </th>
-                                        <th class="text-center">
-                                            <span style="min-width:120px" sh_lang="dhcp_client_ip"></span>
+                                        <th class="text-left">
+                                            <span style="min-width:100px" sh_lang="dhcp_client_ip"></span>
                                         </th>
-                                        <th class="text-center">
-                                            <span style="min-width:120px" sh_lang="dhcp_client_mac"></span>
+                                        <th class="text-left">
+                                            <span style="min-width:100px" sh_lang="dhcp_client_mac"></span>
                                         </th>
-                                        <th class="text-center">
+                                        <th class="text-left">
                                             <span style="min-width:100px" sh_lang="dhcp_client_name"></span>
                                         </th>
-                                        <th class="text-center">
-                                            <span style="min-width:100px">Description</span>
+                                        <th class="text-left">
+                                            <span style="min-width:100px; margin-left:20px;">Description</span>
                                         </th>
-                                        <th class="text-center">
+                                        <th class="text-left">
                                             <span style="min-width:100px" sh_lang="vlan_name"></span>
                                         </th>
-                                        <th class="text-center">
+                                        <th class="text-left">
                                             <span style="min-width:100px" sh_lang="dhcp_client_lease_time"></span>
                                         </th>
-                                        <th class="text-center">
-                                            <span style="min-width:100px">Type</span>
+                                        <th class="text-left">
+                                            <span style="min-width:50px">Type</span>
                                         </th>
                                         <th class="text-center">
-                                            <span style="min-width:100px">Status</span>
+                                            <span style="min-width:50px">Status</span>
                                         </th>
                                     </tr>
                                     </thead>

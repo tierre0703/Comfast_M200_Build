@@ -96,10 +96,10 @@ define(function (require, b) {
             this_html += '<tr class="text-center">';
             this_html += '<td class="real_num hidden" >' + m.real_num + '</td>';
             this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
-            this_html += '<td>' + (n + 1) + '</td>';
-            this_html += '<td class="src_ip">' + m.ip + '</td>';
-            this_html += '<td class="src_mac" >' + m.mac.toUpperCase() + '</td>';
-            this_html += '<td class="src_name" >' + m.commentname + '</td>';
+            this_html += '<td class="text-left">' + (n + 1) + '</td>';
+            this_html += '<td class="src_ip text-left">' + m.ip + '</td>';
+            this_html += '<td class="src_mac text-left" >' + m.mac.toUpperCase() + '</td>';
+            this_html += '<td class="src_name text-left" >' + m.commentname + '</td>';
 
             var additional_info = {};
             d.each(dhcp_clients, function(client_index, client_info){
@@ -120,7 +120,7 @@ define(function (require, b) {
                 }
 
             });
-            this_html += '<td class="tbl_Description"><span class="hide">' + (arp_data.remark || "") + '</span><input type="text" value="' + (arp_data.remark || "") + '" style="min-width:170px;border:1px solid #ffffff;" id="description_' + n + '" class="input_description border_light_grey text-center" et="blur:changeDescription" /></td>';
+            this_html += '<td class="tbl_Description text-left"><span class="hide">' + (arp_data.remark || "") + '</span><input type="text" value="' + (arp_data.remark || "") + '" style="min-width:170px;border:1px solid #ffffff;" id="description_' + n + '" class="input_description border_light_grey" et="blur:changeDescription" /></td>';
 
 
 
@@ -153,11 +153,9 @@ define(function (require, b) {
             });
 
 
-            this_html += "<td class='hidden src_arp_real_num'>" + (arp_data.real_num || "") + "</td>"
-            this_html += "<td class='hidden src_iface'>" + vlan_iface + "</td>";
 
-            this_html += '<td class="src_vlan_name">' + vlan_name.toUpperCase() +'</td>';
-            this_html += '<td class="src_timestring" >' + m.rest_time_string + '</td>';
+            this_html += '<td class="src_vlan_name text-left">' + vlan_name.toUpperCase() +'</td>';
+            this_html += '<td class="src_timestring" text-left >' + m.rest_time_string + '</td>';
             var status = additional_info.status || 'online';
             if(status == 'online')
             {
@@ -173,6 +171,9 @@ define(function (require, b) {
 
             this_html += '<td><a class="table-link"><span class="fa-stack" et="click tap:bindthis"><i class="fa fa-square fa-stack-2x"></i><i title="' + dhcp_list_add_static + '" class="fa fa-link fa-stack-1x fa-inverse"></i></span></a>' +
                 '</td>';
+            this_html += "<td class='hidden src_arp_real_num'>" + (arp_data.real_num || "") + "</td>"
+            this_html += "<td class='hidden src_iface'>" + vlan_iface + "</td>";
+
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);
@@ -212,8 +213,8 @@ define(function (require, b) {
                     null,
                     null,                
                     null,
-                    null,
-                    null,
+                    {"orderable": false},
+                    {"orderable": false},
                     {"orderable": false}
                 ],
                 "drawCallback": function () {

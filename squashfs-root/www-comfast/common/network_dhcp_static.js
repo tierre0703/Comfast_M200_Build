@@ -171,21 +171,21 @@ define(function (require, b) {
                 this_html += '<td><input class="row-checkbox" type="checkbox" /></td>';
             }
 
-            this_html += '<td>' + (n + 1) + '</td>';
-            this_html += '<td class="src_ip">' + m.ip + '</td>';
-            this_html += '<td class="src_mac" >' + m.mac.toUpperCase() + '</td>';
+            this_html += '<td class="text-left">' + (n + 1) + '</td>';
+            this_html += '<td class="src_ip text-left">' + m.ip + '</td>';
+            this_html += '<td class="src_mac text-left" >' + m.mac.toUpperCase() + '</td>';
 
             if (notcheck) {
-                this_html += '<td class="src_name" >' + m.remark + '</td>';
+                this_html += '<td class="src_name text-left" >' + m.remark + '</td>';
             } else {
-                this_html += '<td class="src_name" >' + m.commentname + '</td>';
+                this_html += '<td class="src_name text-left" >' + m.commentname + '</td>';
             }
 
-            this_html += '<td class="tbl_Description"><span class="hide">' + (arp_data.remark || "") + '</span><input type="text" value="' + (arp_data.remark || "") + '" style="min-width:170px;border:1px solid #ffffff;" id="description_' + n + '" class="input_description border_light_grey text-center" et="blur:changeDescription" /></td>';
+            this_html += '<td class="tbl_Description text-left"><span class="hide">' + (arp_data.remark || "") + '</span><input type="text" value="' + (arp_data.remark || "") + '" style="min-width:170px;border:1px solid #ffffff;" id="description_' + n + '" class="input_description border_light_grey text-left" et="blur:changeDescription" /></td>';
 
 
 
-            this_html += '<td class="src_vlan_name">' + vlan_name.toUpperCase() +'</td>';
+            this_html += '<td class="src_vlan_name text-left">' + vlan_name.toUpperCase() +'</td>';
 
             var status = additional_info.status || 'online';
             if(status == 'online')

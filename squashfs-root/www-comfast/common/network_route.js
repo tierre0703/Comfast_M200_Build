@@ -173,6 +173,8 @@ define(function (require, b) {
     }).on("click", ".row-checkbox", function (event) {
         !d(event.target).is(":checkbox") && d(":checkbox", this).trigger("click");
     });
+    
+ 
 
     function laber_text(status) {
         if (status) {

@@ -235,6 +235,27 @@ define(function (require, b) {
                 d(this).blur();
             }
           });
+          
+        d('#search_input').on("keyup", function(){
+			var search_key = d(this).val();
+			
+			d('#tbody_info tr').each(function(){
+				var innerText = d(this).text();
+				if(search_key == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(innerText.indexOf(search_key) > -1) {
+					d(this).show();
+				}
+				else
+				{
+					d(this).hide();
+				}
+			});
+		
+		});
 
         if (status_array.length > 0) {
             this_table = d('#table').DataTable({

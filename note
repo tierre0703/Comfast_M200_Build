@@ -5,3 +5,14 @@ Changes:
 3. IpLimit, LocalNetMonitor Page disabling of speed limit when bandwidth enabled
 4. Bug Fix for ip routes' nexthop issue in Static WANs
 5. Bug Fix for WAN conf saving error in Static WAN
+
+#######################################################
+version: M200-v3.0.9
+7. search box in all client info
+6. insert condition to traffic rule
+5. curl output error report fixed
+4. logs_log clear func inserted
+3. table align modified
+2. client_all_status->vlan filter added
+1. 502 error fixed
+

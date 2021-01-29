@@ -15,6 +15,8 @@ define(function (require, b) {
     var iface_to_name = {}, action, more_iface, static_route;
     var this_table, lock_web = false, tip_num = 0, default_num = 0;
     var wan_ext_info;
+    
+    var lan_list, wan_list, ip_exception_list = [];
 
     function init() {
         d('.select_line').val(default_num);
@@ -38,6 +40,20 @@ define(function (require, b) {
             }
         });
         */
+        f.getMConfig('lan_dhcp_config', function (data) {
+            if (data && data.errCode == 0) {
+                lan_list = data.lanlist || [];
+                vlan_list = data.vlanlist || [];
+                d.each(lan_list, function(n,m) {
+					var ipaddr = m.ipaddr;
+					if(ipaddr == "") return;
+					var ip_num = h.ip2int(ipaddr);
+					if(ip_num == 0) return;
+					ip_exception_list.push(ip_num);
+				});
+            }
+        }, false);
+
          f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
 			wan_ext_info = data || [];
 		},false);
@@ -45,7 +61,16 @@ define(function (require, b) {
         f.getMConfig('multi_pppoe', function (data) {
             if (data.errCode == 0) {
                 more_iface = data.wanlist || [];
+                wan_list = data.wanlist || [];
                 ifaceoption(more_iface);
+                
+                d.each(wan_list, function(n,m){
+					var ipaddr = m[0].wan_ipaddr || "";
+					if(ipaddr == "") return;
+					var ip_num = h.ip2int(ipaddr);
+					if(ip_num == 0) return;
+					ip_exception_list.push(ip_num);
+				});
 			}
 		}, false);
 		
@@ -218,6 +243,31 @@ define(function (require, b) {
 		arg.del_list = d(evt).parents('tr').find('.real_num').html() +  ",";
 		set_config(arg);
 	}
+	
+	function parseCIDR(CIDR) {
+		var beg = CIDR.substr(CIDR, CIDR.indexOf('/'));
+		var end = beg;
+		var off = (1<<(32 - parseInt(CIDR.substr(CIDR.indexOf('/') + 1)))) - 1;
+		var sub = beg.split('.').map(function(a){return parseInt(a)});
+		
+		var buf = new ArrayBuffer(4);
+		var i32 = new Uint32Array(buf);
+		
+		i32[0] = (sub[0] << 24) + (sub[1]<< 16) + (sub[2] << 8) + (sub[3]) + off;
+		var end = Array.apply([], new Uint8Array(buf)).reverse().join('.');
+		
+		return [beg, end];
+	}
+	
+	function parseCIDR2(cidr) {
+	   var range = [2];
+	   cidr = cidr.split('/');
+	   var cidr_1 = parseInt(cidr[1])
+	   range[0] = long2ip((ip2long(cidr[0])) & ((-1 << (32 - cidr_1))));
+	   start = ip2long(range[0])
+	   range[1] = long2ip( start + Math.pow(2, (32 - cidr_1)) - 1);
+	   return range;
+	}
 
     function set_volide() {
         var arg = {}, error_falg = 0, ip_arr = [], start_ip, end_ip;
@@ -233,6 +283,78 @@ define(function (require, b) {
             arg.real_num = parseInt(d("#real_num").val());
         }
         start_ip = d("#start_ip").val();
+        if(start_ip == "") {
+			h.ErrorTip(tip_num++, "Invalid IP Address");
+            return false;
+		}
+		
+		var ipTokens = start_ip.split(",");
+		var ip_list = [];
+		d.each(ipTokens, function(n, m){
+			if(m.indexOf("-") > -1) {
+				//ip range
+				var ipRange = m.split("-");
+				var firstIP = ipRange[0] || "";
+				var secondIP = ipRange[1] || "";
+				if(firstIP == "" || secondIP == "") return;
+				if(h.ip2int(firstIP) == 0 || h.ip2int(secondIP) == 0) return;
+				
+				var firstIPNum = h.ip2int(firstIP);
+				var secondIPNum = h.ip2int(secondIP);
+				if(secondIPNum < firstIPNum) 
+				{
+					var tmp_num = firstIPNum;
+					firstIPNum = secondIPNum;
+					secondIPNum = tmp_num;
+				}
+				for(var i = firstIPNum; i <= secondIPNum; i++)
+				{
+					ip_list.push(i);
+				}
+			}
+			else if(m.indexOf("/") > -1) {
+				//subnet
+				var ipRange = parseCIDR2(CIDR);
+				if(ipRange[0] == "" || ipRange[1] == "") return;
+				
+				var firstIPNum = h.ip2int(ipRange[0]);
+				var sencondIPNum = h.ip2int(ipRange[1]);
+				if(sencondIPNum < firstIPNum) 
+				{
+					var tmp_num = firstIPNum;
+					firstIPNum = sencondIPNum;
+					sencondIPNum = tmp_num;
+				}
+				for(var i = firstIPNum; i <= sencondIPNum; i++)
+				{
+					ip_list.push(i);
+				}
+			}
+			else{
+				//single ip
+				if(m == "") return;
+				ip_list.push(h.ip2int(m));
+			}
+		});
+		
+		var bFound = false;
+		
+		d.each(ip_list, function(n, m){
+			d.each(ip_exception_list, function(ip_idx, ip){
+				if(m == ip){
+					bFound = true;
+					return false;
+				}
+			});
+			
+			if(bFound == true) return false;
+		});
+		
+		if(bFound){
+			h.ErrorTip(tip_num++, "Invalid IP Address");
+			return false;
+		}
+		
         //end_ip = d("#end_ip").val();
 
 	/*

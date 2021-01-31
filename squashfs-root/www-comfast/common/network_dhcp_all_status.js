@@ -20,6 +20,9 @@ define(function (require, b) {
     var arp_list;
     
     var selected_vlan = '';
+    var search_key = '';
+    var b_vlan_selected = false;
+    var b_keyword_selected = false;
 
     function init() {
         d('.select_line').val(default_num);
@@ -100,6 +103,7 @@ define(function (require, b) {
             d('.select_vlan').html(txt_html);
             
             d('.select_vlan').select(selected_vlan);
+            d('.select_vlan').val(selected_vlan);
 	
 	}
 
@@ -239,21 +243,12 @@ define(function (require, b) {
         d('#search_input').on("keyup", function(){
 			var search_key = d(this).val();
 			
-			d('#tbody_info tr').each(function(){
-				var innerText = d(this).text();
-				if(search_key == "")
-				{
-					d(this).show();
-					 return;
-				}
-				if(innerText.indexOf(search_key) > -1) {
-					d(this).show();
-				}
-				else
-				{
-					d(this).hide();
-				}
-			});
+			showTableByKeyword();
+			
+			d('.select_vlan').val('');
+			selected_vlan = '';
+			b_keyword_selected = true;
+			b_vlan_selected = false;
 		
 		});
 
@@ -284,6 +279,8 @@ define(function (require, b) {
             else
                 this_table.page.len(status_array.length).draw();
         }
+        
+        showTableByVlan();
     }
 
     d('#table').on("change", ":checkbox", function () {
@@ -319,8 +316,27 @@ define(function (require, b) {
         }
     };
     
-    et.displayvlan = function(evt) {
-		selected_vlan = d(evt).val();
+     function showTableByKeyword() {
+	
+			d('#tbody_info tr').each(function(){
+				var innerText = d(this).text();
+				if(search_key == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(innerText.indexOf(search_key) > -1) {
+					d(this).show();
+				}
+				else
+				{
+					d(this).hide();
+				}
+			});	
+	}
+    
+    function showTableByVlan() {
+	
 		
 		d('#tbody_info tr').each(function(){
 				var iface = d(this).find(".src_iface").text();
@@ -337,6 +353,18 @@ define(function (require, b) {
 					d(this).show();
 				}
 			});
+	
+	}
+    
+    et.displayvlan = function(evt) {
+		selected_vlan = d(evt).val();
+		
+		showTableByVlan();
+		d('#search_input').val('');
+		search_key = '';
+		b_vlan_selected = true;
+		b_keyword_selected = false;
+		/*
 		/*
 		if(selected_vlan == "") {
 			this_table.clear();

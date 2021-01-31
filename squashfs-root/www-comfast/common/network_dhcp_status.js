@@ -157,17 +157,18 @@ define(function (require, b) {
             this_html += '<td class="src_vlan_name text-left">' + vlan_name.toUpperCase() +'</td>';
             this_html += '<td class="src_timestring" text-left >' + m.rest_time_string + '</td>';
             var status = additional_info.status || 'online';
-            if(status == 'online')
+              if(status == 'online')
             {
-                this_html +='<td><span class="dot-blue"></span></td>';
+                this_html +='<td><div class="tooltips dot-blue"><span class="tooltiptext">Online</span><div></td>';
             }
             else if(status == "offline")
             {
-                this_html +='<td><span class="dot-red"></span></td>';
+                this_html +='<td><div class="tooltips dot-red"><span class="tooltiptext">Offline</span><div></td>';
             }
             else{
-                this_html += '<td><span class="dot-green"></span></td>';
+                this_html += '<td><div class="tooltips dot-green"><span class="tooltiptext">Inactive</span><div></td>';
             }
+
 
             this_html += '<td><a class="table-link"><span class="fa-stack" et="click tap:bindthis"><i class="fa fa-square fa-stack-2x"></i><i title="' + dhcp_list_add_static + '" class="fa fa-link fa-stack-1x fa-inverse"></i></span></a>' +
                 '</td>';

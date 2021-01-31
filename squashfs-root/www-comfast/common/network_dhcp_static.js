@@ -190,14 +190,14 @@ define(function (require, b) {
             var status = additional_info.status || 'online';
             if(status == 'online')
             {
-                this_html +='<td><span class="dot-blue"></span></td>';
+                this_html +='<td><div class="tooltips dot-blue"><span class="tooltiptext">Online</span><div></td>';
             }
             else if(status == "offline")
             {
-                this_html +='<td><span class="dot-red"></span></td>';
+                this_html +='<td><div class="tooltips dot-red"><span class="tooltiptext">Offline</span><div></td>';
             }
             else{
-                this_html += '<td><span class="dot-green"></span></td>';
+                this_html += '<td><div class="tooltips dot-green"><span class="tooltiptext">Inactive</span><div></td>';
             }
 
             if (notcheck) {

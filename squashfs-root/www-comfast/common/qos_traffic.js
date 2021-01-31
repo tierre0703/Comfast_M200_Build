@@ -23,6 +23,12 @@ define(function (require, b) {
 
     var selectedRow = "";
     var bm_conf = false;
+    
+    var selected_vlan = '';
+    var search_key = '';
+    
+    var b_vlan_selected = false;
+    var b_keyword_selected = false;
 
     function init() {
         d('.select_line').val(default_num);
@@ -82,6 +88,8 @@ define(function (require, b) {
                 double_support = data.double_support;
                 dev_vlan_type = data.vlan_itype;
                 vlan_config = data.vlan || [];
+                showVlanList();
+                
             }
          }, false);
 
@@ -104,6 +112,33 @@ define(function (require, b) {
         netstats();
         
     }
+    
+    function showVlanList() {
+		
+		var txt_html = "";
+			var vlan_name = "Default VLAN";
+            var vlan_iface = "";
+            
+            txt_html += '<option value="">ALL</option>';
+
+            d.each(vlan_config, function(vlan_index, vlan_info){
+				vlan_name = vlan_info.desc == "" ? vlan_info.iface : vlan_info.desc;
+				vlan_iface = vlan_info.iface;
+				txt_html += '<option value="' + vlan_iface + '">' + vlan_name + '</option>';
+            });
+
+            d.each(lan_list, function(lan_index, lan_info){
+				vlan_name = lan_info.hostname == "" ? lan_info.ifname.toUpperCase() : lan_info.hostname;
+				vlan_iface = lan_info.ifname.toUpperCase();
+				txt_html += '<option value="' + vlan_iface + '">' + vlan_name + '</option>';
+            });
+            
+            d('.select_vlan').html(txt_html);
+            
+            d('.select_vlan').select(selected_vlan);
+            d('.select_vlan').val(selected_vlan);
+	
+	}
 
     function netstats() {
         f.getSConfig('net_stats_get', function (data) {
@@ -260,9 +295,27 @@ define(function (require, b) {
             this_html += '<td class="hide limit_downrate">' + limit_downrate || '' + '</td>';
             this_html += '<td class="hide limit_download">' + limit_download || '' + '</td>';
             this_html += '<td class="hide limit_upload">' + limit_upload || '' + '</td>';
+			this_html += '<td class="hide src_iface">' + (vlan_iface || '')  + '</td>';
             this_html += '</tr>';
         });
         d('#tbody_info').html(this_html);
+        
+        if(b_vlan_selected)
+			showTableByVlan();
+		
+		if(b_keyword_selected)
+			showTableByKeyword();
+        
+         d('#search_input').on("keyup", function(){
+			search_key = d(this).val();
+			
+			showTableByKeyword();
+			d('.select_vlan').val('');
+			selected_vlan = '';
+			b_keyword_selected = true;
+			b_vlan_selected = false;
+		
+		});
 
         if (flow_net.length > 0) {
             this_table = d('#table').DataTable({
@@ -288,7 +341,9 @@ define(function (require, b) {
                     {"orderable": false},
                     {"orderable": false},
                     {"orderable": false},
+                    {"orderable": false},
                     {"orderable": false}
+
                 ],
                 "fnDrawCallback": function() {
                     sortCol = this.fnSettings().aaSorting[0][0];
@@ -309,6 +364,75 @@ define(function (require, b) {
 
         });
     }
+    function showTableByKeyword() {
+	
+			d('#tbody_info tr').each(function(){
+				var innerText = d(this).text();
+				if(search_key == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(innerText.indexOf(search_key) > -1) {
+					d(this).show();
+				}
+				else
+				{
+					d(this).hide();
+				}
+			});	
+	}
+    
+    function showTableByVlan() {
+	
+		
+		d('#tbody_info tr').each(function(){
+				var iface = d(this).find(".src_iface").text();
+				if(selected_vlan == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(iface != selected_vlan) {
+					d(this).hide();
+				}
+				else
+				{
+					d(this).show();
+				}
+			});
+	
+	}
+    
+    et.displayvlan = function(evt) {
+		selected_vlan = d(evt).val();
+		showTableByVlan();
+		d('#search_input').val('');
+		search_key = '';
+		b_vlan_selected = true;
+		b_keyword_selected = false;
+		/*
+		if(selected_vlan == "") {
+			this_table.clear();
+			if(default_num > 0)
+                this_table.page.len(default_num).draw();
+            else
+                this_table.page.len(status_array.length).draw();
+		}
+		else
+		{
+			//this_table.columns(10).search(selected_vlan, true, false).draw();
+			
+			var filterData = this_table.column(10).data().filter(function(value, index) {
+					return value == selected_vlan ? true : false;
+				})
+			this_table.clear();
+			this_table.rows.add(filterData);
+			this_table.draw();
+		}
+		* */
+	}
+
 
     et.refresh_list = function () {
         gohref();
@@ -595,7 +719,8 @@ define(function (require, b) {
     }
 
     function gohref() {
-        location.href = location.href;
+        //location.href = location.href;
+        refresh_init();
     }
 
     b.init = init;

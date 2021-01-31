@@ -272,6 +272,7 @@ else if($method == "SET")
 	
 	if($action == "set_rule") {
 		set_rules();
+		shell_exec("curl -s \"http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run\"");
 	}
 	else if($action == "delete_rule") {
 		delete_rules();
@@ -366,6 +367,7 @@ else if($method == "SET")
 		
 		set_rules();
 		
+		shell_exec("curl -s \"http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run\"");
         header("Content-Type: application/json");
         echo json_encode(array("errCode"=>0));
 	}

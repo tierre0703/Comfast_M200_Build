@@ -8,9 +8,9 @@
 
 [ -f /etc/routed ] && /etc/routed
 
-curl "http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run"
+#curl -s "http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run"
 
-curl "http://127.0.0.1/cgi-php/access_config.php?method=SET&action=apply_access_control"
+curl -s "http://127.0.0.1/cgi-php/access_config.php?method=SET&action=apply_access_control"
 
-curl "http://127.0.0.1/cgi-php/dirroute_config.php?method=SET&action=set_rule"
+curl -s "http://127.0.0.1/cgi-php/dirroute_config.php?method=SET&action=set_rule"
 

@@ -441,6 +441,9 @@ define(function (require, b) {
 
     et.saveConfig = function () {
 
+        if (lock_web) return;
+        lock_web = true;
+        
         set_qos_config();
         var limit_uprate = d('#limit_uprate').val();
         var limit_downrate = d('#limit_downrate').val();
@@ -453,8 +456,6 @@ define(function (require, b) {
             return;
         }
         var arg_data;
-        if (lock_web) return;
-        lock_web = true;
         if (arg_data = set_volide()) {
             lock_web = false;
             d('.closewin').click();
@@ -553,6 +554,7 @@ define(function (require, b) {
             } else {
                 h.SetOKTip(tip_num++, set_success);
                 refresh_init();
+                setTimeout(reset_lock_web, 3000);
             }
 
         },false);

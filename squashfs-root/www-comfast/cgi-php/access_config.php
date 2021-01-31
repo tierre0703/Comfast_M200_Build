@@ -106,7 +106,7 @@ function write_access_control_device($target_ip, $bAllow)
 
     if($bAllow == 0)
     {
-        $cmd = sprintf("iptables -L | grep DROP | grep %s", strtoupper($mac_addr));
+        $cmd = sprintf("iptables -L -n | grep DROP | grep %s", strtoupper($mac_addr));
         $del_cmd = shell_exec($cmd);
         if($del_cmd == "")
         {
@@ -191,7 +191,7 @@ function write_access_control()
                     if($config->access_config[$key]->devices[$device_index]->mac_addr == "")
                      $config->access_config[$key]->devices[$device_index]->mac_addr == $mac_addr;
 
-                    $cmd = sprintf("iptables -L | grep DROP | grep %s", strtoupper($mac_addr));
+                    $cmd = sprintf("iptables -L -n | grep DROP | grep %s", strtoupper($mac_addr));
                     $del_cmd = shell_exec($cmd);
                     echo $del_cmd;
 

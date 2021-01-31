@@ -166,7 +166,7 @@ function mask2cidr($mask){
  function set_qos_limit($mac, $status)
  {
     $COMMENT = "QtyCtl";
-    $cmd = sprintf("iptables -L |grep %s | grep %s", $COMMENT, strtoupper($mac));
+    $cmd = sprintf("iptables -L -n |grep %s | grep %s", $COMMENT, strtoupper($mac));
     $retStr = shell_exec($cmd);
     $retStr = str_clean($retStr);
 

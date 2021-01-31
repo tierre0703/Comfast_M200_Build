@@ -8,6 +8,13 @@
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
 
+function str_clean($str)
+{
+	$remove_character = array("\n", "\r\n", "\r");
+	$str = str_replace($remove_character , '', trim($str));
+	return $str;
+}
+
 function ipv4Breakout ($ip_address, $ip_nmask) {
     $hosts = array();
     //convert ip addresses to long form
@@ -69,6 +76,7 @@ function delete_ip_rule($subnet)
     foreach($ret_arr as $key => $val)
     {
         $val = str_replace("\n", "", $val);
+        $val = str_clean($val);
         $val = substr($val, strpos($val, "from "));
         if($val == "") continue;
         $cmd = sprintf("ip rule delete %s", $val);
@@ -96,7 +104,7 @@ function delete_ip_route($subnet)
 
 function delete_firewall($subnet, $vlan_name)
 {
-    $cmd = sprintf("iptables -L | grep ACCEPT");
+    $cmd = sprintf("iptables -L -n | grep ACCEPT");
     $subnet_stuff = "";
     $intervlan_stuff = "| grep 'intervlan'";
     if($subnet != false)
@@ -109,7 +117,7 @@ function delete_firewall($subnet, $vlan_name)
         $intervlan = "inter" . $vlan_name;
         $intervlan_stuff = sprintf( " | grep '%s' ", $intervlan);
     }
-    $cmd = sprintf("iptables -L | grep ACCEPT %s %s", $intervlan_stuff, $subnet_stuff);
+    $cmd = sprintf("iptables -L -n | grep ACCEPT %s %s", $intervlan_stuff, $subnet_stuff);
 
     $ret = shell_exec($cmd);
     //"ACCEPT     all  --  %s        %s  /* intervlan */"
@@ -413,12 +421,7 @@ function apply_intervlan()
     }
 }
 
-function str_clean($str)
- {
-    $remove_character = array("\n", "\r\n", "\r");
-    $str = str_replace($remove_character , '', trim($str));
-     return $str;
- }
+
 
 
 function get_vlan_iface()
@@ -737,7 +740,7 @@ else if ($method == "SET")
         shell_exec("uci commit vlan");
         shell_exec("uci commit network");
 
-        echo "apply_intervlan called";
+        //echo "apply_intervlan called";
     }
 }
 

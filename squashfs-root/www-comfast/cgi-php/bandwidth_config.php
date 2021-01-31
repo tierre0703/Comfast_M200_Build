@@ -499,6 +499,7 @@ if($method == "GET")
     else if($action == "bandwidth_speedtest")
     {
         $IPERF_HOST_NAME="bouygues.iperf.fr";
+        $IPERF_HOST_IP = "89.84.1.222";
         $IPERF_PORT_FROM=5200;
         $IPERF_PORT_END=5222;
         $json_text = file_get_contents('php://input', true);
@@ -525,10 +526,11 @@ if($method == "GET")
         $cmd = sprintf("ubus call network.interface.%s status | jsonfilter -e '@[\"ipv4-address\"][0].address'",$wan_name);
         $wan_ip = shell_exec($cmd);
         $wan_ip = str_clean($wan_ip);
-        $cmd = sprintf("ping -q -c 1 -t 1 %s | grep PING | sed -e \"s/).*//\" | sed -e \"s/.*(//\"", $IPERF_HOST_NAME);
-        $iperf_ip = shell_exec($cmd);
-        $iperf_ip = str_clean( $iperf_ip);
+        //$cmd = sprintf("ping -q -c 1 -t 1 %s | grep PING | sed -e \"s/).*//\" | sed -e \"s/.*(//\"", $IPERF_HOST_NAME);
+        //$iperf_ip = shell_exec($cmd);
+        //$iperf_ip = str_clean( $iperf_ip);
 
+$iperf_ip = $IPERF_HOST_IP;
         //set route
 
         
@@ -829,6 +831,7 @@ else if($method == "SET")
     if($action == "speedtest_cron")
     {
         $IPERF_HOST_NAME="bouygues.iperf.fr";
+        $IPERF_HOST_IP = "89.84.1.222";
         $IPERF_PORT_FROM=5200;
         $IPERF_PORT_END=5222;
 
@@ -925,10 +928,11 @@ else if($method == "SET")
         $wan_ip = str_clean($wan_ip);
         echo urlencode($wan_ip) . "<br/>";
 
-        $cmd = sprintf("ping -q -c 1 -t 1 %s | grep PING | sed -e \"s/).*//\" | sed -e \"s/.*(//\" 2>&1", $IPERF_HOST_NAME);
+        //$cmd = sprintf("ping -q -c 1 -t 1 %s | grep PING | sed -e \"s/).*//\" | sed -e \"s/.*(//\" 2>&1", $IPERF_HOST_NAME);
 
-        $iperf_ip = shell_exec($cmd);
-        $iperf_ip = str_clean($iperf_ip);
+        //$iperf_ip = shell_exec($cmd);
+        //$iperf_ip = str_clean($iperf_ip);
+        $iperf_ip = $IPERF_HOST_IP;
         echo urlencode($iperf_ip) . "<br/>";
 
         //delete exist ip

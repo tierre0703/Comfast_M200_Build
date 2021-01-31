@@ -65,11 +65,6 @@
         "childs": ""
       },
       {
-        "name": "index_dns_network_set",
-        "urls": "/network/network_dns.html",
-        "childs": ""
-      },
-      {
         "name": "index_static_route",
         "urls": "/network/network_static.html",
         "childs": ""

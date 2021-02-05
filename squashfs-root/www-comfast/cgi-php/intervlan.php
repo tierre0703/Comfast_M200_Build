@@ -3,7 +3,7 @@
 // /etc/config/vlan
    //add field
    //vlan.vlan1.intervlan=0 | 1
-
+error_reporting(0);
 
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
@@ -437,17 +437,17 @@ function get_vlan_iface()
         {
             $vlan_data = array();
             //get ip
-            $cmd = sprintf("uci get vlan.%s.ipaddr", $value);
+            $cmd = sprintf("uci get vlan.%s.ipaddr 2>/dev/null", $value);
             $ip = shell_exec($cmd);
             $ip = str_clean($ip);
 
             //get netmask
-            $cmd = sprintf("uci get vlan.%s.netmask", $value);
+            $cmd = sprintf("uci get vlan.%s.netmask 2>/dev/null", $value);
             $netmask = shell_exec($cmd);
             $netmask =  str_clean($netmask);
 
             //get intervlan option
-            $cmd = sprintf("uci get vlan.%s.intervlan", $value);
+            $cmd = sprintf("uci get vlan.%s.intervlan 2>/dev/null", $value);
             $intervlan = shell_exec($cmd);
             $intervlan = str_clean($intervlan);
             $intervlan = $intervlan;
@@ -471,17 +471,17 @@ function get_vlan_iface()
         {
             $vlan_data = array();
             //get ip
-            $cmd = sprintf("uci get network.%s.ipaddr", $value);
+            $cmd = sprintf("uci get network.%s.ipaddr 2>/dev/null", $value);
             $ip = shell_exec($cmd);
             $ip = str_clean($ip);
 
             //get netmask
-            $cmd = sprintf("uci get network.%s.netmask", $value);
+            $cmd = sprintf("uci get network.%s.netmask 2>/dev/null", $value);
             $netmask = shell_exec($cmd);
             $netmask =  str_clean($netmask);
 
             //get intervlan option
-            $cmd = sprintf("uci get network.%s.intervlan", $value);
+            $cmd = sprintf("uci get network.%s.intervlan 2>/dev/null", $value);
             $intervlan = shell_exec($cmd);
             $intervlan = str_clean($intervlan);
             $intervlan = $intervlan;

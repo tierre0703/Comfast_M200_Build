@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 $table_id_start = 320;
 
 $table_suffix = "dt_";
@@ -199,7 +199,7 @@ function get_real_nums() {
 	$total_num = 0;
 	$real_nums = array();
 	
-	$str_real_nums = shell_exec("uci get traffic_rule.rule_list.list");
+	$str_real_nums = shell_exec("uci get traffic_rule.rule_list.list 2>/dev/null");
 	$nums = explode(",", $str_real_nums);
 	$index = 0;
 	foreach($nums as $k=>$num){
@@ -219,19 +219,19 @@ function get_conf() {
 		
 		$real_nums = get_real_nums();
 		foreach($real_nums as $k=>$real_num) {
-			$cmd = sprintf("uci get traffic_rule.rule_%d.desc", $real_num);
+			$cmd = sprintf("uci get traffic_rule.rule_%d.desc 2>/dev/null", $real_num);
 			$desc = shell_exec($cmd); $desc = str_clean($desc);
 			
-			$cmd = sprintf("uci get traffic_rule.rule_%d.ipaddr", $real_num);
+			$cmd = sprintf("uci get traffic_rule.rule_%d.ipaddr 2>/dev/null", $real_num);
 			$ipaddr = shell_exec($cmd); $ipaddr = str_clean($ipaddr);
 
-			$cmd = sprintf("uci get traffic_rule.rule_%d.enable", $real_num);
+			$cmd = sprintf("uci get traffic_rule.rule_%d.enable 2>/dev/null", $real_num);
 			$enable = shell_exec($cmd); $enable = str_clean($enable);
 
-			$cmd = sprintf("uci get traffic_rule.rule_%d.iface", $real_num);
+			$cmd = sprintf("uci get traffic_rule.rule_%d.iface 2>/dev/null", $real_num);
 			$iface = shell_exec($cmd); $iface = str_clean($iface);
 
-			$cmd = sprintf("uci get traffic_rule.rule_%d.enable", $real_num);
+			$cmd = sprintf("uci get traffic_rule.rule_%d.enable 2>/dev/null", $real_num);
 			$enable = shell_exec($cmd); $enable = str_clean($enable);
 			
 			$retdata[]= array(
@@ -333,11 +333,11 @@ else if($method == "SET")
 			
 			foreach($del_nums as $k=>$num) {
 				if($num == "") continue;
-				$cmd = sprintf("uci delete traffic_rule.rule_%s.desc", $num); shell_exec($cmd);
-				$cmd = sprintf("uci delete traffic_rule.rule_%s.ipaddr", $num); shell_exec($cmd);
-				$cmd = sprintf("uci delete traffic_rule.rule_%s.enable", $num); shell_exec($cmd);
-				$cmd = sprintf("uci delete traffic_rule.rule_%s.iface", $num); shell_exec($cmd);
-				$cmd = sprintf("uci delete traffic_rule.rule_%s", $num); shell_exec($cmd);
+				$cmd = sprintf("uci delete traffic_rule.rule_%s.desc 2>/dev/null", $num); shell_exec($cmd);
+				$cmd = sprintf("uci delete traffic_rule.rule_%s.ipaddr 2>/dev/null", $num); shell_exec($cmd);
+				$cmd = sprintf("uci delete traffic_rule.rule_%s.enable 2>/dev/null", $num); shell_exec($cmd);
+				$cmd = sprintf("uci delete traffic_rule.rule_%s.iface 2>/dev/null", $num); shell_exec($cmd);
+				$cmd = sprintf("uci delete traffic_rule.rule_%s 2>/dev/null", $num); shell_exec($cmd);
 			}
 			
 			//set num

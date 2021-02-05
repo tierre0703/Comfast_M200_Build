@@ -1,5 +1,6 @@
 <?php
 
+error_reporting(0);
 
 function str_clean($str)
  {
@@ -12,7 +13,7 @@ function str_clean($str)
 function rearrange_qos(){
 	$QOS_CONFIG = "/etc/config/common";
 	
-	$list_str = shell_exec("uci get common.limitlist.list");
+	$list_str = shell_exec("uci get common.limitlist.list 2>/dev/null");
 	$list = explode(",", $list_str);
 	
 	$total_num = 0;
@@ -44,25 +45,25 @@ function rearrange_qos(){
 		//option downrate '10000'
 		//option uprate '10000'
 		
-		$cmd = sprintf("uci get common.limit_%d.enable", $num); 
+		$cmd = sprintf("uci get common.limit_%d.enable 2>/dev/null", $num); 
 		$enable = shell_exec($cmd); $enable = str_clean($enable);
 
-		$cmd = sprintf("uci get common.limit_%d.ip", $num); 
+		$cmd = sprintf("uci get common.limit_%d.ip 2>/dev/null", $num); 
 		$ip = shell_exec($cmd); $ip = str_clean($ip);
 		
 		$single_ip = true;
 		if(strpos($ip, "-") >= -1) $single_ip = false;
 
-		$cmd = sprintf("uci get common.limit_%d.share", $num); 
+		$cmd = sprintf("uci get common.limit_%d.share 2>/dev/null", $num); 
 		$share = shell_exec($cmd); $share = str_clean($share);
 
-		$cmd = sprintf("uci get common.limit_%d.downrate", $num); 
+		$cmd = sprintf("uci get common.limit_%d.downrate 2>/dev/null", $num); 
 		$downrate = shell_exec($cmd); $downrate = str_clean($downrate);
 
-		$cmd = sprintf("uci get common.limit_%d.uprate", $num); 
+		$cmd = sprintf("uci get common.limit_%d.uprate 2>/dev/null", $num); 
 		$uprate = shell_exec($cmd); $uprate = str_clean($uprate);
 		
-		$cmd = sprintf("uci get common.limit_%d.comment", $num);
+		$cmd = sprintf("uci get common.limit_%d.comment 2>/dev/null", $num);
 		$comment = shell_exec($cmd); $comment = str_clean($comment);
 		
 		$qos_conf[] = array('real_num'=>$num, 'enable'=>$enable, 'ip'=>$ip, 'share'=>$share, 'downrate'=>$downrate, 'uprate'=>$uprate, 'comment'=>$comment, 'single_ip'=>$single_ip);
@@ -123,7 +124,7 @@ else if($action == "set") {
 	if($operate == 'add') {
 		$real_num = 0;
 		
-		$list_str = shell_exec("uci get common.limitlist.list");
+		$list_str = shell_exec("uci get common.limitlist.list 2>/dev/null");
 		$list = explode(",", $list_str);
 	
 		$total_num = 0;
@@ -210,20 +211,20 @@ else if($action == "set") {
 		
 		foreach($nums as $k=>$num) {
 			if($num == "") continue;
-			$cmd = sprintf("uci delete common.limit_%s.comment", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s.uprate", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s.downrate", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s.uprate", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s.share", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s.enable", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s.ip", $num); shell_exec($cmd);
-			$cmd = sprintf("uci delete common.limit_%s", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.comment 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.uprate 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.downrate 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.uprate 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.share 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.enable 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s.ip 2>/dev/null", $num); shell_exec($cmd);
+			$cmd = sprintf("uci delete common.limit_%s 2>/dev/null", $num); shell_exec($cmd);
 		}
 		
 		$total_num = 0;
 		$real_nums = array();
 		$index = 0;
-		$list_str = shell_exec("uci get common.limitlist.list");
+		$list_str = shell_exec("uci get common.limitlist.list 2>/dev/null");
 		$list = explode(",", $list_str);
 		
 		foreach($list as $key=>$val) {

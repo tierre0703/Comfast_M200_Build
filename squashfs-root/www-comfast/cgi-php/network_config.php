@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
 
@@ -24,7 +24,7 @@ function get_interfaces() {
 			$wan = str_clean($wan);
 			if($wan == "") continue;
 			
-			$cmd = sprintf("uci get network.%s.wanhostname", $wan);
+			$cmd = sprintf("uci get network.%s.wanhostname 2>/dev/null", $wan);
 			$hostname = shell_exec($cmd);
 			$hostname = str_clean($hostname);
             $interfaces[] = array(
@@ -48,7 +48,7 @@ if($method == "GET") {
 	{
 		header("Content-Type: application/json");
 		
-		$hostname = shell_exec("uci get system.@system[0].hostname");
+		$hostname = shell_exec("uci get system.@system[0].hostname 2>/dev/null");
 		$hostname = str_clean($hostname);
 		$retdata = array('hostname'=>$hostname);
 		echo json_encode($retdata);

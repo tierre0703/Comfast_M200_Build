@@ -455,11 +455,11 @@ if($method=="GET")
             $macaddr = "";
             $alias = "";
 
-            $cmd = sprintf("uci get dhcp_client.@rule[%s].macaddr", $id);
+            $cmd = sprintf("uci get dhcp_client.@rule[%s].macaddr 2>/dev/null", $id);
             $macaddr = shell_exec($cmd);
             $macaddr = str_clean($macaddr);
 
-            $cmd = sprintf("uci get dhcp_client.@rule[%s].alias", $id);
+            $cmd = sprintf("uci get dhcp_client.@rule[%s].alias 2>/dev/null", $id);
             $alias = shell_exec($cmd);
             $alias = str_clean($alias);
             $outputData[] = array('mac'=>$macaddr, 'remark'=>$alias);

@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 $config_path = "/etc/nginx/nginx.conf";
 
 $str = file_get_contents($config_path);

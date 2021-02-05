@@ -18,6 +18,11 @@ define(function (require, b) {
     var dhcp_clients = [];
     var lan_list, lanlists_info, vlanlists_info;
     var arp_bind_list;
+    
+    var selected_vlan = '';
+    var search_key = '';
+    var b_vlan_selected = false;
+    var b_keyword_selected = false;
 
     function init() {
         d('.select_line').val(default_num);
@@ -51,6 +56,7 @@ define(function (require, b) {
                 double_support = data.double_support;
                 dev_vlan_type = data.vlan_itype;
                 vlan_config = data.vlan || [];
+                showVlanList();
             }
          }, false);
 
@@ -67,6 +73,33 @@ define(function (require, b) {
             }
         });
     }
+    
+    function showVlanList() {
+		
+		var txt_html = "";
+			var vlan_name = "Default VLAN";
+            var vlan_iface = "";
+            
+            txt_html += '<option value="">ALL</option>';
+
+            d.each(vlan_config, function(vlan_index, vlan_info){
+				vlan_name = vlan_info.desc == "" ? vlan_info.iface : vlan_info.desc;
+				vlan_iface = vlan_info.iface;
+				txt_html += '<option value="' + vlan_iface + '">' + vlan_name + '</option>';
+            });
+
+            d.each(lan_list, function(lan_index, lan_info){
+				vlan_name = lan_info.hostname == "" ? lan_info.ifname.toUpperCase() : lan_info.hostname;
+				vlan_iface = lan_info.ifname.toUpperCase();
+				txt_html += '<option value="' + vlan_iface + '">' + vlan_name + '</option>';
+            });
+            
+            d('.select_vlan').html(txt_html);
+            
+            d('.select_vlan').select(selected_vlan);
+            d('.select_vlan').val(selected_vlan);
+	
+	}
 
     function refresh_DList() {
         var static_flag;
@@ -199,6 +232,18 @@ define(function (require, b) {
                 d(this).blur();
             }
           });
+          
+          d('#search_input').on("keyup", function(){
+			search_key = d(this).val();
+			
+			showTableByKeyword();
+			
+			d('.select_vlan').val('');
+			selected_vlan = '';
+			b_keyword_selected = true;
+			b_vlan_selected = false;
+		
+		});
 
         if (status_array.length > 0) {
             this_table = d('#table').DataTable({
@@ -228,6 +273,8 @@ define(function (require, b) {
             else
                 this_table.page.len(status_array.length).draw();
         }
+        
+         showTableByVlan();
     }
 
     d('#table').on("change", ":checkbox", function () {
@@ -262,6 +309,59 @@ define(function (require, b) {
             d(evt).blur();
         }
     };
+    
+    
+     function showTableByKeyword() {
+	
+			d('#tbody_info tr').each(function(){
+				var innerText = d(this).text();
+				if(search_key == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(innerText.indexOf(search_key) > -1) {
+					d(this).show();
+				}
+				else
+				{
+					d(this).hide();
+				}
+			});	
+	}
+    
+    function showTableByVlan() {
+	
+		
+		d('#tbody_info tr').each(function(){
+				var iface = d(this).find(".src_iface").text();
+				if(selected_vlan == "")
+				{
+					d(this).show();
+					 return;
+				}
+				if(iface != selected_vlan) {
+					d(this).hide();
+				}
+				else
+				{
+					d(this).show();
+				}
+			});
+	
+	}
+    
+    et.displayvlan = function(evt) {
+		selected_vlan = d(evt).val();
+		
+		showTableByVlan();
+		d('#search_input').val('');
+		search_key = '';
+		b_vlan_selected = true;
+		b_keyword_selected = false;
+		
+	}
+
 
     et.refresh_list = function () {
         d('#tbody_info').html('');

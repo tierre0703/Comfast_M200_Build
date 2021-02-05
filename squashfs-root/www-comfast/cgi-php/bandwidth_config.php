@@ -1,6 +1,6 @@
 #!/usr/bin/php-cgi
 <?php
-
+error_reporting(0);
 $CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
@@ -213,11 +213,11 @@ function func_set_routing($id, $wan, $ubus_wan, $br_wan, $lansubnet)
         else
         {
         //delete rule
-            $cmd = sprintf("uci delete network.@rule[%s].lookup", $rule_num);
+            $cmd = sprintf("uci delete network.@rule[%s].lookup 2>/dev/null", $rule_num);
             shell_exec($cmd);
-            $cmd = sprintf("uci delete network.@rule[%s].src", $rule_num);
+            $cmd = sprintf("uci delete network.@rule[%s].src 2>/dev/null", $rule_num);
             shell_exec($cmd);
-            $cmd = sprintf("uci delete network.@rule[%s]", $rule_num);
+            $cmd = sprintf("uci delete network.@rule[%s] 2>/dev/null", $rule_num);
             shell_exec($cmd);
         }
     }
@@ -421,15 +421,15 @@ if($method == "GET")
 
             if($lan == "") continue;
 
-            $cmd = sprintf("uci get network.%s.hostname", $lan);
+            $cmd = sprintf("uci get network.%s.hostname 2>/dev/null", $lan);
             $hostname = shell_exec($cmd);
             $hostname = str_clean($hostname);
 
-            $cmd = sprintf("uci get network.%s.ipaddr", $lan);
+            $cmd = sprintf("uci get network.%s.ipaddr 2>/dev/null", $lan);
             $ipaddr = shell_exec($cmd);
             $ipaddr = str_clean($ipaddr);
 
-            $cmd = sprintf("uci get network.%s.netmask", $lan);
+            $cmd = sprintf("uci get network.%s.netmask 2>/dev/null", $lan);
             $netmask = shell_exec($cmd);
             $netmask = str_clean($netmask);
 
@@ -471,20 +471,20 @@ if($method == "GET")
         $speed_array[] = array();
         for($i = 0; $i < 100; $i++) //never exceed 100 wans
         {
-            $cmd = sprintf("uci get speedtest.@rule[%d].wan_name", $i);
+            $cmd = sprintf("uci get speedtest.@rule[%d].wan_name 2>/dev/null", $i);
             $cmd_ret = shell_exec($cmd);
             $wan_name = str_clean($cmd_ret);
             if(strpos($cmd_ret, "Entry not found") != false || $wan_name == "")
             {
                 break;
             }
-            $cmd = sprintf("uci get speedtest.@rule[%d].rx_rate", $i);
+            $cmd = sprintf("uci get speedtest.@rule[%d].rx_rate 2>/dev/null", $i);
             $rx_rate = shell_exec($cmd);
             $rx_rate = str_clean($rx_rate);
-            $cmd = sprintf("uci get speedtest.@rule[%d].tx_rate", $i);
+            $cmd = sprintf("uci get speedtest.@rule[%d].tx_rate 2>/dev/null", $i);
             $tx_rate = shell_exec($cmd);
             $tx_rate = str_clean($tx_rate);
-            $cmd = sprintf("uci get speedtest.@rule[%d].test_time", $i);
+            $cmd = sprintf("uci get speedtest.@rule[%d].test_time 2>/dev/null", $i);
             $test_time = shell_exec($cmd);
             $test_time = str_clean($test_time);
             $speed_array[] = array(
@@ -657,7 +657,7 @@ $iperf_ip = $IPERF_HOST_IP;
                 $conf_index = str_clean($conf_index);
                 if($conf_index != "")
                 {
-                    $cmd = sprintf("uci get speedtest.@rule[%s].rx_rate", $conf_index);
+                    $cmd = sprintf("uci get speedtest.@rule[%s].rx_rate 2>/dev/null", $conf_index);
                     $rx_rate = shell_exec($cmd);
                     $rx_rate = str_clean($rx_rate);
                     if($rx_rate == "")
@@ -665,7 +665,7 @@ $iperf_ip = $IPERF_HOST_IP;
                     else
                         $rx_rate = $rx_rate;
 
-                    $cmd = sprintf("uci get speedtest.@rule[%s].tx_rate", $conf_index);
+                    $cmd = sprintf("uci get speedtest.@rule[%s].tx_rate 2>/dev/null", $conf_index);
                     $tx_rate = shell_exec($cmd);
                     $tx_rate = str_clean($tx_rate);
                     if($tx_rate == "")
@@ -731,12 +731,12 @@ $iperf_ip = $IPERF_HOST_IP;
                 $wan_data['up'] = (!empty($wan_status->up)) ? $wan_status->up : false;
 
                 //get pingcheck
-                $cmd = sprintf("uci get pingcheck.%s.status", $value);
+                $cmd = sprintf("uci get pingcheck.%s.status 2>/dev/null", $value);
                 $status = shell_exec($cmd);
                 $status = str_clean($status);
                 $wan_data['status'] = $status;
 
-                $cmd = sprintf("uci get network.%s.ifname", $value);
+                $cmd = sprintf("uci get network.%s.ifname 2>/dev/null", $value);
                 $ifname = shell_exec($cmd);
                 $wan_data['ifname'] = str_clean($ifname);
 
@@ -762,7 +762,7 @@ $iperf_ip = $IPERF_HOST_IP;
                 $str_wan_status = shell_exec($cmd);
                 $wan_status = json_decode($str_wan_status);
                 $wan_data['up'] = (!empty($wan_status->up)) ? $wan_status->up : false;
-                $cmd = sprintf("uci get network.%s.ifname", $value);
+                $cmd = sprintf("uci get network.%s.ifname 2>/dev/null", $value);
                 $ifname = shell_exec($cmd);
                 $wan_data['ifname'] = str_clean($ifname);
                 
@@ -880,7 +880,7 @@ else if($method == "SET")
 
         if($target_wan == "")
         {
-            $cur_wan = shell_exec("uci get speedtest.status.cur_wan");
+            $cur_wan = shell_exec("uci get speedtest.status.cur_wan 2>/dev/null");
             $cur_wan = str_clean($cur_wan);
             $cur_wan = $cur_wan == "wan0" ? "wan" : $cur_wan;
     
@@ -1095,7 +1095,7 @@ else if($method == "SET")
                                 {
                                     //edit
 
-                                    $cmd = sprintf("uci get common.limit_%s.comment", $limit_id);
+                                    $cmd = sprintf("uci get common.limit_%s.comment 2>/dev/null", $limit_id);
 
                                     $comment = shell_exec($cmd);
                                     $comment = str_clean($comment);
@@ -1190,7 +1190,7 @@ else if($method == "SET")
                             {
                                 //edit
 
-                                $cmd = sprintf("uci get common.limit_%s.comment", $limit_id);
+                                $cmd = sprintf("uci get common.limit_%s.comment 2>/dev/null", $limit_id);
                                 $comment = shell_exec($cmd);
                                 $comment = str_clean($comment);
 

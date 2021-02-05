@@ -241,7 +241,7 @@ define(function (require, b) {
           });
           
         d('#search_input').on("keyup", function(){
-			var search_key = d(this).val();
+			search_key = d(this).val();
 			
 			showTableByKeyword();
 			

@@ -1,6 +1,6 @@
 #!/usr/bin/php-cgi
 <?php
-
+error_reporting(0);
 $CONFIG_PATH =  "/www-comfast/cgi-php/access_config";
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";

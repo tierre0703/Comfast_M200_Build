@@ -111,7 +111,23 @@
             <div class="col-lg-12">
                 <div class="main-box clearfix">
                     <div class="main-box-header clearfix">
-                        <h2 class="pull-left hide" sh_lang="msg_list"></h2>
+                        <!--<h2 class="pull-left hidden" sh_lang="msg_list"></h2> -->
+						<div class="input-group search-form pull-left">
+							<input type="text" class="form-control" id="search_input" placeholder="ip,mac,desc keyword">
+							<span class="seach-icon" style="z-index: 3; position: absolute; top: 8px;left: 12px;">
+								<i class="fa fa-search"></i>
+							</span>
+						</div>
+						
+						<div class="pull-left filter-block" style="margin-left: 30px;">
+							<h5 class="pull-left">VLAN filter: </h5>
+							<div class="pull-left mrg-l-sm">
+								<div class="input-group">
+									<select class="form-control select_vlan" et="change:displayvlan">
+									</select>
+								</div>
+							</div>
+						</div>
                         <div class="pull-right filter-block">
                             <div class="pull-left">
                                 <div class="input-group">
@@ -137,7 +153,9 @@
                             </a>
                         </div>
                     </div>
-                    <div class="main-box-body">
+				</div>
+				<div class="main-box clearfix">
+					<div class="main-box-header clearfix">
                         <table class="table table-hover" id="table">
                             <thead>
                             <tr>

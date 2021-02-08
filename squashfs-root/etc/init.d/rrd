@@ -6,6 +6,7 @@ start()
 	if [ -f /etc/crontabs/root ];then
 		cmd=`cat /etc/crontabs/root | grep loadrrd`
 		if [ -n "$cmd" ];then
+			/etc/init.d/cron restart
 			exit 0
 		fi
 	fi

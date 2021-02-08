@@ -103,12 +103,11 @@ $action = !empty($_GET["action"]) ? $_GET["action"] : "";
             //echo $cmd."<br/>";
             shell_exec($cmd);
 
-            shell_exec('/etc/init.d/cron restart');
-
 
          }
     }
- }
+    shell_exec('/etc/init.d/cron restart');
+}
 
  function delete_ip_rule($subnet)
  {

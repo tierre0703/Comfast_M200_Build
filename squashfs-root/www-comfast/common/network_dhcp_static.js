@@ -223,6 +223,7 @@ define(function (require, b) {
 
 
             this_html += '<td class="src_vlan_name text-left">' + vlan_name.toUpperCase() +'</td>';
+            this_html += '<td class="src_vlan_iface text-left">' + vlan_iface.toUpperCase() +'</td>';
 
             var status = additional_info.status || 'online';
             if(status == 'online')
@@ -298,6 +299,7 @@ define(function (require, b) {
                     null,
                     {"orderable": true},
                     {"orderable": true},
+                    {"orderable": true},
                     {"orderable": false},
                     {"orderable": false},
                     {"orderable": false}
@@ -353,7 +355,7 @@ define(function (require, b) {
 					d(this).show();
 					 return;
 				}
-				if(innerText.indexOf(search_key) > -1) {
+				if(innerText.toLowerCase().indexOf(search_key.toLowerCase()) > -1) {
 					d(this).show();
 				}
 				else

@@ -14,6 +14,8 @@ define(function (require, b) {
     var lock_web = false, tip_num = 0;
     
     var wan_extra_info;
+    
+    var query_ifname = "";
 
     function init() {
         e.plugInit(et, start_model);
@@ -29,6 +31,13 @@ define(function (require, b) {
         wan_num = 0;
         action_flag = 'edit';
         
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        if(urlParams.has('ifname')) {
+			query_ifname = urlParams.get('ifname');
+		}
+        
+        
         f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
 			wan_extra_info = data || [];
 		},false);
@@ -36,6 +45,15 @@ define(function (require, b) {
         f.getMConfig('multi_pppoe', function (data) {
             if (data.errCode == 0) {
                 wanlists_info = data.wanlist || [];
+                if(query_ifname != "") {
+						d.each(wanlists_info, function(n, m){
+							if(m[0].iface == query_ifname){
+								list_num = n;
+								return false;
+							}
+						});
+						query_ifname = "";							
+				}
                 network_init();
             }
         });

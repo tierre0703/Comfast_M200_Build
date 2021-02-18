@@ -4,6 +4,7 @@ define(function (require, exports) {
         e = require("mbox"),
         f = require("util"),
         g = require("function"),
+		h = require('tips'),
         et = {}, device;
 
     require('bootstrap')(d);
@@ -23,6 +24,14 @@ define(function (require, exports) {
     var time_lapse = 0;
     var wan_connect_status = [];
     var bm_conf;
+    var tip_num = 0;
+    
+    var handleInterval = 0;
+    var refresh_upgrade_interval = 0;
+    var refresh_iface_interval = 0;
+    var refresh_cpuflow_memusage_interval = 0;
+    var refresh_wan_speed_interval = 0;
+    var refresh_uptime_interval = 0;
 
     exports.init = function () {
         e.plugInit(et, start_model);
@@ -124,7 +133,10 @@ define(function (require, exports) {
                 } else {
                     d("#upgrade_flag").hide();
                 }
-                setTimeout(refresh_upgrade, 60000);
+                if(refresh_upgrade_interval != 0) {
+					clearTimeout(refresh_upgrade_interval);
+				}
+                refresh_upgrade_interval = setTimeout(refresh_upgrade, 60000);
             }
         })
     }
@@ -202,7 +214,10 @@ define(function (require, exports) {
                 wan_list = data.wanlist;
                 portarr = data.wanlist.concat(data.lanlist);
                 iface_show();
-                setTimeout(refresh_iface, 30000);
+                if(refresh_iface_interval != 0) {
+					clearTimeout(refresh_iface_interval);
+				}
+                refresh_iface_interval = setTimeout(refresh_iface, 30000);
             }
         });
     }
@@ -286,8 +301,15 @@ define(function (require, exports) {
                 }
 
             });
+            if(wan_connection.up == false)
+            {
+				this_html += '<tr class="text-center" style="background: #FFEEEE;" data-value="'+ wan_connection.wan_ifname +'">';
+			}
+			else
+			{
+				this_html += '<tr class="text-center" data-value="' + wan_connection.wan_ifname + '">';
+			}
 
-            this_html += '<tr class="text-center">';
             if (device.mwan == '1') {
                 this_html += '<td class="text-left"><span>' + mwan_interface + n + '</span></td>';
             }
@@ -301,13 +323,14 @@ define(function (require, exports) {
                 } else {
                     this_html += '<td class="text-left"><span><i class="fa fa-minus"></i></span></td>';
                 }
-                if (m.up == 0) {
-                    this_html += '<td class="text-left"><span><i class="fa fa-times red"></i></span></td>'
+                //if (m.up == 0) {
+                if(wan_connection.up == false){
+					 this_html += '<td class="text-center"><span><i class="fa fa-times red"></i></span></td>'
                 } else {
                     if(wan_connection.status == 'online'  || wan_connection.wan_ifname.indexOf('lan') > -1)
-                        this_html += '<td class="text-left"><span><i class="fa fa-check green"></i></span></td>'
+                        this_html += '<td class="text-center"><span><i class="fa fa-check green"></i></span></td>'
                     else 
-                        this_html += '<td class="text-left"><span><i class="fa fa-check yellow"></i></span></td>'
+                        this_html += '<td class="text-center"><span><i class="fa fa-check yellow"></i></span></td>'
                 }
 
                 //connection
@@ -337,14 +360,77 @@ define(function (require, exports) {
                         this_html += '<td class="text-left"><span class="yellow">Connectivity problems</span></td>'
                     }
                 }
+                
+                var bEnabled = 0;
+                if(wan_connection.up == false) {
+					bEnabled = 0;
+				}
+				else {
+					bEnabled = 1;
+				}
+				if(wan_connection.wan_ifname.indexOf('lan') > -1)
+				{
+					this_html += '<td></td>';
+				}
+				else
+				{
+					this_html += '<td class="text-left select_iface"><select id="sel_' + used_info.iface + '" data-value="' +used_info.iface  + '" et="change:changeEnable"><option value="0" ' +(bEnabled==0?"selected":"")+ '>Disable</option><option value="1" ' + (bEnabled==1?"selected": "") + '>Enable</option></select></td>';
+				}
+				
+                
             } else {
-                this_html += '<td><span><i class="fa fa-minus"></i></span></td>';
-                this_html += '<td><span><i class="fa fa-minus"></i></span></td>';
-                this_html += '<td><span><i class="fa fa-minus"></i></span></td>';
+                this_html += '<td class="text-left"><span><i class="fa fa-minus"></i></span></td>';
+                this_html += '<td class="text-left"><span><i class="fa fa-minus"></i></span></td>';
+                this_html += '<td class="text-left"><span><i class="fa fa-minus"></i></span></td>';
+                this_html += '<td class="text-left"><span><i class="fa fa-minus"></i></span></td>';
             }
             this_html += '</tr>';
         });
         d('#iface_list').html(this_html);
+        
+        d('#iface_list tr td:not(.select_iface)').on("click", function(){
+			var wan_interface = d(this).parent('tr').attr('data-value');
+			if(wan_interface.indexOf("lan") > - 1) {
+				window.location.href = "/network/network_localnet.html?ifname=" + wan_interface;
+			}
+			else if(wan_interface.indexOf("wan") > - 1)
+			{
+				window.location.href = "/network/network_extranet.html?ifname=" + wan_interface;
+			}
+		});
+
+    }
+    
+       et.changeEnable = function(evt) {
+        var event_name = event.type;
+        if(event_name == "change")
+        {
+			run_waitMe('ios');
+			
+			var enable_val = parseInt(evt.val());
+			
+			var interface = evt.attr('data-value');
+			
+			var arg = {iface: interface, enable: enable_val};
+			f.setSHConfig('network_config.php?method=SET&action=enable_iface', arg, function(data){
+				if (data.errCode != 0) {
+					h.ErrorTip(tip_num++, data.errCode);
+				} else {
+					h.SetOKTip(tip_num++, set_success);
+					
+
+				}
+				
+
+			});
+			
+			setTimeout(function(){
+				release_loading(false);
+				refresh_default();
+				}, 8000);
+
+			
+        }
     }
 
     function load_Firmware() {
@@ -417,7 +503,10 @@ define(function (require, exports) {
                 load_CpuFlow();
                 memory_info = data.memory;
                 load_memory();
-                setTimeout(refresh_cpuflow_memusage, 1000);
+                if(refresh_cpuflow_memusage_interval != 0) {
+					clearTimeout(refresh_cpuflow_memusage_interval);
+				}
+                refresh_cpuflow_memusage_interval = setTimeout(refresh_cpuflow_memusage, 1000);
             }
         })
     }
@@ -426,7 +515,11 @@ define(function (require, exports) {
         f.getSHConfig('bandwidth_config.php?method=GET&action=wan_speed', function(data){
             wan_speed_list = data;
             update_wan_speed_list();
-            setTimeout(refresh_wan_speed, 1000);
+            if(refresh_wan_speed_interval != 0)
+            {
+				clearTimeout(refresh_wan_speed_interval);
+			}
+            refresh_wan_speed_interval = setTimeout(refresh_wan_speed, 1000);
         });
     }
 
@@ -435,7 +528,11 @@ define(function (require, exports) {
             if (data.errCode == 0) {
                 var uptime_str = gen_uptime_str(parseInt(data.uptime.time));
                 d("#runtime").text(uptime_str);
-                setTimeout(refresh_uptime, 60000);
+                
+                if(refresh_uptime_interval != 0) {
+					clearTimeout(refresh_uptime_interval);
+				}
+                refresh_uptime_interval = setTimeout(refresh_uptime, 60000);
             }
         })
     }
@@ -732,6 +829,25 @@ define(function (require, exports) {
         }
 
     }
+    
+    
+    //loading finished
+    function release_loading(bshowTip)
+    {
+        $('#page-wrapper').waitMe('hide');
+        if(bshowTip)
+            h.SetOKTip(tip_num++, set_success);
+    }
+
+    //
+    function run_waitMe(effect){
+		$('#page-wrapper').waitMe({
+			effect: effect,
+			text: please_waiting,
+			bg: 'rgba(255,255,255,0.7)',
+			color:'#000'
+		});
+    }
 
     function setevent() {
         Highcharts.setOptions({
@@ -748,7 +864,10 @@ define(function (require, exports) {
                     load: function () {
                         // set up the updating of the chart each second
                         var series1 = this.series[0], series2 = this.series[1];
-                        setInterval(function () {
+                        if(handleInterval != 0) {
+							clearInterval(handleInterval);
+						}
+                        handleInterval = setInterval(function () {
                             var x = (new Date()).getTime(); // current time
                             series1.addPoint([x, (data_tx * 8 / 1000)], false, true);
                             series2.addPoint([x, (data_rx * 8 / 1000)], false, true);

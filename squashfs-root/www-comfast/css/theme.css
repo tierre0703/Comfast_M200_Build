@@ -2580,3 +2580,11 @@ fieldset.groupbox-border span {
 .tooltips:hover .tooltiptext {
 	visibility: visible;
 }
+
+.status_table > thead > tr > th {
+	line-height: 2.0;
+}
+
+.status_table > tbody > tr > td {
+	line-height: 2.0;
+}

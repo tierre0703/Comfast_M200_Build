@@ -12,6 +12,7 @@
     <title></title>
     <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon"/>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/waitMe.css"/>
     <link rel="stylesheet" type="text/css" href="/fonts/allfonts.css"/>
     <link rel="stylesheet" type="text/css" href="/css/ora.css"/>
     <link rel="stylesheet" type="text/css" href="/css/theme.css"/>
@@ -302,7 +303,7 @@
                                 </div>
                                 <div class="main-box-body clearfix">
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-hover">
+                                        <table class="table table-striped table-hover status_table">
                                             <thead>
                                             <tr>
                                                 <th class="text-left">
@@ -317,14 +318,17 @@
                                                 <th class="text-left">
                                                     <span sh_lang="portfw_ipaddress"></span>
                                                 </th>
-                                                <th class="text-left">
-                                                    <span sh_lang="main_status"></span>
+                                                <th class="text-center">
+                                                    <span>Activity</span>
                                                 </th>
                                                 <th class="text-left">
                                                     <span>Link</span>
                                                 </th>
                                                 <th class="text-left">
                                                     <span>Connection</span>
+                                                </th>
+                                                <th class="text-left">
+                                                    <span sh_lang="main_status"></span>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -404,6 +408,7 @@
 <script type="text/javascript" src="/common/lib/highstock.js"></script>
 <script type="text/javascript" src="/common/lib/jquery.easypiechart.js"></script>
 <script type="text/javascript" src="/common/sea.js"></script>
+<script type="text/javascript" src="/common/lib/waitMe.js"></script>
 <script type="text/javascript">
     var moduleName = document.body.getAttribute("module");
     if (moduleName) {

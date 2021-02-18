@@ -266,6 +266,7 @@ define(function (require, b) {
             this_html += '<td class="dev_description tbl_Description">' + (arp_data.remark || "*") + '</td>';
             this_html += '<td class="dev_clientname tbl_ClientName">' + (client.commentname || "*") + '</td>';
             this_html += '<td class="dev_vlan tbl_VLAN text-left">' + (vlan_name.toUpperCase()) + '</td>';
+            this_html += '<td class="dev_vlan tbl_VID text-left">' + (vlan_iface.toUpperCase()) + '</td>';
             
             this_html += '<td class="tbl_UploadRate text-left">' + g.bytesTosizePerSec(txrate, 2) + '</td>';
             this_html += '<td class="tbl_DownloadRate text-left">' + g.bytesTosizePerSec(rxrate, 2) + '</td>';
@@ -327,6 +328,7 @@ define(function (require, b) {
                     {"orderable": true},
                     {"orderable": true},
                     {"orderable": true},
+                    {"orderable": true},
                     {type: 'traffic', targets: 0},
                     {type: 'traffic', targets: 1},
                     {type: 'traffic', targets: 2},
@@ -373,7 +375,7 @@ define(function (require, b) {
 					d(this).show();
 					 return;
 				}
-				if(innerText.indexOf(search_key) > -1) {
+				if(innerText.toLowerCase().indexOf(search_key.toLowerCase()) > -1) {
 					d(this).show();
 				}
 				else

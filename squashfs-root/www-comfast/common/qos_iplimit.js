@@ -138,6 +138,7 @@ define(function (require, b) {
             this_html += '<td>' + (n + 1) + '</td>';
             this_html += '<td class="limit_ip">' + m.ip + '</td>';
             this_html += '<td class="limit_vlan">' + vlan_name + '</td>';
+            this_html += '<td class="limit_vlanid">' + vlan_iface + '</td>';
             this_html += '<td class="limit_uprate" data-value="'  + m.uprate / 1000 +  '" >' + m.uprate / 1000 + 'Mb/s</td>';
             this_html += '<td class="limit_downrate" data-value="'  + m.downrate / 1000 +  '">' + m.downrate / 1000 + 'Mb/s</td>';
             this_html += '<td >' + mode_str + '</td>';
@@ -169,6 +170,7 @@ define(function (require, b) {
                 "columns": [
                     {"orderable": false},
                     {"orderable": false},
+                    null,
                     null,
                     null,
                     null,

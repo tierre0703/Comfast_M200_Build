@@ -14,6 +14,8 @@ define(function (require, b) {
     var lock_web = false, tip_num = 0, lan_list;
 
     var now_link_ip = location.hostname, now_link_iface;
+    
+    var query_ifname = "";
 
     function init() {
         e.plugInit(et, start_model);
@@ -26,6 +28,12 @@ define(function (require, b) {
     }
 
     function refresh_init() {
+		
+		var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        if(urlParams.has('ifname')) {
+			query_ifname = urlParams.get('ifname');
+		}
 
         if (device.mlan == 1) {
             d("#other_lan").removeClass("hidden");
@@ -40,6 +48,16 @@ define(function (require, b) {
             if (data.errCode == 0) {
                 lanlists_info = data.lanlist || [];
                 vlanlists_info = data.vlanlist || [];
+                
+                if(query_ifname != "") {
+					d.each(lanlists_info, function (n, m) {
+						if(m.iface == query_ifname) {
+							lan_num = n;
+							return false;
+						}
+					});
+					query_ifname = "";
+				}
                 network_init();
             }
         });

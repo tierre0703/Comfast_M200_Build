@@ -54,7 +54,6 @@ if($method == "GET") {
 		echo json_encode($retdata);
 		
 	}
-
 }
 else if($method == "SET") {
 	if($action == "system_info") {
@@ -84,9 +83,104 @@ else if($method == "SET") {
 		header("Content-Type: application/json");
 		echo json_encode($retdata);
 		
-	} else if($action="clear_log")
+	} else if($action=="clear_log")
 	{
 		shell_exec("/etc/init.d/log restart > /dev/null &");
+	}
+	else if($action == "enable_iface") {
+		$post_data = json_decode(file_get_contents('php://input', true), true);
+		$iface = $post_data['iface'];
+		$enable = $post_data['enable'];
+		if($iface != "")
+		{
+			//save
+			$cmd = sprintf("uci set network.%s.benabled=%s", $iface, $enable);
+			shell_exec($cmd);
+			shell_exec("uci commit network");
+			
+			//get status
+			
+			$cmd = sprintf("ubus call network.interface.%s status", $iface);
+			$data = shell_exec($cmd);
+			$ubus_data = json_decode($data, true);
+			
+			if(array_key_exists("up", $ubus_data))
+			{
+				$up_status = $ubus_data['up'];
+				
+				echo $up_status;
+				
+				
+				if($up_status == true && $enable == 0)
+				{
+					$cmd = sprintf("ubus call network.interface.%s down", $iface);
+					shell_exec($cmd);
+				}
+				else if($up_status == false && $enable == 1) {
+					$cmd = sprintf("ubus call network.interface.%s up", $iface);
+					
+					shell_exec($cmd);
+				
+				}
+				shell_exec("sleep 5;");
+			}
+			
+			/*
+			$str_enable = "up";
+			if($enable == 0) {
+				$str_enable = "down";
+			}
+			
+			$cmd = sprintf("ubus call network.interface.%s %s > /dev/null &", $iface, $str_enable);
+			shell_exec($cmd);
+			*/
+			
+		}
+		
+		
+			
+			
+			
+		$retdata = array('errCode'=>0);
+		header("Content-Type: application/json");
+		echo json_encode($retdata);
+	}
+	else if($action == "enable_ifaces") {
+		$cmd = sprintf("uci show network | grep =interface | cut -d . -f 2 | cut -d = -f 1");
+		$interfaces = shell_exec($cmd);
+		$ifaces = explode("\n", $interfaces);
+		foreach($ifaces as $k=>$v) {
+			$v = str_clean($v);
+			if(strpos($v, "lan") >= -1 || strpos($v, "wan") >= -1) {
+				$cmd = sprintf("uci get network.%s.benabled", $v);
+				$benabled = shell_exec($cmd);
+				$benabled = str_clean($benabled);
+				if($benabled == "") continue;
+				$benabled = intval($benabled);
+				
+				$cmd = sprintf("ubus call network.interface.%s status", $v);
+				$data = shell_exec($cmd);
+				$ubus_data = json_decode($data, true);
+			
+				if(array_key_exists("up", $ubus_data))
+				{
+					$up_status = $ubus_data['up'];
+					if($up_status == true && $benabled == 0)
+					{
+						$cmd = sprintf("ubus call network.interface.%s down", $v);
+						echo $cmd;
+						shell_exec($cmd);
+					}
+					else if($up_status == false && $benabled == 1) {
+						$cmd = sprintf("ubus call network.interface.%s up", $v);
+						echo $cmd;
+						shell_exec($cmd);
+					}
+				}
+			}
+		}
+		
+		echo "enabling interfaces done";
 	}
 
 }

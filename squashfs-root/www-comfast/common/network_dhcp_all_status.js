@@ -18,7 +18,7 @@ define(function (require, b) {
     var dhcp_clients = [];
     var arp_bind_list;
     var arp_list;
-    
+    var wanlist;
     var selected_vlan = '';
     var search_key = '';
     var b_vlan_selected = false;
@@ -47,6 +47,12 @@ define(function (require, b) {
         f.getSHConfig('client_config.php?method=GET&action=client_info2', function(data){
             arpbind_info = data || [];
         },false);
+        
+        f.getMConfig('multi_pppoe', function (data) {
+            if (data.errCode == 0) {
+                wanlist = data.wanlist || [];
+			}
+		}, false);
 
 
         f.getMConfig('arp_list', function (data) {
@@ -170,7 +176,7 @@ define(function (require, b) {
 
             var client_ip = m.ip;
             var dec_ip = IpSubnetCalculator.toDecimal(client_ip);
-            var vlan_name = "Default VLAN";
+            var vlan_name = "";
             var vlan_iface = "";
 
             d.each(vlan_config, function(vlan_index, vlan_info){
@@ -195,10 +201,11 @@ define(function (require, b) {
                     return false;
                 }
             });
-
+           
 
 
             this_html += '<td class="src_vlan_name text-left">' + vlan_name.toUpperCase() +'</td>';
+            this_html += '<td class="src_vlan_name text-left">' + vlan_iface.toUpperCase() +'</td>';
             this_html += '<td class="src_timestring text-left" >' + (m.rest_time_string || "") + '</td>';
             this_html += '<td class="text-left">' + (m.type.toUpperCase() || "") + '</td>';
             var status = additional_info.status || 'online';
@@ -264,6 +271,7 @@ define(function (require, b) {
                     {"orderable": true},//null,
                     {"orderable": true},//null,
                     {"orderable": true},//null,                
+                    {"orderable": true},//null,                
                     {"orderable": true},//null,
                     {"orderable": true},//null,
                     {"orderable": true},//null,
@@ -325,7 +333,7 @@ define(function (require, b) {
 					d(this).show();
 					 return;
 				}
-				if(innerText.indexOf(search_key) > -1) {
+				if(innerText.toLowerCase().indexOf(search_key.toLowerCase()) > -1) {
 					d(this).show();
 				}
 				else

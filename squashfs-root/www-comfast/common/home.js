@@ -311,11 +311,11 @@ define(function (require, exports) {
 			}
 
             if (device.mwan == '1') {
-                this_html += '<td class="text-left"><span>' + mwan_interface + n + '</span></td>';
+                this_html += '<td class="text-left row-click gohref"><span>' + mwan_interface + n + '</span></td>';
             }
 
             if (used_stauts) {
-                this_html += '<td  class="text-left"><span>' + used_info.name.toUpperCase() + '</span></td>';
+                this_html += '<td  class="text-left row-click gohref"><span>' + used_info.name.toUpperCase() + '</span></td>';
                 this_html += '<td  class="text-left"><span>' + description + '</span></td>';
 
                 if (used_info.ipaddr || used_info.wan_ipaddr) {
@@ -387,8 +387,7 @@ define(function (require, exports) {
             this_html += '</tr>';
         });
         d('#iface_list').html(this_html);
-        
-        d('#iface_list tr td:not(.select_iface)').on("click", function(){
+        d('#iface_list tr .gohref').on("click", function(){
 			var wan_interface = d(this).parent('tr').attr('data-value');
 			if(wan_interface.indexOf("lan") > - 1) {
 				window.location.href = "/network/network_localnet.html?ifname=" + wan_interface;
@@ -398,7 +397,7 @@ define(function (require, exports) {
 				window.location.href = "/network/network_extranet.html?ifname=" + wan_interface;
 			}
 		});
-
+	
     }
     
        et.changeEnable = function(evt) {

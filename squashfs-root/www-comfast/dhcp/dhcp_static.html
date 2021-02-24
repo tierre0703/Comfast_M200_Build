@@ -110,17 +110,17 @@
             <!--left content start-->
             <div class="col-lg-12">
                 <div class="main-box clearfix">
-                    <div class="main-box-header clearfix">
+                    <div class="main-box-header clearfix col-lg-12">
                         <!--<h2 class="pull-left hidden" sh_lang="msg_list"></h2> -->
-						<div class="input-group search-form pull-left">
-							<input type="text" class="form-control" id="search_input" placeholder="ip,mac,desc keyword">
-							<span class="seach-icon" style="z-index: 3; position: absolute; top: 8px;left: 12px;">
-								<i class="fa fa-search"></i>
-							</span>
-						</div>
 						
-						<div class="pull-left filter-block" style="margin-left: 30px;">
-							<h5 class="pull-left">VLAN filter: </h5>
+						<div class="pull-left filter-block col-lg-5  col-md-8 col-sm-8">
+							<div class="input-group search-form pull-left">
+								<input type="text" class="form-control" id="search_input" placeholder="ip,mac,desc keyword">
+								<span class="seach-icon" style="z-index: 3; position: absolute; top: 8px;left: 12px;">
+									<i class="fa fa-search"></i>
+								</span>
+							</div>
+							<h5 class="pull-left"  style="margin-left: 30px;">VLAN filter: </h5>
 							<div class="pull-left mrg-l-sm">
 								<div class="input-group">
 									<select class="form-control select_vlan" et="change:displayvlan">
@@ -128,28 +128,33 @@
 								</div>
 							</div>
 						</div>
-                        <div class="pull-right filter-block">
-                            <div class="pull-left">
+						<div  class="pull-left filter-block col-lg-2 col-md-4 col-sm-4" >
+							<div class="pull-right" style="margin-left: 30px;">
                                 <div class="input-group">
                                     <select class="form-control select_line" et="change:displayline">
                                         <option value="10" sh_lang="display_line_10"></option>
                                         <option value="20" sh_lang="display_line_20"></option>
                                         <option value="100" sh_lang="display_line_100"></option>
+                                        <option value="0" >ALL</option>
                                     </select>
                                 </div>
                             </div>
-                            <a class="btn btn-primary pull-left beforebtn" et="click tap:arp_set">
-                                <i id="arpset_icon" class="fa fa-lg"></i>
-                                <span id="arpset"></span>
+
+						</div>
+                        <div class="pull-right filter-block col-lg-5 margin-md-t margin-sm-t">
+                            <a class="btn btn-primary pull-right afterbtn mrg-h-lg" et="click tap:del_select">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                                <span sh_lang="firewall_delete_select"></span>
                             </a>
-                            <a class="btn btn-primary pull-left afterbtn mrg-h-lg" et="click tap:add_list"
+                            <a class="btn btn-primary pull-right afterbtn mrg-h-lg" et="click tap:add_list"
                                data-toggle="modal" data-target="#modal_one">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                                 <span sh_lang="global_add"></span>
                             </a>
-                            <a class="btn btn-primary pull-right afterbtn mrg-h-lg" et="click tap:del_select">
-                                <i class="fa fa-trash-o fa-lg"></i>
-                                <span sh_lang="firewall_delete_select"></span>
+                            
+                            <a class="btn btn-primary pull-right beforebtn" et="click tap:arp_set">
+                                <i id="arpset_icon" class="fa fa-lg"></i>
+                                <span id="arpset"></span>
                             </a>
                         </div>
                     </div>

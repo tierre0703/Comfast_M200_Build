@@ -47,6 +47,9 @@ define(function (require, b) {
 		interface_interval_day= 0;
 
 	var interface_interval_timeout = 0;
+	
+	var wan_ext_info;
+	var lan_ext_info;
 
 
     function init() {
@@ -88,9 +91,14 @@ define(function (require, b) {
 				color_array[9] = data.color4;
             }
         });
+        
+        f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
+			wan_ext_info = data || [];
+		},false);
 
-
-
+		f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
+            lan_ext_info = data || [];
+        },false);
 
         f.getMConfig('mwan_capability_config', function (data) {
             if (data && data.errCode == 0) {
@@ -104,6 +112,29 @@ define(function (require, b) {
         getcpuimg();
 
     }
+    
+    function getInterfaceString(iface) {
+			var interfaceStr = "";
+			
+			d.each(wan_ext_info, function(n, m){
+				if(iface == m.iface){
+					interfaceStr = g.ifacetoname(iface) + " " + "(" + m.hostname +")";
+					interfaceStr = interfaceStr.toUpperCase();
+					return false;
+				}
+			});
+
+			
+			d.each(lan_ext_info, function(n, m){
+				if(iface == m.ifname){
+					interfaceStr = g.ifacetoname(iface) + " " + "(" + m.hostname +")";
+					interfaceStr = interfaceStr.toUpperCase();
+					return false;
+				}
+			});
+			
+			return interfaceStr;
+	}
 
     function showmwanlist() {
         d("#interfacelist").html('');
@@ -146,15 +177,12 @@ define(function (require, b) {
 	function parseInterfaceRRDData(data)
 	{
 		
-
 		var json_data = {};
 		json_data[str_rx_bytes] = [];
 		json_data[str_tx_bytes] = [];
-
 		var arr = data.match(/[^\r\n]+/g);
 		if(arr.length < 2)
 			return json_data;
-
 		var _timestamp = 0;
 		var rx_bytes = 0;
 		var tx_bytes = 0;
@@ -167,25 +195,19 @@ define(function (require, b) {
 			//timestamp
 			//obj[str_timestamp] = parseInt(tokens[0]) * 1000;
 			_timestamp = parseInt(tokens[0]) * 1000;
-
-
 			if(isNaN(parseFloat(tokens[1])))
 				rx_bytes = 0;
 			else
 				rx_bytes = parseFloat(tokens[1]);
-
 			json_data[str_rx_bytes].push({x:_timestamp, y: rx_bytes});
 	
 			if(isNaN(parseFloat(tokens[2])))
 				tx_bytes = 0;
 			else
 				tx_bytes = parseFloat(tokens[2]);
-
 			json_data[str_tx_bytes].push({x:_timestamp, y: tx_bytes});
 		}
-
 		return json_data;
-
 	}
 	*/
 function parseInterfaceRRDData(data)
@@ -1000,11 +1022,13 @@ function parseInterfaceRRDData(data)
                 useUTC: false
             }
         });
+        var chartWidth = d('#content-wrapper').width() * 0.6;
         var mchart = Highcharts.chart('interface_week_pic', {
             chart: {
                 type: 'spline',
                 animation: Highcharts.svg, // don't animate in old IE
                 marginRight: 10,
+                width: chartWidth,
 				events: {
 					load: function () {
 						// set up the updating of the chart each second
@@ -1132,11 +1156,13 @@ function parseInterfaceRRDData(data)
                 useUTC: false
             }
         });
+        var chartWidth = d('#content-wrapper').width() * 0.6;
         var mchart = Highcharts.chart('interface_day_pic', {
             chart: {
                 type: 'spline',
                 animation: Highcharts.svg, // don't animate in old IE
                 marginRight: 10,
+                width: chartWidth,
 				events: {
 					load: function () {
 						// set up the updating of the chart each second
@@ -1265,11 +1291,14 @@ function parseInterfaceRRDData(data)
                 useUTC: false
             }
         });
+        var chartWidth = d('#content-wrapper').width() * 0.6;
+        
         var mchart = Highcharts.chart('interface_hour_pic', {
             chart: {
                 type: 'spline',
                 animation: Highcharts.svg, // don't animate in old IE
                 marginRight: 10,
+                width: chartWidth,
 				events: {
 					load: function () {
 						// set up the updating of the chart each second
@@ -1366,8 +1395,8 @@ function parseInterfaceRRDData(data)
             navigator: {
                 enabled: false
             },
-
-		
+            
+            
             series: [
 				{
                 name: flow_down,
@@ -1401,9 +1430,12 @@ function parseInterfaceRRDData(data)
         function activeLastPointToolip() {
             mchart.redraw();
         }
+
 	}
 
- function getdefault() {
+
+    function getdefault() {
+		/*
         var arg = {};
         if (lanlist) {
             arg.interface = lanlist[0].iface;
@@ -1414,17 +1446,60 @@ function parseInterfaceRRDData(data)
         } else {
             return;
         }
+		*/
+		 var graphinterface = d("#interfacelist").val();
+        var interfacename = d('#interfacelist').find("option:selected").text();
+        var arg = {};
+        arg.interface = graphinterface;
+        arg.display_name = interfacename;
+
+		if(graphinterface == "")
+			return;
+
         f.setMConfig('update_interface_png', arg, function (data) {
             if (data.errCode == 0) {
-                var pic_name = "/rrd/" + lanlist[0].iface + "_hour.png?" + randomnumber;
-                d("#interface_hour_pic").attr("src", pic_name);
-                var pic_name = "/rrd/" + lanlist[0].iface + "_day.png?" + randomnumber;
-                d("#interface_day_pic").attr("src", pic_name);
-                var pic_name = "/rrd/" + lanlist[0].iface + "_week.png?" + randomnumber;
-                d("#interface_week_pic").attr("src", pic_name);
+
+				f.getRRDData("/rrd/" + graphinterface + "_hour.dump", function(data){
+						//console.log(data);
+						interface_hour_data = parseInterfaceRRDData(data);
+						if(!firstRun_Interface_hour)
+						{
+							//drawInterfaceHourChart(graphinterface.toUpperCase());
+							drawInterfaceHourChart( getInterfaceString(graphinterface) );
+							firstRun_Interface_hour = true;
+						}
+					});
+
+
+				f.getRRDData("/rrd/" + graphinterface + "_day.dump", function(data){
+						//console.log(data);
+						interface_day_data = parseInterfaceRRDData(data);
+						if(!firstRun_Interface_day)
+						{
+							//drawInterfaceDayChart(graphinterface.toUpperCase());
+							drawInterfaceDayChart( getInterfaceString(graphinterface) );
+							firstRun_Interface_day = true;
+						}
+					});
+				
+
+				f.getRRDData("/rrd/" + graphinterface + "_week.dump", function(data){
+						//console.log(data);
+						interface_week_data = parseInterfaceRRDData(data);
+						if(!firstRun_Interface_week)
+						{
+							//drawInterfaceWeekChart(graphinterface.toUpperCase());
+							drawInterfaceWeekChart( getInterfaceString(graphinterface) );
+							firstRun_Interface_week = true;
+						}
+					});
+					
             }
 
         });
+
+		interface_interval_timeout = setTimeout(getdefault, 30000);
+
     }
 
     et.displayinterfacepng = function () {
@@ -1434,17 +1509,43 @@ function parseInterfaceRRDData(data)
         a.interface = graphinterface;
         a.display_name = interfacename;
 
+		firstRun_Interface_hour = false;
+		firstRun_Interface_week = false;
+		firstRun_Interface_day = false;
+		if(interface_interval_hour != 0)
+			clearInterval(interface_interval_hour);
+		if(interface_interval_day != 0)
+			clearInterval(interface_interval_day);
+		if(interface_interval_week != 0)
+			clearInterval(interface_interval_week);
+
+		if(interface_interval_timeout != 0)
+			clearTimeout(interface_interval_timeout);
+		getdefault();
+		/*
         f.setMConfig('update_interface_png', a, function (a) {
             if (a.errCode == 0) {
-                var pic_name = "/rrd/" + graphinterface + "_hour.png";
-                d("#interface_hour_pic").attr("src", pic_name);
-                var pic_name = "/rrd/" + graphinterface + "_day.png";
-                d("#interface_day_pic").attr("src", pic_name);
-                var pic_name = "/rrd/" + graphinterface + "_week.png";
-                d("#interface_week_pic").attr("src", pic_name);
+				f.getRRDData("/rrd/" + graphinterface + "_hour.dump", function(data){
+						//console.log(data);
+						interface_hour_data = parseInterfaceRRDData(data);
+						drawInterfaceHourChart(interfacename);
+					});
+					
+				f.getRRDData("/rrd/" + graphinterface + "_day.dump", function(data){
+						//console.log(data);
+						interface_day_data = parseInterfaceRRDData(data);
+						drawInterfaceDayChart(interfacename);
+					});
+				
+				f.getRRDData("/rrd/" + graphinterface + "_week.dump", function(data){
+						//console.log(data);
+						interface_week_data = parseInterfaceRRDData(data);
+						drawInterfaceWeekChart(interfacename);
+					});
             }
-
         });
+		*/
     }
+
     b.init = init;
 });

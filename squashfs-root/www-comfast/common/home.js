@@ -32,6 +32,9 @@ define(function (require, exports) {
     var refresh_cpuflow_memusage_interval = 0;
     var refresh_wan_speed_interval = 0;
     var refresh_uptime_interval = 0;
+    
+    var vlan_config;
+    var dhcp_clients;
 
     exports.init = function () {
         e.plugInit(et, start_model);
@@ -67,10 +70,18 @@ define(function (require, exports) {
         f.getSHConfig('network_config.php?method=GET&action=wan_info', function(data){
 			wan_ext_info = data || [];
 		},false);
+		
+        f.getMConfig('vlan_config', function (data) {
+            if (data && data.errCode == 0) {
+                vlan_config = data.vlan || [];
+                
+            }
+         }, false);
+
         
         f.getSHConfig('bandwidth_config.php?method=GET&action=bm_config', function(data){
-	    bm_conf = data || {};
-	}, false);
+			bm_conf = data || {};
+		}, false);
 
         f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
             lan_list = data || [];
@@ -191,12 +202,39 @@ define(function (require, exports) {
         
         
         f.getSHConfig('client_config.php?method=GET&action=client_info', function(data){
-            var dhcp_clients = data || [];
+            dhcp_clients = data || [];
             var client_count = 0;
             d.each(dhcp_clients, function(dhcp_index, dhcp){
             client_count++;
             });
             d("#online_devices").text(client_count);
+            d('#clients_per_vlan').attr('title', getVLANClientStatus());
+            $.widget("ui.tooltip", $.ui.tooltip, {
+				options: {
+					content: function () {
+						return $(this).prop('title');
+					}
+				}
+			});
+			$('#clients_per_vlan').tooltip({
+				
+				position: {
+				 
+					using: function (position, feedback) {
+						var left = $(this).position();
+						
+						$(this).css(position);
+						/*
+						$("<div>")
+							.addClass("arrow")
+							.addClass(feedback.vertical)
+							.addClass(feedback.horizontal)
+							.appendTo(this);
+							*/
+					}
+				}
+				
+			});
                
         });
 
@@ -813,8 +851,8 @@ define(function (require, exports) {
         d('#wan_speed_panel').html(text_html);
         d.each(wan_speed_list, function(n, m){
             wan_ifname = m.wan_ifname;
-            $('#rx_rate_' + wan_ifname).easyPieChart({barColor: color_green, size:120});
-            $('#tx_rate_' + wan_ifname).easyPieChart({barColor: color_purple, size:120});
+            $('#rx_rate_' + wan_ifname).easyPieChart({barColor: color_green, size:115});
+            $('#tx_rate_' + wan_ifname).easyPieChart({barColor: color_purple, size:115});
         });
         
         if(online_wan_num == 0) {
@@ -823,8 +861,8 @@ define(function (require, exports) {
         }
         else
         {
-        	d('.left-content-panel').css('width', '33.3%');
-        	d('.right-content-panel').css('width', '66.6%');
+        	//d('.left-content-panel').css('width', '33.3%');
+        	//d('.right-content-panel').css('width', '66.6%');
         }
 
     }
@@ -969,5 +1007,62 @@ define(function (require, exports) {
             mchart.redraw();
         }
     };
+    
+    
+    function getVLANClientStatus() {
+		
+		var device_list = {};
+		
+		d.each(lan_list, function(lan_index, lan_info){
+			device_list[lan_info.ifname] = {clients: 0, iface: lan_info.ifname, hostname: lan_info.hostname};
+		});
+		
+		d.each(vlan_config, function(vlan_index, vlan_info){
+			device_list[vlan_info.iface] = {clients: 0, iface: vlan_info.iface, hostname: vlan_info.desc};
+		});
+		
+	
+			this_html = '<table class="table-tooltip table"><thead><tr><th class="text-left" style="min-width:100px">VLAN</th><th class="text-left" style="min-width:100px">Clients</th></tr></thead><tbody id="multivlans">';
+			d.each(dhcp_clients, function(dhcp_index, dhcp){
+				var client_ip = dhcp.ip;
+				var dec_ip = IpSubnetCalculator.toDecimal(client_ip);
+				var vlan_name = "";
+				var vlan_iface = "";
+				
+				
+				d.each(lan_list, function(lan_index, lan_info){
+					if(lan_info.ipaddr == "" || lan_info.netmask == "") return;
+					var calc_data = IpSubnetCalculator.calculateCIDRPrefix(lan_info.ipaddr, lan_info.netmask);
+					if(dec_ip >= calc_data.ipLow && dec_ip <= calc_data.ipHigh)
+					{
+						//this ip is in this vlan_config
+						device_list[lan_info.ifname].clients += 1;
+						return false;
+					}
+				});
+
+
+				d.each(vlan_config, function(vlan_index, vlan_info){
+					var calc_data = IpSubnetCalculator.calculateCIDRPrefix(vlan_info.ipaddr, vlan_info.netmask);
+					if(dec_ip >= calc_data.ipLow && dec_ip <= calc_data.ipHigh)
+					{
+						//this ip is in this vlan_config
+						device_list[vlan_info.iface].clients += 1;
+						return false;
+					}
+				});
+
+            });
+            
+          for(var group_idx in device_list){
+			if(device_list[group_idx].clients != 0) {
+				this_html += '<tr><td class="text-left no-border">' + ((device_list[group_idx].hostname != "") ? (device_list[group_idx].iface.toUpperCase() + " (" + device_list[group_idx].hostname.toUpperCase() +  ")") : device_list[group_idx].iface.toUpperCase() ) + '</td><td class="text-left">' + device_list[group_idx].clients + '</td></tr>';
+			}
+ 		  }  
+
+           this_html += "</tbody></table>";	
+           return this_html;
+	}
+        
 
 });

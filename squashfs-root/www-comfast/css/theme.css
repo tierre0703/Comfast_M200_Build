@@ -1853,11 +1853,12 @@ table thead th span label {
 .dataTables_wrapper {
     padding-left: 4px;
     padding-right: 4px;
-}
+ }
 
 table.dataTable {
     white-space: nowrap;
-    overflow: hidden;
+    overflow: scroll;
+    /*overflow: hidden;*/
 }
 
 table.dataTable thead th {
@@ -2264,6 +2265,8 @@ legend.groupbox-border {
 
 .vlan_heading {
     font-weight: bold;
+    white-space: nowrap;
+    font-size: 0.9em;
 }
 
 .light-border {
@@ -2588,3 +2591,119 @@ fieldset.groupbox-border span {
 .status_table > tbody > tr > td {
 	line-height: 2.0;
 }
+
+.toltip-div {
+    height: 144px;
+    margin: 0 auto;
+    padding: 0;
+    width: 280px;
+    }
+    .toltip-top {
+    background-color: #FAF9DD;
+    border: 1px solid #D8D8D8;
+    float: left;
+    height: 153px;
+    padding: 0;
+    width: 258px;
+    }
+    .toltip-area {
+    color: #7F7F7F;
+    float: left;
+    font-family: 'open_sanssemibold_italic';
+    font-size: 15px;
+    height: 110px;
+    margin: 0 auto;
+    padding: 18px 0 0 32px;
+    width: 227px;
+    }
+    /*.toltip-arrow {
+    background: url("images/toltip-arrow.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    float: left;
+    height: 22px;
+    margin: 65px 0 0 -1px;
+    width: 14px;
+    }*/
+    .toptip-close {
+    float: right;
+    height: 13px;
+    margin: 9px 8px 0 0;
+    width: 13px;
+    }
+
+.ui-tooltip, .arrow:after {
+background:  #ffffff; 
+
+}
+.ui-tooltip {
+padding: 10px 20px;
+font: normal 12px "Helvetica Neue", Sans-Serif;
+box-shadow: 0 0 7px black;
+width: 400px;
+/*
+color: white;
+border-radius: 20px;
+text-transform: uppercase;
+*/
+}
+.arrow {
+width: 70px;
+height: 16px;
+overflow: hidden;
+position: absolute;
+left: 50%;
+margin-left: -35px;
+bottom: -16px;
+}
+.arrow.top {
+top: -16px;
+bottom: auto;
+}
+.arrow.left {
+left: 20%;
+}
+.arrow:after {
+content:"";
+position: absolute;
+left: 20px;
+top: -20px;
+width: 25px;
+height: 25px;
+box-shadow: 6px 5px 9px -9px black;
+-webkit-transform: rotate(45deg);
+-moz-transform: rotate(45deg);
+-ms-transform: rotate(45deg);
+-o-transform: rotate(45deg);
+transform: rotate(45deg);
+
+}
+.arrow.top:after {
+bottom: -20px;
+top: auto;
+}
+
+
+.table-tooltip
+{
+}
+
+.table-tooltip tr{
+    height: 30px;
+    border-bottom: 1px solid #cccc;
+}
+.table-tooltip > thead > tr
+{
+    background-color: #cccc;
+}
+
+.table-tooltip tr th, 
+.table-tooltip tr td
+{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.table-tooltip .no-border 
+{
+    border: none;
+}
+

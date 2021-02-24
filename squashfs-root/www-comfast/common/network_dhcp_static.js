@@ -13,7 +13,7 @@ define(function (require, b) {
     require('tabletool')(d);
 
     var arpstatic_info, arpbindlists_info, dhcp_static, arp_dhcp, arpstatue, action;
-    var this_table, lock_web = false, tip_num = 0, default_num = 10;
+    var this_table, lock_web = false, tip_num = 0, default_num = 0;
     var dhcp_clients, vlan_config, double_support, dev_vlan_type, arpbind_info, lan_list;
     
         
@@ -310,7 +310,10 @@ define(function (require, b) {
                     d(":checkbox", d('#table_wrapper')).prop('checked', false);
                 }
             });
-            this_table.page.len(default_num).draw();
+            if(default_num == 0)
+				this_table.page.len(arp_dhcp.length).draw();
+			else
+				this_table.page.len(default_num).draw();
         }
         
         showTableByVlan();
@@ -340,7 +343,12 @@ define(function (require, b) {
     et.displayline = function (evt) {
         if (arp_dhcp.length > 0) {
             default_num = d(evt).val();
-            this_table.page.len(default_num).draw();
+            //this_table.page.len(default_num).draw();
+            if(default_num == 0)
+				this_table.page.len(arp_dhcp.length).draw();
+			else
+				this_table.page.len(default_num).draw();
+
             d(evt).blur();
         }
     }

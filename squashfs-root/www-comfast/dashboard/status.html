@@ -12,6 +12,7 @@
     <title></title>
     <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon"/>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/jquery-ui.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/waitMe.css"/>
     <link rel="stylesheet" type="text/css" href="/fonts/allfonts.css"/>
     <link rel="stylesheet" type="text/css" href="/css/ora.css"/>
@@ -238,7 +239,7 @@
                                             -->
                                             <div class="infographic-box merged pull-left" style="width:100%; min-height:115px; border:none;">
                                                 <a href="/dashboard/client_all_status.html">
-                                                    <i class="fa fa-user red-bg"></i>
+                                                    <i class="fa fa-user red-bg" id="clients_per_vlan"></i>
                                                     <span class="value red" id="online_devices">0</span>
                                                     <span class="headline" sh_lang="user_sum_num"></span>
                                                 </a>
@@ -405,8 +406,11 @@
 <script type="text/javascript" src="/common/lib/html5.js"></script><![endif]-->
 <!--[if IE]>
 <script type="text/javascript" src="/common/lib/excanvas.js"></script><![endif]-->
+<script type="text/javascript" src="/common/lib/jquery-ui.min.js"></script>
+
 <script type="text/javascript" src="/common/lib/highstock.js"></script>
 <script type="text/javascript" src="/common/lib/jquery.easypiechart.js"></script>
+<script type="text/javascript" src="/common/lib/ip-subnet-calculator.js"></script>
 <script type="text/javascript" src="/common/sea.js"></script>
 <script type="text/javascript" src="/common/lib/waitMe.js"></script>
 <script type="text/javascript">

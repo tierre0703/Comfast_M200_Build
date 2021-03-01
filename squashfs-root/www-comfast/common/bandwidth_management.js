@@ -800,7 +800,8 @@ define(function (require, exports) {
         d('#wan_panel').html('');
         d.each(bm_info.wan_data, function(n, m){
 
-            var wan_descname = m.descname;
+            var wan_descname = (m.descname == "") ? m.ifname : (m.ifname + "(" + m.descname + ")");
+            wan_descname= wan_descname.toUpperCase();
             var wan_ifname = m.ifname;
             //bm_info.wan_data[wan_index].isAutocheck = false;
             //bm_info.wan_data[wan_index].autocheck_interval = 1; // in hours
@@ -903,7 +904,7 @@ define(function (require, exports) {
         d('#wan_panel').html(text_html);
 
         d.each(bm_info.wan_data, function(n, m){
-            var wan_descname = m.descname;
+            var wan_descname = (m.descname == "") ? m.ifname : (m.ifname + "(" + m.descname + ")");
             var wan_ifname = m.ifname;
             var schedule_time = parseInt(m.schedule_time) - timezoneOffset;
             var time_txt = "" + (schedule_time / 60) + ":" + (schedule_time % 60);

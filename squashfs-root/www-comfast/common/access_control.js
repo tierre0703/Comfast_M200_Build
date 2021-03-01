@@ -19,6 +19,7 @@ define(function (require, b) {
     var section_action = "";
     var device_action = "";
     var section_real_num = 0;
+    var lan_list;
     var access_config = {access_config: [
         {
             section_name: "Apple TV's access",
@@ -49,6 +50,10 @@ define(function (require, b) {
 
     function refresh_init() {
         d('#all_section_checked').prop('checked', false).attr('data-value', '0');
+        
+        f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
+            lan_list = data || [];
+        },false);
 
         f.getMConfig('vlan_config', function (data) {
             if (data && data.errCode == 0) {
@@ -125,7 +130,7 @@ define(function (require, b) {
                                     <th class="text-left">
                                         <span sh_lang="device_vlan_ifname">VLan</span>
                                     </th>
-                                    <th class="text-left">
+                                    <th class="text-center">
                                         <span sh_lang="device_status">Control</span>
                                     </th>
                                 </tr>
@@ -149,6 +154,19 @@ define(function (require, b) {
                             vlan_desc = vlan_data.desc == "" ? vlan_data.iface : vlan_data.desc;
                         }
                     });
+                    
+                    d.each(lan_list, function(lan_index, lan_info){
+						if(lan_info.ipaddr == "" || lan_info.netmask == "") return;
+						var calc_data = IpSubnetCalculator.calculateCIDRPrefix(lan_info.ipaddr, lan_info.netmask);
+						if(device_ip_num >= calc_data.ipLow && device_ip_num <= calc_data.ipHigh)
+						{
+							//this ip is in this vlan_config
+							vlan_desc = lan_info.hostname == "" ? lan_info.ifname.toUpperCase() : lan_info.hostname;
+							//vlan_iface = lan_info.ifname.toUpperCase();
+							return false;
+						}
+					});
+
 
 
                     this_html += `<tr class="text-center">

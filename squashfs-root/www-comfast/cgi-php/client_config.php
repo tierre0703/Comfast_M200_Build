@@ -5,8 +5,8 @@ error_reporting(0);
 
 
 $CONFIG_PATH =  "/etc/config/dhcp_client";
-$DHCP_CLIENT = "/www-comfast/cgi-php/dhcp_client";
-$CLIENT_QOS_PATH = "/www-comfast/cgi-php/client_qos";
+$DHCP_CLIENT = "/etc/dhcp_client";
+$CLIENT_QOS_PATH = "/etc/client_qos";
 
 $COMMENT = "QtyCtl";
 
@@ -194,7 +194,7 @@ function mask2cidr($mask){
  }
  
  function func_get_client_list() {
- $DHCP_CLIENT = "/www-comfast/cgi-php/dhcp_client";
+ $DHCP_CLIENT = "/etc/dhcp_client";
  /**
          * 1. poll dhcp
          * 2. poll arp

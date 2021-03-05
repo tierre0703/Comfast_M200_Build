@@ -1036,8 +1036,8 @@ function parseInterfaceRRDData(data)
 							series2 = this.series[1];
 								
 						interface_interval_week = setInterval(function () {
-						var rx_data = averageData(interface_day_data[str_rx_bytes],60);
-						var tx_data = averageData(interface_day_data[str_tx_bytes],60);
+						var rx_data = averageData(interface_week_data[str_rx_bytes],60);
+						var tx_data = averageData(interface_week_data[str_tx_bytes],60);
 						var curtime_rx = 0;
 							if(series1.data.length > 0)
 								curtime_rx = series1.data[series1.data.length - 1].x;

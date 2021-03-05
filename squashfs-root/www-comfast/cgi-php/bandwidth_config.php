@@ -1,7 +1,7 @@
 #!/usr/bin/php-cgi
 <?php
 error_reporting(0);
-$CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
+$CONFIG_PATH =  "/etc/bandwidth_config";
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
 
@@ -86,6 +86,7 @@ $action = !empty($_GET["action"]) ? $_GET["action"] : "";
             $cron_str = "";
             foreach($arr as $k=>$line)
             {
+				$line = str_clean($line);
                 if($line == "") continue;
                 if($line[0] == "#") continue;
                 $cron_str = $cron_str . $line . "\n";
@@ -129,7 +130,7 @@ $action = !empty($_GET["action"]) ? $_GET["action"] : "";
  
 function func_set_config($data)
 {
-    $CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
+    $CONFIG_PATH =  "/etc/bandwidth_config";
     file_put_contents($CONFIG_PATH, $data);
     $json_data = json_decode($data);
 
@@ -180,7 +181,7 @@ function func_set_config($data)
 function func_get_config()
 {
 
-    $CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
+    $CONFIG_PATH =  "/etc/bandwidth_config";
     if(!file_exists($CONFIG_PATH) || filesize($CONFIG_PATH) == 0)
     {
         file_put_contents($CONFIG_PATH, '{"bm_enabled": 1, "bm_data": []}');
@@ -1227,7 +1228,7 @@ else if($method == "SET")
     }
     else if($action == "bm_set_data")
     {
-        $CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
+        $CONFIG_PATH =  "/etc/bandwidth_config";
 
         $post_data = json_decode(file_get_contents('php://input', true));
         if($post_data->operate == "del_vlan")
@@ -1304,7 +1305,7 @@ else if($method == "SET")
         shell_exec("uci commit");
         */
         //func_set_config(json_encode($post_data));
-        $CONFIG_PATH =  "/www-comfast/cgi-php/bandwidth_config";
+        $CONFIG_PATH =  "/etc/bandwidth_config";
         file_put_contents($CONFIG_PATH, json_encode($post_data));
         shell_exec("(sleep 5; /etc/init.d/firewall restartall) > /dev/null &");
         set_cron($post_data);

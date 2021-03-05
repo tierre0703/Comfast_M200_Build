@@ -31,6 +31,11 @@ fi
 	time=604800
 	PIC=/tmp/rrd/$1_week.dump
 	rrdtool fetch "${rrdfile}" AVERAGE -s -"${time}" -r 900 > "${PIC}"
+	
+	rrdfile=/tmp/rrd/$1.rrd
+	PIC=/tmp/rrd/$1_hour.png
+	time=28800
+	iface_name=$2
 
 	  rrdtool graph "${PIC}" -a PNG -s -"${time}" -w 550 -h 240 -v "bytes/s" \
                 'DEF:in='${rrdfile}':rx_bytes:AVERAGE' \

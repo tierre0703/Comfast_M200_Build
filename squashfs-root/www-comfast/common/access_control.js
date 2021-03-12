@@ -20,6 +20,8 @@ define(function (require, b) {
     var device_action = "";
     var section_real_num = 0;
     var lan_list;
+    
+    var dhcp_clients, arp_list;
     var access_config = {access_config: [
         {
             section_name: "Apple TV's access",
@@ -51,6 +53,17 @@ define(function (require, b) {
     function refresh_init() {
         d('#all_section_checked').prop('checked', false).attr('data-value', '0');
         
+        f.getSHConfig('client_config.php?method=GET&action=client_info', function(data){
+            dhcp_clients = data || [];
+        },false);
+        
+        f.getMConfig('arp_list', function (data) {
+            if (data.errCode == 0) {
+                arp_list = data.arp_list || [];
+            }
+        }, false);
+
+        
         f.getSHConfig('bandwidth_config.php?method=GET&action=lan_list', function(data){
             lan_list = data || [];
         },false);
@@ -69,6 +82,7 @@ define(function (require, b) {
                 access_config = data.access_config || [];
 
                 //show table
+                show_device_dropdown();
                 show_section_table();
                 show_device_table();
              }
@@ -76,6 +90,14 @@ define(function (require, b) {
          }, false);
 
     }
+    
+    function show_device_dropdown() {
+		var this_html = '';
+		d.each(arp_list, function(n, m) {
+			this_html += '<option value="' + m.ip + '">' + m.ip + '</option>';
+		});	
+		d('#device_ip').html(this_html);
+	}
 
     function show_device_table()
     {
@@ -332,6 +354,7 @@ define(function (require, b) {
 
     et.add_device_list = function(evt){
         section_real_num = evt.attr("data-value");
+        d('#edit_modal_title').html("Add Device");
         device_action = "add";
         g.clearall();
     }
@@ -430,6 +453,7 @@ define(function (require, b) {
     et.editDevice = function(evt){
         g.clearall();
         device_action = "edit";
+        d('#edit_modal_title').html("Edit Device");
         section_real_num = evt.parents('table').attr("data-value");
         d('#device_real_num').val(d(evt).parents('tr').find('.device_real_num').html());
         d('#device_ip').val(d(evt).parents('tr').find('.device_ip').html());

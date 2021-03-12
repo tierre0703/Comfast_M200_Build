@@ -1219,7 +1219,7 @@ function parseInterfaceRRDData(data)
                 labels: {
                     formatter: function () {
                         //return this.value+"KB/s";
-                        return this.value;
+                        return this.value + "Mb/s";
                     }
                 }
 			},
@@ -1354,7 +1354,7 @@ function parseInterfaceRRDData(data)
                 labels: {
                     formatter: function () {
                         //return this.value+"KB/s";
-                        return this.value;
+                        return this.value + "Mb/s";
                     }
                 }
 			},

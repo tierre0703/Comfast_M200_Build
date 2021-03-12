@@ -440,6 +440,7 @@ if($method=="GET")
     }
     else if($action == "client_info2")
     {
+		/*
         $str_ids = shell_exec("uci show dhcp_client | grep .macaddr= | cut -d [ -f 2 | cut -d ] -f 1 ");
 
         $outputData = array();
@@ -464,7 +465,43 @@ if($method=="GET")
             $alias = str_clean($alias);
             $outputData[] = array('mac'=>$macaddr, 'remark'=>$alias);
         }
-
+        */
+        $str_client = shell_exec("uci show dhcp_client");
+        $outputData_t = array();
+        $outputData = array();
+        $lines = explode("\n", $str_client);
+		foreach($lines as $k=>$v) {
+			$line = str_clean($v);
+			$tokens = explode("=", $line);
+			//key 
+			$matches = array();
+			preg_match("/\[([^\]]*)\]/", $tokens[0], $matches);
+			$key = intval($matches[1]);
+			$macaddr = "";
+			$alias = "";
+			if(strpos($line, "=rule") != false) {
+				$outputData_t[$key]['mac'] = "";
+				$outputData_t[$key]['remark'] = "";
+			}
+			else if(strpos($tokens[0], ".macaddr") != false)
+			{
+				//macaddr
+				$macaddr = $tokens[1];
+				$outputData_t[$key]['mac'] = $macaddr;
+				
+			}
+			else if (strpos($tokens[0], ".alias") != false)
+			{
+				$alias = $tokens[1];
+				$outputData_t[$key]['remark']=$alias;	
+				
+			}
+		}
+		
+		foreach($outputData_t as $k=>$v){
+			$outputData[] = $v;
+		}
+ 
         header("Content-Type: application/json");
         echo json_encode($outputData);
     }

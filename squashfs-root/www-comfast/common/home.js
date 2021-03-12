@@ -35,6 +35,7 @@ define(function (require, exports) {
     
     var vlan_config;
     var dhcp_clients;
+    d('#page-wrapper').css('visibility', 'hidden');
 
     exports.init = function () {
         e.plugInit(et, start_model);
@@ -106,6 +107,8 @@ define(function (require, exports) {
         }, false);
         // setTimeout(delayed_fun,50);
         delayed_fun();
+        d('#page-wrapper').css('visibility', 'visible');
+
     }
 
     function initchart() {

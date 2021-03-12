@@ -35,7 +35,39 @@ define(function (require, exports) {
         if (callback) {
             callback(device);
         }
+        //timer show
+        setTimeout(show_timer, 1000);
     }
+    
+    
+    function checkTime(i) {
+        return (i < 10) ? "0" + i : i;
+    }
+    
+    function show_timer() {
+		var cur_date = new Date();
+		var day = checkTime(cur_date.getDate());
+		var m = checkTime(cur_date.getMonth() + 1);
+		var y = cur_date.getFullYear();
+		var h = cur_date.getHours();
+		var hour = checkTime(h % 12 ? h % 12 : 12);
+        var mm = checkTime(cur_date.getMinutes());
+        var ampm = cur_date.getHours() >= 12 ? 'pm' : 'am';
+		var date_str = "Date: " + day + "/" + m + "/" + y;
+		var time_str = "Time: " + hour + ":" + mm + " " + ampm.toUpperCase();
+		var this_html='<div class="pull-left" style="padding-top: 12px;"><span style="font-weight:bold;font-size:10px">' + date_str + '<br/>' + time_str + '</span></div><ul class="nav navbar-nav pull-right"><li class="hidden-xs" id="login_out"><a href="#"><i class="fa fa-power-off"></i></a></li></ul></div>';
+		d("#header-nav").html(this_html);
+		d('#login_out').on('click', function () {
+			f.logout(function (data) {
+				if (data.errCode == 0) {
+					location.replace(window.location.protocol + '//' + window.location.host);
+					return;
+				}
+			})
+		});
+
+			
+	}
 
     function click_href() {
         d.ajax({

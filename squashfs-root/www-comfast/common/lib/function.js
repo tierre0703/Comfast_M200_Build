@@ -36,7 +36,7 @@ define(function (require, exports) {
             callback(device);
         }
         //timer show
-        setTimeout(show_timer, 1000);
+        setInterval(show_timer, 1000);
     }
     
     
@@ -53,7 +53,7 @@ define(function (require, exports) {
 		var hour = checkTime(h % 12 ? h % 12 : 12);
         var mm = checkTime(cur_date.getMinutes());
         var ampm = cur_date.getHours() >= 12 ? 'pm' : 'am';
-		var date_str = "Date: " + day + "/" + m + "/" + y;
+		var date_str = "Date: "  + m + "/"+ day + "/" + y;
 		var time_str = "Time: " + hour + ":" + mm + " " + ampm.toUpperCase();
 		var this_html='<div class="pull-left" style="padding-top: 12px;"><span style="font-weight:bold;font-size:10px">' + date_str + '<br/>' + time_str + '</span></div><ul class="nav navbar-nav pull-right"><li class="hidden-xs" id="login_out"><a href="#"><i class="fa fa-power-off"></i></a></li></ul></div>';
 		d("#header-nav").html(this_html);

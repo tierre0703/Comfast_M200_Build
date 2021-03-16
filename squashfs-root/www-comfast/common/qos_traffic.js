@@ -29,6 +29,8 @@ define(function (require, b) {
     
     var b_vlan_selected = false;
     var b_keyword_selected = false;
+    
+    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         d('.select_line').val(default_num);
@@ -110,6 +112,7 @@ define(function (require, b) {
 
 
         netstats();
+        d('#page-wrapper').css('visibility', 'visible');
         
     }
     

@@ -23,6 +23,8 @@ define(function (require, b) {
     var search_key = '';
     var b_vlan_selected = false;
     var b_keyword_selected = false;
+    
+    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         d('.select_line').val(default_num);
@@ -83,7 +85,8 @@ define(function (require, b) {
                 DhcpList = data.dhcp || [];
                 refresh_DList();
             }
-        });
+        }, false);
+        d('#page-wrapper').css('visibility', 'visible');
     }
     
     function showVlanList() {

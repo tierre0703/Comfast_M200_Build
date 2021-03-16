@@ -20,6 +20,7 @@ define(function (require, b) {
     var device_action = "";
     var section_real_num = 0;
     var lan_list;
+    var arpbind_info;
     
     var dhcp_clients, arp_list;
     var access_config = {access_config: [
@@ -38,7 +39,7 @@ define(function (require, b) {
         }
     ]};
 
-    
+    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         
@@ -56,6 +57,11 @@ define(function (require, b) {
         f.getSHConfig('client_config.php?method=GET&action=client_info', function(data){
             dhcp_clients = data || [];
         },false);
+
+        f.getSHConfig('client_config.php?method=GET&action=client_info2', function(data){
+            arpbind_info = data || [];
+        },false);
+
         
         f.getMConfig('arp_list', function (data) {
             if (data.errCode == 0) {
@@ -88,16 +94,25 @@ define(function (require, b) {
              }
 
          }, false);
+         d('#page-wrapper').css('visibility', 'visible');
 
     }
     
     function show_device_dropdown() {
+		
+		
+		
 		var this_html = '';
 		d.each(arp_list, function(n, m) {
-			this_html += '<option value="' + m.ip + '">' + m.ip + '</option>';
+			var desc = find_desc(m.ip);
+			this_html += '<option value="' + m.ip + '">' + (desc == "" ? m.ip : desc) + '</option>';
+			//this_html += '<option value="' + m.ip + '" />';
+			
 		});	
 		d('#device_ip').html(this_html);
+
 	}
+	
 
     function show_device_table()
     {
@@ -320,6 +335,7 @@ define(function (require, b) {
         }
     }
 
+
     d('#table_section').on("change", ":checkbox", function () {
         if (d(this).is("[name='checked-section-all']")) {
             d(":checkbox:enabled", d('#table_section')).prop("checked", d(this).prop("checked"));
@@ -332,6 +348,61 @@ define(function (require, b) {
     }).on("click", ".chk_section", function (event) {
         !d(event.target).is(":checkbox") && d(":checkbox", this).trigger("click");
     });
+    
+    function find_desc(ip) {
+		//get mac
+		var mac = "";
+		var desc = "";
+		d.each(arp_list, function(n, m){
+			if(m.ip == ip){
+				mac = m.mac;
+			}
+		});
+		
+		if(mac != "") {
+			//find access_control
+			//find device list
+			d.each(dhcp_clients, function(n, m){
+				if(m.mac == mac){
+					if(m.commentname != ""){
+						if(m.commentname != "*"){
+							desc = m.commentname;
+							return false;
+						}
+					}
+				}
+			});
+			
+			d.each(arpbind_info, function(n, m) {
+				if(m.mac == mac){
+					desc = m.remark;					
+					return false;
+				}
+			});
+			
+			d.each(access_config, function(n, m){
+			
+				  //table body
+				if(typeof m.devices != 'undefined')
+				{
+					d.each(m.devices, function(device_index, device_info){
+						if(device_info.mac_addr == mac) {
+							desc = device_info.desc;
+						}
+					});
+				}
+			});
+		
+		}
+		return desc;
+	}
+    
+    
+    d('#search_box').on("change", function(){
+		var ip = d(this).val();
+		var desc = find_desc(ip);
+		d('#device_description').val(desc);
+	});
 
     function laber_text(status) {
         if (status) {
@@ -457,7 +528,16 @@ define(function (require, b) {
         section_real_num = evt.parents('table').attr("data-value");
         d('#device_real_num').val(d(evt).parents('tr').find('.device_real_num').html());
         d('#device_ip').val(d(evt).parents('tr').find('.device_ip').html());
-        d('#device_description').val(d(evt).parents('tr').find('.device_description').html());
+        
+       
+		var ip = d(evt).parents('tr').find('.device_ip').html();
+		
+        var desc = d(evt).parents('tr').find('.device_description').html();
+        if (desc == "")
+			desc = find_desc(ip);
+		
+		d('#search_box').val(ip);
+        d('#device_description').val(desc);
         d('#device_status').val(d(evt).parents('tr').find('.device_status').html());
     }
 

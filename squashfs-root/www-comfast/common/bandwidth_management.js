@@ -82,7 +82,8 @@ define(function (require, exports) {
     };
 
 
-
+	d('#page-wrapper').css('visibility', 'hidden');
+    
     exports.init = function () {
         e.plugInit(et, start_model);
     };
@@ -458,6 +459,7 @@ define(function (require, exports) {
                 });
             }
         }, false);
+        d('#page-wrapper').css('visibility', 'visible');
     }
 
     function parse_ip_rules(data)

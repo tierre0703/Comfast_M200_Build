@@ -17,6 +17,7 @@ define(function (require, b) {
     var wan_ext_info;
     
     var lan_list, wan_list, ip_exception_list = [];
+    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         d('.select_line').val(default_num);
@@ -78,6 +79,7 @@ define(function (require, b) {
                 static_route = data || [];
                 showtable();
 		},false);
+		d('#page-wrapper').css('visibility', 'visible');
         
     }
 

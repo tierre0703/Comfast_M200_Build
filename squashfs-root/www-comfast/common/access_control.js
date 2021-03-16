@@ -398,7 +398,7 @@ define(function (require, b) {
 	}
     
     
-    d('#search_box').on("change", function(){
+    d('#search_box_ip').on("change", function(){
 		var ip = d(this).val();
 		var desc = find_desc(ip);
 		d('#device_description').val(desc);
@@ -427,6 +427,7 @@ define(function (require, b) {
         section_real_num = evt.attr("data-value");
         d('#edit_modal_title').html("Add Device");
         device_action = "add";
+        d('#search_box_ip').val("");
         g.clearall();
     }
 
@@ -536,7 +537,7 @@ define(function (require, b) {
         if (desc == "")
 			desc = find_desc(ip);
 		
-		d('#search_box').val(ip);
+		d('#search_box_ip').val(ip);
         d('#device_description').val(desc);
         d('#device_status').val(d(evt).parents('tr').find('.device_status').html());
     }
@@ -609,7 +610,10 @@ define(function (require, b) {
         arg.section_real_num = section_real_num;
 
         arg.status = d('#device_status').val();
-        arg.ip = d('#device_ip').val();
+        
+        //arg.ip = d('#device_ip').val();
+        
+        arg.ip = d('#search_box_ip').val();
         arg.mac_addr = d('#device_macaddr').val();
         if(arg.ip == "")
         {

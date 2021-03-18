@@ -12,6 +12,7 @@ define(function (require, b) {
 
     var lanlists_info, vlanlists_info, dhcp_action = 'lan', gloable_iface;
     var lock_web = false, tip_num = 0;
+    var vlan_extra_info;
 
     function init() {
         e.plugInit(et, start_model);
@@ -30,6 +31,9 @@ define(function (require, b) {
         if (device.mlan) {
             show_dns();
         }
+        f.getMConfig('vlan_config', function(data){
+			vlan_extra_info = data.vlan || [];
+			}, false);
         f.getMConfig('lan_dhcp_config', function (data) {
             if (data.errCode == 0) {
                 lanlists_info = data.lanlist || [];
@@ -93,8 +97,17 @@ define(function (require, b) {
 
     function fillvalue(dhcp_type) {
         var type_list, dnsarry, lanlist_dhcp;
+        var vlan_ext;
         if (dhcp_type.indexOf('vlan') > -1) {
             type_list = array_find(vlanlists_info, dhcp_type);
+            
+            d.each(vlan_extra_info, function(n, m){
+				if(type_list.iface == m.iface){
+					vlan_ext = m;
+					return false;
+				}
+			})
+            
         } else {
             type_list = array_find(lanlists_info, dhcp_type);
         }
@@ -117,7 +130,19 @@ define(function (require, b) {
         d("#dhcp_limit").val(type_list.dhcp.limit || "150");
 
         d("#dhcp_leasetime").val(type_list.dhcp.leasetime / 60 || "120");
-        d("#dhcp_domain").val(type_list.dhcp.domain)
+        d("#dhcp_domain").val(type_list.dhcp.domain);
+        
+        d('#vlan_id').attr('disabled', 'disabled');
+        if (dhcp_type.indexOf('vlan') > -1) {
+			d('#vlan_id_block').css('display', 'block');
+			d('#vlan_id').val((vlan_ext.id + "(" + vlan_ext.desc + ")")|| "");
+		}
+		else{
+			d('#vlan_id_block').css('display', 'none');
+		}
+
+        d('#vlan_ipclass').val(type_list.ipaddr + "/" + type_list.netmask);
+        d('#vlan_ipclass').attr('disabled', 'disabled');
     }
 
     et.dhcpnet = function (evt) {

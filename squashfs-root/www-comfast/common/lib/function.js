@@ -36,7 +36,8 @@ define(function (require, exports) {
             callback(device);
         }
         //timer show
-        setInterval(show_timer, 1000);
+        show_timer();
+        setInterval(show_timer, 60000);
     }
     
     
@@ -45,6 +46,44 @@ define(function (require, exports) {
     }
     
     function show_timer() {
+        var servername;
+        var time = "";
+        
+		f.getMConfig('ntp_timezone', function (data) {
+            if (data && !data.errCode) {
+                ntptime_info = data.ntp;
+				var y = ntptime_info.timestr.substring(0, 4);
+				var m = ntptime_info.timestr.substring(5, 7);
+				var day = ntptime_info.timestr.substring(8, 10);
+				var hour = ntptime_info.timestr.substring(14, 16);
+				var mm = ntptime_info.timestr.substring(17, 19);
+
+				var date_str = "Date: "  + m + "/"+ day + "/" + y;
+				var time_str = "Time: " + hour + ":" + mm;
+
+				var this_html='<div class="pull-left" style="padding-top: 12px;"><span style="font-weight:bold;font-size:10px">' + date_str + '<br/>' + time_str + '</span></div><ul class="nav navbar-nav pull-right"><li class="hidden-xs" id="login_out"><a href="#"><i class="fa fa-power-off"></i></a></li></ul></div>';
+				
+				
+				d("#header-nav").html(this_html);
+				
+				d('#login_out').on('click', function () {
+					f.logout(function (data) {
+						if (data.errCode == 0) {
+							location.replace(window.location.protocol + '//' + window.location.host);
+							return;
+						}
+					})
+				});
+                
+            }
+        });        
+        
+    }
+    
+    /*
+    function show_timer() {
+		
+		
 		var cur_date = new Date();
 		var day = checkTime(cur_date.getDate());
 		var m = checkTime(cur_date.getMonth() + 1);
@@ -56,7 +95,10 @@ define(function (require, exports) {
 		var date_str = "Date: "  + m + "/"+ day + "/" + y;
 		var time_str = "Time: " + hour + ":" + mm + " " + ampm.toUpperCase();
 		var this_html='<div class="pull-left" style="padding-top: 12px;"><span style="font-weight:bold;font-size:10px">' + date_str + '<br/>' + time_str + '</span></div><ul class="nav navbar-nav pull-right"><li class="hidden-xs" id="login_out"><a href="#"><i class="fa fa-power-off"></i></a></li></ul></div>';
+		
+		
 		d("#header-nav").html(this_html);
+		
 		d('#login_out').on('click', function () {
 			f.logout(function (data) {
 				if (data.errCode == 0) {
@@ -68,6 +110,7 @@ define(function (require, exports) {
 
 			
 	}
+	**/
 
     function click_href() {
         d.ajax({

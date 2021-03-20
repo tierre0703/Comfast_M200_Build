@@ -36,8 +36,10 @@ define(function (require, exports) {
             callback(device);
         }
         //timer show
-        show_timer();
-        setInterval(show_timer, 60000);
+        if (this_url.indexOf('login.html') == -1) {
+			show_timer();
+			setInterval(show_timer, 60000);
+		}
     }
     
     

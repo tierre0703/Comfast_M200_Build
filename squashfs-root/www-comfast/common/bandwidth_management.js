@@ -82,8 +82,7 @@ define(function (require, exports) {
     };
 
 
-	d('#page-wrapper').css('visibility', 'hidden');
-    
+	
     exports.init = function () {
         e.plugInit(et, start_model);
     };
@@ -459,7 +458,10 @@ define(function (require, exports) {
                 });
             }
         }, false);
-        d('#page-wrapper').css('visibility', 'visible');
+        d('#nav-col').css('opacity', '1');
+        d('#content-wrapper').css('opacity', '1');
+        release_loading(false);
+
     }
 
     function parse_ip_rules(data)
@@ -679,6 +681,7 @@ define(function (require, exports) {
     }
 
     function start_model(data) {
+		run_waitMe('ios');
         device = data;
         refresh_init();
     }
@@ -1305,6 +1308,7 @@ define(function (require, exports) {
 
     //
     function run_waitMe(effect){
+		
 		$('#page-wrapper').waitMe({
 			effect: effect,
 			text: please_waiting,

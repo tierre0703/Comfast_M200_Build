@@ -39,7 +39,6 @@ define(function (require, b) {
         }
     ]};
 
-    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         
@@ -47,6 +46,7 @@ define(function (require, b) {
     }
 
     function start_model(data) {
+		run_waitMe('ios');
         device = data;
         refresh_init();
     }
@@ -94,7 +94,9 @@ define(function (require, b) {
              }
 
          }, false);
-         d('#page-wrapper').css('visibility', 'visible');
+        d('#nav-col').css('opacity', '1');
+        d('#content-wrapper').css('opacity', '1');
+        release_loading(false);
 
     }
     

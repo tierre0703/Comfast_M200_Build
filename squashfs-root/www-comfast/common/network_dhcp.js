@@ -19,10 +19,30 @@ define(function (require, b) {
     }
 
     function start_model(data) {
+		run_waitMe('ios');
         device = data;
         h.volide('body');
         refresh_init();
     }
+    
+       
+    function run_waitMe(effect){
+		$('#page-wrapper').waitMe({
+			effect: effect,
+			text: please_waiting,
+			bg: 'rgba(255,255,255,0.7)',
+			color:'#000'
+		});
+    }
+
+    //loading finished
+    function release_loading(bshowTip)
+    {
+        $('#page-wrapper').waitMe('hide');
+        if(bshowTip)
+            h.SetOKTip(tip_num++, set_success);
+    }
+
 
     function refresh_init() {
         var tmp_iparr = device.ip.split('.');
@@ -40,7 +60,12 @@ define(function (require, b) {
                 vlanlists_info = data.vlanlist || [];
                 network_init();
             }
-        });
+        }, false);
+
+        d('#nav-col').css('opacity', '1');
+        d('#content-wrapper').css('opacity', '1');
+        release_loading(false);
+
     }
 
     function show_dns() {

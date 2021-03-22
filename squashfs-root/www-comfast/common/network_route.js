@@ -17,7 +17,6 @@ define(function (require, b) {
     var wan_ext_info;
     
     var lan_list, wan_list, ip_exception_list = [];
-    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         d('.select_line').val(default_num);
@@ -25,10 +24,30 @@ define(function (require, b) {
     }
 
     function start_model(data) {
+		run_waitMe('ios');
         device = data;
         h.volide('body');
         refresh_init();
     }
+    
+    
+    function run_waitMe(effect){
+		$('#page-wrapper').waitMe({
+			effect: effect,
+			text: please_waiting,
+			bg: 'rgba(255,255,255,0.7)',
+			color:'#000'
+		});
+    }
+    
+    //loading finished
+    function release_loading(bshowTip)
+    {
+        $('#page-wrapper').waitMe('hide');
+        if(bshowTip)
+            h.SetOKTip(tip_num++, set_success);
+    }
+
 
     function refresh_init() {
 		/*
@@ -79,7 +98,10 @@ define(function (require, b) {
                 static_route = data || [];
                 showtable();
 		},false);
-		d('#page-wrapper').css('visibility', 'visible');
+		
+		d('#nav-col').css('opacity', '1');
+        d('#content-wrapper').css('opacity', '1');
+        release_loading(false);
         
     }
 

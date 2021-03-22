@@ -24,7 +24,6 @@ define(function (require, b) {
     var b_vlan_selected = false;
     var b_keyword_selected = false;
     
-    d('#page-wrapper').css('visibility', 'hidden');
 
     function init() {
         d('.select_line').val(default_num);
@@ -32,9 +31,29 @@ define(function (require, b) {
     }
 
     function start_model(data) {
+		run_waitMe('ios');
         device = data;
         refresh_init();
     }
+    
+    
+    function run_waitMe(effect){
+		$('#page-wrapper').waitMe({
+			effect: effect,
+			text: please_waiting,
+			bg: 'rgba(255,255,255,0.7)',
+			color:'#000'
+		});
+    }
+
+    //loading finished
+    function release_loading(bshowTip)
+    {
+        $('#page-wrapper').waitMe('hide');
+        if(bshowTip)
+            h.SetOKTip(tip_num++, set_success);
+    }
+
 
     function refresh_init() {
 
@@ -86,7 +105,10 @@ define(function (require, b) {
                 refresh_DList();
             }
         }, false);
-        d('#page-wrapper').css('visibility', 'visible');
+        d('#nav-col').css('opacity', '1');
+        d('#content-wrapper').css('opacity', '1');
+        release_loading(false);
+
     }
     
     function showVlanList() {

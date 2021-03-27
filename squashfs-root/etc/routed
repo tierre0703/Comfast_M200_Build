@@ -5,7 +5,7 @@
 . /usr/share/libubox/jshn.sh
 
 
-CONFIG_PATH=/etc/bandwidth_config
+CONFIG_PATH=/etc/config/bandwidth_config
 
 index=0
 wanname=''

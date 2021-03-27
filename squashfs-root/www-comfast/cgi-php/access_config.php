@@ -1,7 +1,7 @@
 #!/usr/bin/php-cgi
 <?php
 error_reporting(0);
-$CONFIG_PATH =  "/etc/access_config";
+$CONFIG_PATH =  "/etc/config/access_config";
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
 
@@ -135,7 +135,7 @@ function write_access_control_device($target_ip, $bAllow)
 
 function write_access_control()
 {
-    $CONFIG_PATH =  "/etc/access_config";
+    $CONFIG_PATH =  "/etc/config/access_config";
     //read setting
     if(!file_exists($CONFIG_PATH))
     {

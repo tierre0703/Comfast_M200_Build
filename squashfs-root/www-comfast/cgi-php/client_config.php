@@ -5,8 +5,8 @@ error_reporting(0);
 
 
 $CONFIG_PATH =  "/etc/config/dhcp_client";
-$DHCP_CLIENT = "/etc/dhcp_client";
-$CLIENT_QOS_PATH = "/etc/client_qos";
+$DHCP_CLIENT = "/etc/config/dhcp_client";
+$CLIENT_QOS_PATH = "/etc/config/client_qos";
 
 $COMMENT = "QtyCtl";
 
@@ -194,7 +194,7 @@ function mask2cidr($mask){
  }
  
  function func_get_client_list() {
- $DHCP_CLIENT = "/etc/dhcp_client";
+ $DHCP_CLIENT = "/etc/config/dhcp_client";
  /**
          * 1. poll dhcp
          * 2. poll arp

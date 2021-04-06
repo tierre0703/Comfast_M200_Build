@@ -118,7 +118,10 @@ define(function (require, b) {
 			
 			d.each(wan_ext_info, function(n, m){
 				if(iface == m.iface){
-					interfaceStr = g.ifacetoname(iface) + " " + "(" + m.hostname +")";
+					if(m.hostname != "")
+						interfaceStr = g.ifacetoname(iface) + " " + "(" + m.hostname +")";
+					else 
+						interfaceStr = g.ifacetoname(iface);
 					interfaceStr = interfaceStr.toUpperCase();
 					return false;
 				}
@@ -127,7 +130,10 @@ define(function (require, b) {
 			
 			d.each(lan_ext_info, function(n, m){
 				if(iface == m.ifname){
-					interfaceStr = g.ifacetoname(iface) + " " + "(" + m.hostname +")";
+					if(m.hostname != "")
+						interfaceStr = g.ifacetoname(iface) + " " + "(" + m.hostname +")";
+					else 
+						interfaceStr = g.ifacetoname(iface);
 					interfaceStr = interfaceStr.toUpperCase();
 					return false;
 				}
@@ -139,6 +145,8 @@ define(function (require, b) {
     function showmwanlist() {
         d("#interfacelist").html('');
         var this_html = '';
+       
+        /*
         d.each(lanlist, function (n, m) {
             if (device.mlan == 0) {
                 this_html += '<option value="' + m.iface + '">' + m.iface.toUpperCase() + '</option>';
@@ -154,7 +162,22 @@ define(function (require, b) {
             }
             this_html += '<option value="' + m.iface + '">' + g.ifacetoname(m.iface) + '</option>';
         });
+        */
+		d.each(lanlist, function (n, m) {
+            if (device.mlan == 0) {
+                this_html += '<option value="' + m.iface + '">' + getInterfaceString(m.iface )+ '</option>';
+                return false;
+            }
+            this_html += '<option value="' + m.iface + '">' + getInterfaceString(m.iface)+ '</option>';
+        });
 
+        d.each(wanlist, function (n, m) {
+            if (device.mlan == 0) {
+                this_html += '<option value="' + m.iface + '">' + getInterfaceString(m.iface) + '</option>';
+                return false;
+            }
+            this_html += '<option value="' + m.iface + '">' + getInterfaceString(m.iface)+ '</option>';
+        });
         d("#interfacelist").html(this_html);
     }
 

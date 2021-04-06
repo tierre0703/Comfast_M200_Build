@@ -13,6 +13,31 @@ $COMMENT = "QtyCtl";
 $method = !empty($_GET["method"]) ? $_GET["method"] : "";
 $action = !empty($_GET["action"]) ? $_GET["action"] : "";
 
+
+function write_lock($filename, $content)
+{
+	$file = fopen($filename, 'w');
+	$lock = flock($file, LOCK_EX);
+	file_put_contents($filename, $content);
+	flock($file, LOCK_UN);
+	fclose($file);
+	
+}
+
+function read_lock($filename)
+{
+	$file = fopen($filename, 'r');
+	$lock = flock($file, LOCK_SH);
+	$str = file_get_contents($filename);
+	flock($file, LOCK_UN);
+	fclose($file);
+	return $str;
+}
+
+
+
+
+
 function str_clean($str)
  {
     $remove_character = array("\n", "\r\n", "\r");
@@ -199,7 +224,7 @@ function mask2cidr($mask){
          * 1. poll dhcp
          * 2. poll arp
          */
-        $str_clients = file_get_contents($DHCP_CLIENT);
+        $str_clients = read_lock($DHCP_CLIENT); //file_get_contents($DHCP_CLIENT);
         $clients = json_decode($str_clients, true);
         $time = time();
 
@@ -385,7 +410,7 @@ function mask2cidr($mask){
                 unset($clients[$key]);
             }
          }
-         file_put_contents($DHCP_CLIENT, json_encode($clients));
+         write_lock($DHCP_CLIENT, json_encode($clients)); //file_put_contents($DHCP_CLIENT, json_encode($clients));
  }
 
 
@@ -398,12 +423,12 @@ if(!file_exists($CONFIG_PATH))
 
 if(!file_exists($DHCP_CLIENT))
 {
-    file_put_contents($DHCP_CLIENT, "[]");
+    write_lock($DHCP_CLIENT, "[]"); //file_put_contents($DHCP_CLIENT, "[]");
 }
 
 if(!file_exists($CLIENT_QOS_PATH))
 {
-    file_put_contents($CLIENT_QOS_PATH, "[]");
+    write_lock($CLIENT_QOS_PATH, "[]");//file_put_contents($CLIENT_QOS_PATH, "[]");
 }
 
 
@@ -411,7 +436,7 @@ if($method=="GET")
 {
     if($action == "quantity_qos_list")
     {
-        $str_client_qos = file_get_contents($CLIENT_QOS_PATH);
+        $str_client_qos = read_lock($CLIENT_QOS_PATH); //file_get_contents($CLIENT_QOS_PATH);
 
         /**
          * {'mac': '11:22:33:44:55:66', 'download_limit': 1000, 'upload_limit': 1000 }
@@ -428,12 +453,12 @@ if($method=="GET")
     else if($action == "client_info")
     {
         header("Content-Type: application/json");
-        $ret = file_get_contents($DHCP_CLIENT);
+        $ret = read_lock($DHCP_CLIENT); //file_get_contents($DHCP_CLIENT);
         $clients = json_decode($ret, true);
         //if(count($clients) == 0) 
         {
 			func_get_client_list();
-			$ret = file_get_contents($DHCP_CLIENT);
+			$ret = read_lock($DHCP_CLIENT); //file_get_contents($DHCP_CLIENT);
 			$clients = json_decode($ret, true);
 		}
         echo json_encode($clients);
@@ -518,7 +543,7 @@ if($method=="GET")
          */
 
 
-        $str_client_qos = file_get_contents($CLIENT_QOS_PATH);
+        $str_client_qos = read_lock($CLIENT_QOS_PATH); //file_get_contents($CLIENT_QOS_PATH);
         $client_qos = json_decode($str_client_qos, true);
 
         $flow_info = get_flow_data();
@@ -624,7 +649,7 @@ if($method=="GET")
         }
         echo json_encode($client_qos);
 
-        file_put_contents($CLIENT_QOS_PATH, json_encode($client_qos));
+        write_lock($CLIENT_QOS_PATH, json_encode($client_qos)); //file_put_contents($CLIENT_QOS_PATH, json_encode($client_qos));
     }
 
 }
@@ -638,7 +663,7 @@ else if($method == "SET")
         $download_limit = $data['download_limit'];
         $upload_limit = $data['upload_limit'];
 
-        $str_client_qos = file_get_contents($CLIENT_QOS_PATH);
+        $str_client_qos = read_lock($ClIENT_QOS_PATH); //file_get_contents($CLIENT_QOS_PATH);
         $client_qos = json_decode($str_client_qos, true);
 
         $found = false;
@@ -658,7 +683,7 @@ else if($method == "SET")
             $client_qos[] = array('mac'=>$mac, 'download_limit'=>$download_limit, 'upload_limit'=>$upload_limit);
         }
 
-        file_put_contents($CLIENT_QOS_PATH, json_encode($client_qos));
+        write_lock($CLIENT_QOS_PATH, json_encode($client_qos)); //file_put_contents($CLIENT_QOS_PATH, json_encode($client_qos));
         /**
          * {'mac': '11:22:33:44:55:66', 'download_limit': 1000, 'upload_limit': 1000 }
          */

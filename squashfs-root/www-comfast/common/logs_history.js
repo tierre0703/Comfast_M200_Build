@@ -1471,7 +1471,7 @@ function parseInterfaceRRDData(data)
         }
 		*/
 		 var graphinterface = d("#interfacelist").val();
-        var interfacename = d('#interfacelist').find("option:selected").text();
+        var interfacename = d("#interfacelist").val(); //d('#interfacelist').find("option:selected").text();
         var arg = {};
         arg.interface = graphinterface;
         arg.display_name = interfacename;

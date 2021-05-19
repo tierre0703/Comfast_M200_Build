@@ -20,9 +20,11 @@ define(function (require, b) {
 
     function start_model(data) {
 		run_waitMe('ios');
-        device = data;
         h.volide('body');
-        refresh_init();
+		setTimeout(function(){
+			device = data;
+			refresh_init();
+			},0)
     }
     
        

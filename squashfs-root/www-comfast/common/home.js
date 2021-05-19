@@ -43,8 +43,10 @@ define(function (require, exports) {
     function start_model(data) {
 		run_waitMe('ios');
 
-        device = data;
-        refresh_default();
+        setTimeout(function(){
+			device = data;
+			refresh_init();
+			},0)
     }
 
     function refresh_default() {
@@ -105,12 +107,12 @@ define(function (require, exports) {
         f.getSHConfig('bandwidth_config.php?method=GET&action=wan_speed', function(data){
             wan_speed_list = data;
             show_wan_speed_panel();
+			d('#nav-col').css('opacity', '1');
+			d('#content-wrapper').css('opacity', '1');
+			release_loading(false);
         }, false);
         // setTimeout(delayed_fun,50);
         delayed_fun();
-        d('#nav-col').css('opacity', '1');
-        d('#content-wrapper').css('opacity', '1');
-        release_loading(false);
 
     }
 

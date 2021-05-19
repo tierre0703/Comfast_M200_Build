@@ -162,7 +162,13 @@
         "name": "ddos",
         "urls": "/firewall/firewall_ddos.html",
         "childs": ""
-      }
+      },
+	{
+		"name": "redirect_rule",
+		"urls": "/firewall/redirect_rule.html",
+		"childs": ""
+	}
+      
     ]
   },
 

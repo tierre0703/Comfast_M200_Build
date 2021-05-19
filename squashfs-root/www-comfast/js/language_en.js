@@ -2162,4 +2162,6 @@ var device_macaddr = "MAC Address";
 var bm_already_enabled = "Not available when Bandwidth Management enabled";
 
 var system_info = "System Info";
+
+var redirect_rule = "Static Rule";
 /*auth all*/

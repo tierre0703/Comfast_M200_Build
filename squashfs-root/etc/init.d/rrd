@@ -13,6 +13,10 @@ start()
 #	echo "*/1 * * * * /etc/rrd/loadrrd start" >> /etc/crontabs/root
 
 	if [ -f /etc/crontabs/root ];then
+		cmd=`cat /etc/crontabs/root | grep drop_caches`
+		if [ -z "$cmd" ];then
+			echo "* * * * * sync; echo 3 > /proc/sys/vm/drop_caches" >> /etc/crontabs/root
+	
 		cmd=`cat /etc/crontabs/root | grep loadrrd`
 		if [ -z "$cmd" ];then
 			echo "*/1 * * * * /etc/rrd/loadrrd start" >> /etc/crontabs/root

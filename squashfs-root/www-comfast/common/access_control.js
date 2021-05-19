@@ -47,8 +47,10 @@ define(function (require, b) {
 
     function start_model(data) {
 		run_waitMe('ios');
-        device = data;
-        refresh_init();
+        setTimeout(function(){
+			device = data;
+			refresh_init();
+			},0)
     }
 
     function refresh_init() {

@@ -461,6 +461,10 @@ if($method=="GET")
 			$ret = read_lock($DHCP_CLIENT); //file_get_contents($DHCP_CLIENT);
 			$clients = json_decode($ret, true);
 		}
+		
+		if ($clients == null) {
+			$clients = array();
+		}
         echo json_encode($clients);
     }
     else if($action == "client_info2")

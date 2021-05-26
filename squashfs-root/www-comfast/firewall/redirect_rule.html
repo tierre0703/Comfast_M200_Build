@@ -107,9 +107,10 @@
             <div class="row">
                 <!--left content start-->
                 <div class="col-lg-12">
+					<!-- Dest Rule -->
                     <div class="main-box clearfix">
                         <div class="main-box-header clearfix">
-                            <h2 class="pull-left hide" sh_lang="msg_list"></h2>
+                            <h2 class="pull-left">Dest Rule</h2>
                             <div class="pull-right filter-block">
                                 <div class=" pull-left">
                                     <div class="input-group">
@@ -143,7 +144,7 @@
                                             <span style="min-width:60px" sh_lang="global_No"></span>
                                         </th>
                                         <th class="text-left">
-                                            <span style="min-width:90px">IP Address</span>
+                                            <span style="min-width:90px">Dest IP Address</span>
                                         </th>
                                         <!--
                                         <th class="text-center">
@@ -153,6 +154,71 @@
                                         <th class="text-left">
                                             <span style="min-width:80px" sh_lang="destination_linename"></span>
                                         </th>
+                                        <th class="text-left">
+                                            <span style="min-width:60px" sh_lang="global_alias"></span>
+                                        </th>
+                                        <th class="text-left">
+                                            <span style="min-width:60px">Status</span>
+                                        </th>
+                                        <th class="text-center" style="width:8%">
+                                            <span style="min-width:60px" sh_lang="edit_title"></span>
+                                        </th>
+                                        <th class="hidden"></th>
+                                        <th class="text-center hidden" style="width:10%">
+                                            <input id="allchecked" class="hidden_over" name="checked-all" type="checkbox"/>
+                                            <label class="label label-info select_laber" for="allchecked" sh_lang="selectall_tab"></label>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tbody_info" style="border-bottom: 1px solid #CCC;"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- main-box for internal  -->
+                    <div class="main-box clearfix">
+                        <div class="main-box-header clearfix">
+                            <h2 class="pull-left">Source Rule</h2>
+                            <div class="pull-right filter-block">
+                                <div class=" pull-left">
+                                    <div class="input-group">
+                                        <select class="form-control select_line" et="change:displayline">
+                                            <option value="10" selected sh_lang="display_line_10"></option>
+                                            <option value="20" sh_lang="display_line_20"></option>
+                                            <option value="100" sh_lang="display_line_100"></option>
+                                            <option value="0">ALL</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <a class="btn btn-primary pull-left beforebtn" et="click tap:add_list"
+                                   data-toggle="modal" data-target="#modal_two">
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                    <span sh_lang="global_add"></span>
+                                </a>
+                                <!--
+                                <a class="btn btn-primary pull-right afterbtn mrg-h-lg" et="click tap:apply_select">
+                                    <i class="fa fa-save fa-lg"></i>
+                                    <span>APPLY(selected rules)</span>
+                                </a>
+                                -->
+                            </div>
+                        </div>
+                        <div class="main-box-body">
+                            <div class="table-respon">
+                                <table class="table table-hover" id="table_src">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-left">
+                                            <span style="min-width:60px" sh_lang="global_No"></span>
+                                        </th>
+                                        <th class="text-left">
+                                            <span style="min-width:90px">Src IP Address</span>
+                                        </th>
+                                        <!--
+                                        <th class="text-center">
+                                            <span style="min-width:90px" sh_lang="firewall_end_ip"></span>
+                                        </th>
+                                        -->
                                         <th class="text-left">
                                             <span style="min-width:60px" sh_lang="global_alias"></span>
                                         </th>
@@ -263,6 +329,66 @@
             <div class="modal-footer">
                 <button id="closewin" type="button" class="btn btn-default hide" data-dismiss="modal"></button>
                 <button type="button" class="btn btn-primary" et="click tap:saveConfig" sh_lang="blacklist_save"></button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="modal_two" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" sh_lang="routeroute_header"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row list hide">
+                    <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                        <span>real_num</span>
+                    </div>
+                    <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
+                        <input type="text" class="form-control" id="src_real_num">
+                    </div>
+                </div>
+                <div class="row list">
+                    <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                        <span>IP Adress</span>
+                    </div>
+                    <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
+                        <span class="tip_name hide" sh_lang="firewall_start_ip"></span>
+                        <input type="text" class="form-control require isIPSection" id="src_start_ip">
+                        <p>192.168.0.100</p>
+                    </div>
+                </div>
+                <div class="row list">
+                    <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                        <span sh_lang="global_alias"></span>
+                    </div>
+                    <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
+                        <input type="text" class="form-control require isNULL isALL" id="src_dest_alias">
+                        <p sh_lang="max_32_char"></p>
+                    </div>
+                </div>
+                <div class="row list">
+                    <div class="col-lg-5 col-sm-4 col-xs-4 form_left text-right">
+                        <span>Status</span>
+                    </div>
+                    <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
+						<select class="form-control" id="src_enable">
+							<option value="1" sh_lang="status_enabled">Enabled</option>
+							<option value="0" sh_lang="status_disabled">Disabled</option>
+						</select>
+						<!--
+                        <input type="text" class="form-control require isNULL isALL" id="dest_alias">
+                        <p sh_lang="max_32_char"></p>
+                        -->
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="modal-footer">
+                <button id="closewin_src" type="button" class="btn btn-default hide" et="closeModal_src"></button>
+                <button type="button" class="btn btn-primary" et="click tap:saveConfig_src" sh_lang="blacklist_save"></button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->

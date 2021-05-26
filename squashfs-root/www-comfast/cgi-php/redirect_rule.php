@@ -140,6 +140,36 @@ function mask2cidr($mask){
         from 32 gets you the cidr notation */
 }
 
+function parse_ip_list($ipAddr) {
+	$retVal = array();
+	$ip_list = explode(",", $ipAddr);
+	foreach($ip_list as $k=>$ip) {
+		if(strpos($ip, "-") >= -1) {
+			//this is ip range
+			$ips = explode("-", $ip);
+			$start_ip = $ips[0];
+			$end_ip = $ips[1];
+			
+			$start_numip = ip2long($start_ip);
+			$end_numip = ip2long($end_ip);
+			for($i = $start_numip; $i < $end_numip; $i++) {
+				
+				$retVal[] = long2ip($i);	
+			}
+		}
+		else if(strpos($ip, "/") >= -1 ) {
+			$retVal[] = $ip;
+		}
+		else
+		{
+			$retVal[] = $ip;
+		}
+	}
+	
+	return $retVal;
+}
+
+
 function delete_ip_rule($subnet)
 {
     $cmd = sprintf("ip rule show | grep rt_pub");
@@ -193,7 +223,7 @@ function apply_rule(){
 	delete_ip_route(false);
 	
 	
-	
+	/** enable all vlan deleted
     foreach($vlans as $vlan_index => $vlan_info)
     {
     
@@ -215,6 +245,7 @@ function apply_rule(){
         shell_exec($cmd);
 
     }
+    */
     
     //set ip route
     //"etc/config/pub_rule"
@@ -265,6 +296,32 @@ function get_conf() {
 			);		
 		
 	}
+	
+	
+	$cmd = "uci show pub_rule | grep src_ip | cut -d [ -f 2 | cut -d ] -f 1";
+    $rules_str = shell_exec($cmd);
+    $rules_idx = explode("\n", $rules_str);
+    $retdata_src = array();
+    
+    foreach($rules_idx as $k=>$idx) {
+		$idx = str_clean($idx);
+		if ($idx == "") continue;
+		
+		$cmd = sprintf("uci get pub_rule.@rule[%s].enable", $idx); $enable = shell_exec($cmd); $enable = str_clean($enable);
+		$cmd = sprintf("uci get pub_rule.@rule[%s].src_ip", $idx); $src_ip = shell_exec($cmd); $src_ip = str_clean($src_ip);
+		$cmd = sprintf("uci get pub_rule.@rule[%s].comment", $idx); $comment = shell_exec($cmd); $comment = str_clean($comment);
+		
+		$retdata_src[]= array(
+				'real_num'=>$idx, 
+				'src_ip'=>$src_ip,
+				'enable'=>$enable,
+				'comment'=>$comment
+			);		
+		
+	}
+	
+	$ret = array("target_rule"=>$retdata, "src_rule"=>$retdata_src)
+
 	return $retdata;
 }
 
@@ -282,6 +339,42 @@ if ($method == "GET" ) {
 else if($method == "SET") {
 	if($action == "apply_rule") {
 		apply_rule();
+	}
+	else if($action == "save_conf_src") {
+		$post_data = json_decode(file_get_contents('php://input', true), true);
+		$action = $post_data["action"];
+		$real_num = $post_data["real_num"];
+		$src_ip = $post_data["src_ip"];
+		$enable = $post_data["enable"];
+		$comment = $post_data["comment"];
+		
+		if($action == "add") {		
+			$cmd = "uci add pub_rule src_rule"; shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@src_rule[-1].src_ip='%s'", $src_ip); shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@src_rule[-1].enable=%s", $enable); shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@src_rule[-1].comment='%s'", $comment); shell_exec($cmd);
+			
+			$cmd = "uci commit pub_rule"; shell_exec($cmd);
+		}
+		else if($action == "del") {
+			$cmd = sprintf("uci delete pub_rule.@src_rule[%s].src_ip", $real_num); shell_exec($cmd);
+			$cmd = sprintf("uci delete pub_rule.@src_rule[%s].enable", $real_num); shell_exec($cmd);
+			$cmd = sprintf("uci delete pub_rule.@src_rule[%s].comment", $real_num); shell_exec($cmd);
+			$cmd = sprintf("uci delete pub_rule.@src_rule[%s]", $real_num); shell_exec($cmd);
+			$cmd = "uci commit pub_rule"; shell_exec($cmd);
+			
+		}
+		else if($action == "edit") {
+			$cmd = sprintf("uci set pub_rule.@src_rule[%s].src_ip='%s'", $real_num, $src_ip); shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@src_rule[%s].enable=%s", $real_num, $enable); shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@src_rule[%s].comment='%s'", $real_num, $comment); shell_exec($cmd);
+			$cmd = "uci commit pub_rule"; shell_exec($cmd);
+		}
+		
+		apply_rule();
+		header("Content-Type: application/json");
+        echo json_encode(array("errCode"=>0));
+		
 	}
 	else if($action == "save_conf") {
 		$post_data = json_decode(file_get_contents('php://input', true), true);

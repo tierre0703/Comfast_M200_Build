@@ -45,7 +45,7 @@ define(function (require, exports) {
 
         setTimeout(function(){
 			device = data;
-			refresh_init();
+			refresh_default();
 			},0)
     }
 

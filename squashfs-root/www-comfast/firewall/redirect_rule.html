@@ -182,7 +182,7 @@
                             <div class="pull-right filter-block">
                                 <div class=" pull-left">
                                     <div class="input-group">
-                                        <select class="form-control select_line" et="change:displayline">
+                                        <select class="form-control select_line_src" et="change:displayline_src">
                                             <option value="10" selected sh_lang="display_line_10"></option>
                                             <option value="20" sh_lang="display_line_20"></option>
                                             <option value="100" sh_lang="display_line_100"></option>
@@ -190,7 +190,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <a class="btn btn-primary pull-left beforebtn" et="click tap:add_list"
+                                <a class="btn btn-primary pull-left beforebtn" et="click tap:add_list_src"
                                    data-toggle="modal" data-target="#modal_two">
                                     <i class="fa fa-plus-circle fa-lg"></i>
                                     <span sh_lang="global_add"></span>
@@ -230,12 +230,12 @@
                                         </th>
                                         <th class="hidden"></th>
                                         <th class="text-center hidden" style="width:10%">
-                                            <input id="allchecked" class="hidden_over" name="checked-all" type="checkbox"/>
-                                            <label class="label label-info select_laber" for="allchecked" sh_lang="selectall_tab"></label>
+                                            <input id="allchecked" class="hidden_over" name="checked-all-src" type="checkbox"/>
+                                            <label class="label label-info select_laber_src" for="allchecked" sh_lang="selectall_tab"></label>
                                         </th>
                                     </tr>
                                     </thead>
-                                    <tbody id="tbody_info" style="border-bottom: 1px solid #CCC;"></tbody>
+                                    <tbody id="tbody_info_src" style="border-bottom: 1px solid #CCC;"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -258,7 +258,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" sh_lang="routeroute_header"></h4>
+                <h4 class="modal-title">Redirect Rule Dest Settings</h4>
             </div>
             <div class="modal-body">
                 <div class="row list hide">
@@ -337,8 +337,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" sh_lang="routeroute_header"></h4>
+                <button type="button" class="close" et="click tap:closeModal_src" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Redirect Rule Source Settings</h4>
             </div>
             <div class="modal-body">
                 <div class="row list hide">
@@ -355,8 +355,8 @@
                     </div>
                     <div class="col-lg-4 col-sm-5 col-xs-7 form_right">
                         <span class="tip_name hide" sh_lang="firewall_start_ip"></span>
-                        <input type="text" class="form-control require isIPSection" id="src_start_ip">
-                        <p>192.168.0.100</p>
+                        <input type="text" class="form-control require isNULL isALL" id="src_start_ip">
+                        <p>192.168.0.100,192.168.0.101-192.168.0.105,192.168.0/24</p>
                     </div>
                 </div>
                 <div class="row list">
@@ -387,7 +387,7 @@
                 
             </div>
             <div class="modal-footer">
-                <button id="closewin_src" type="button" class="btn btn-default hide" et="closeModal_src"></button>
+                <button id="closewin_src" type="button" class="btn btn-default hide" et="click tap:closeModal_src"></button>
                 <button type="button" class="btn btn-primary" et="click tap:saveConfig_src" sh_lang="blacklist_save"></button>
             </div>
         </div><!-- /.modal-content -->

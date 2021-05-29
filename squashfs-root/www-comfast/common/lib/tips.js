@@ -400,6 +400,10 @@ define(function (require, b, c) {
             return false;
         }
     }
+    
+    function int2ip (ipInt) {
+		return ( (ipInt>>>24) +'.' + (ipInt>>16 & 255) +'.' + (ipInt>>8 & 255) +'.' + (ipInt & 255) );
+	}
 
     function ip2int(IP) {
         return parseInt(IP.replace(/\d+\.?/ig, function (a) {
@@ -451,6 +455,7 @@ define(function (require, b, c) {
     b.isEqualIP = isEqualIP;
     b.isIncludeIP = isIncludeIP;
     b.ip2int = ip2int;
+    b.int2ip = int2ip;
     b.isMAC = isMAC;
     b.error_ssid = error_ssid;
     b.error_ssidpsk = error_ssidpsk;

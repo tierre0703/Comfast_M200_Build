@@ -177,6 +177,7 @@ function delete_ip_rule($subnet)
         $cmd = sprintf("ip rule show | grep rt_pub | grep %s", $subnet);
 
     $ret = shell_exec($cmd);
+
     $ret_arr = explode("\n", $ret);
     foreach($ret_arr as $key => $val)
     {
@@ -188,7 +189,6 @@ function delete_ip_rule($subnet)
        shell_exec($cmd);
     }
 }
-
 function delete_ip_route($subnet)
 {
     $cmd = sprintf("ip route show table all | grep rt_pub");
@@ -208,6 +208,25 @@ function delete_ip_route($subnet)
 }
 
 
+function handle_rttable(){
+		$table = shell_exec("cat /etc/iproute2/rt_tables");
+		$tables = explode("\n", $table);
+		$mod_table = array();
+		foreach($tables as $k=>$v){
+			$v = str_clean($v);
+			if(strstr($v, "rt_pub")){
+			}
+			else {
+				$mod_table[] = $v;
+			}
+		}
+		
+		$t_str = implode("\n",$mod_table);
+		file_put_contents("/etc/iproute2/rt_tables", $t_str);
+		
+}
+
+
 function apply_rule(){
 	//pre rule
 	//get vlan 
@@ -216,61 +235,19 @@ function apply_rule(){
 	//set
 	$table_name = "rt_pub"; //"inter" . $vlan_info["vlan_name"];
     $table_id = 330;  //+ intval(substr($vlan_info["vlan_name"], 4));
-    $cmd = sprintf("grep -q %s /etc/iproute2/rt_tables || echo %d %s >>/etc/iproute2/rt_tables", $table_name, $table_id, $table_name);
-    shell_exec($cmd);
+    //$cmd = sprintf("grep -q %s /etc/iproute2/rt_tables || echo %d %s >>/etc/iproute2/rt_tables", $table_name, $table_id, $table_name);
+    //shell_exec($cmd);
 	
 	delete_ip_rule(false);
 	delete_ip_route(false);
-	
-	
-	/** enable all vlan deleted
-    foreach($vlans as $vlan_index => $vlan_info)
-    {
-    
-        $vlan_ip = $vlan_info["vlan_ip"];
-        $vlan_netmask = $vlan_info["vlan_netmask"];
-        $vlan_name = $vlan_info["vlan_name"];
-        $table_name = "rt_pub";
-
-        if($vlan_name == "" ||  $vlan_ip == "" || $vlan_netmask == "")
-        {
-            continue;
-        }
-
-        $ip_info =  ipv4Breakout($vlan_info["vlan_ip"], $vlan_info["vlan_netmask"]);
-        $cidr = $ip_info["cidr"];
-        
-        //setup ip rule
-        $cmd = sprintf("ip rule add from %s lookup %s", $cidr, $table_name);
-        shell_exec($cmd);
-
-    }
-    */
-    //set ip rule
-    $cmd = "uci show pub_rule | grep src_ip | cut -d [ -f 2 | cut -d ] -f 1";
-    $src_rules_str = shell_exec($cmd);
-    $src_rules_idx = explode("\n", $src_rules_str);
-    foreach($src_rules_idx as $k=>$idx) {
-		$idx = str_clean($idx);
-		if ($idx == "") continue;
-		$cmd = sprintf("uci get pub_rule.@src_rule[%s].enable", $idx); $enable = shell_exec($cmd); $enable = str_clean($enable);
-		if($enable != "1") continue;
-		
-		$cmd = sprintf("uci get pub_rule.@src_rule[%s].src_ip", $idx); $src_ip = shell_exec($cmd); $src_ip = str_clean($src_ip);
-		$ip_list = parse_ip_list($src_ip);
-		
-		foreach($ip_list as $ip_idx => $ip_val) {
-			$cmd = sprintf("ip rule add from %s lookup %s", $ip_val, $table_name);
-			shell_exec($cmd);
-		}
-	}
-    
+	handle_rttable();
     
     //set ip route
     //"etc/config/pub_rule"
     $cmd = "uci show pub_rule | grep target_ip | cut -d [ -f 2 | cut -d ] -f 1";
     $rules_str = shell_exec($cmd);
     $rules_idx = explode("\n", $rules_str);
+    $index = 0;
     foreach($rules_idx as $k=>$idx) {
 		$idx = str_clean($idx);
 		if ($idx == "") continue;
@@ -279,11 +256,27 @@ function apply_rule(){
 		if($enable != "1") continue;
 		
 		$cmd = sprintf("uci get pub_rule.@rule[%s].target_ip", $idx); $target_ip = shell_exec($cmd); $target_ip = str_clean($target_ip);
+		$cmd = sprintf("uci get pub_rule.@rule[%s].source_ip", $idx); $source_ip = shell_exec($cmd); $source_ip = str_clean($source_ip);
+		
 		$cmd = sprintf("uci get pub_rule.@rule[%s].iface", $idx); $iface = shell_exec($cmd); $iface = str_clean($iface);
 		
-		$cmd = sprintf("ip route replace %s dev br-%s table rt_pub", $target_ip, $iface); shell_exec($cmd);
+		$rt_table_name = sprintf("rt_pub_%d", $index);
+		$rt_table_id = $table_id + $index;
+		$cmd = sprintf("grep -q %s /etc/iproute2/rt_tables || echo %d %s >>/etc/iproute2/rt_tables", $rt_table_name, $rt_table_id, $rt_table_name);
+		shell_exec($cmd);
+		
+		//set ip rule
+		$ip_list = parse_ip_list($source_ip);
+		foreach($ip_list as $ip_idx => $ip_val) {
+			$cmd = sprintf("ip rule add from %s lookup %s", $ip_val, $rt_table_name);
+			shell_exec($cmd);
+		}
+
 		
 		
+		$cmd = sprintf("ip route replace %s dev br-%s table %s", $target_ip, $iface, $rt_table_name); shell_exec($cmd);
+		
+		$index++;
 	}
     
     
@@ -303,12 +296,14 @@ function get_conf() {
 		
 		$cmd = sprintf("uci get pub_rule.@rule[%s].enable", $idx); $enable = shell_exec($cmd); $enable = str_clean($enable);
 		$cmd = sprintf("uci get pub_rule.@rule[%s].target_ip", $idx); $target_ip = shell_exec($cmd); $target_ip = str_clean($target_ip);
+		$cmd = sprintf("uci get pub_rule.@rule[%s].source_ip", $idx); $source_ip = shell_exec($cmd); $source_ip = str_clean($source_ip);
 		$cmd = sprintf("uci get pub_rule.@rule[%s].iface", $idx); $iface = shell_exec($cmd); $iface = str_clean($iface);
 		$cmd = sprintf("uci get pub_rule.@rule[%s].comment", $idx); $comment = shell_exec($cmd); $comment = str_clean($comment);
 		
 		$retdata[]= array(
 				'real_num'=>$idx, 
 				'target_ip'=>$target_ip,
+				'src_ip'=>$source_ip,
 				'iface'=>$iface,
 				'enable'=>$enable,
 				'comment'=>$comment
@@ -343,7 +338,6 @@ function get_conf() {
 
 	return $ret;
 }
-
 
 
 if ($method == "GET" ) {
@@ -408,6 +402,7 @@ else if($method == "SET") {
 		$action = isset($post_data["action"]) ? $post_data["action"] : "";
 		$real_num = isset($post_data["real_num"]) ? $post_data["real_num"]: "";
 		$target_ip = isset($post_data["target_ip"]) ? $post_data["target_ip"] : "";
+		$source_ip = isset($post_data["source_ip"]) ? $post_data["source_ip"] : "";
 		$enable = isset($post_data["enable"]) ?$post_data["enable"] : "";
 		$comment = isset($post_data["comment"]) ? $post_data["comment"]: "";
 		$iface = isset($post_data["iface"]) ? $post_data["iface"] : "";
@@ -415,6 +410,7 @@ else if($method == "SET") {
 		if($action == "add") {		
 			$cmd = "uci add pub_rule rule"; shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[-1].target_ip='%s'", $target_ip); shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@rule[-1].source_ip='%s'", $source_ip); shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[-1].iface='%s'", $iface); shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[-1].enable=%s", $enable); shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[-1].comment='%s'", $comment); shell_exec($cmd);
@@ -430,6 +426,7 @@ else if($method == "SET") {
 				$real_num = str_clean($real_num);
 				if($real_num == "") continue;
 				$cmd = sprintf("uci delete pub_rule.@rule[%s].target_ip", $real_num); shell_exec($cmd);
+				$cmd = sprintf("uci delete pub_rule.@rule[%s].source_ip", $real_num); shell_exec($cmd);
 				$cmd = sprintf("uci delete pub_rule.@rule[%s].iface", $real_num); shell_exec($cmd);
 				$cmd = sprintf("uci delete pub_rule.@rule[%s].enable", $real_num); shell_exec($cmd);
 				$cmd = sprintf("uci delete pub_rule.@rule[%s].comment", $real_num); shell_exec($cmd);
@@ -441,6 +438,7 @@ else if($method == "SET") {
 		}
 		else if($action == "edit") {
 			$cmd = sprintf("uci set pub_rule.@rule[%s].target_ip='%s'", $real_num, $target_ip); shell_exec($cmd);
+			$cmd = sprintf("uci set pub_rule.@rule[%s].source_ip='%s'", $real_num, $source_ip); shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[%s].iface='%s'", $real_num, $iface); shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[%s].enable=%s", $real_num, $enable); shell_exec($cmd);
 			$cmd = sprintf("uci set pub_rule.@rule[%s].comment='%s'", $real_num, $comment); shell_exec($cmd);

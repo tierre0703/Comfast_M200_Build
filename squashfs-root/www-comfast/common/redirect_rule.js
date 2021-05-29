@@ -99,7 +99,7 @@ define(function (require, b) {
                 static_route = data.target_rule || [];
                 static_rule = data.src_rule || [];
                 showtable();
-                showtable_src();
+                //showtable_src();
 		},false);
 		
 		d('#nav-col').css('opacity', '1');
@@ -148,6 +148,7 @@ define(function (require, b) {
             
             //this_html += '<td class="end_ip">' + ip_arr[1] + '</td>';
             this_html += '<td class="name tbl" >' + iface_to_name[m.iface] + '</td>';
+            this_html +='<td class="source_ip tbl">' + m.src_ip + '</td>';
             this_html += '<td class="dest_alias tbl">' + m.comment + '</td>';
             
             var status = m.enable == "1" ? "Enabled" : "Disabled";
@@ -165,6 +166,7 @@ define(function (require, b) {
             this_table = d('#table').DataTable({
                 "bDestroy": true,
                 "columns": [
+                    {"orderable": true},
                     {"orderable": true},
                     {"orderable": true},
                     {"orderable": true},
@@ -319,6 +321,8 @@ define(function (require, b) {
         d('#real_num').val(d(evt).parents('tr').find('.real_num').html());
         d('#start_ip').val(d(evt).parents('tr').find('.start_ip').html());
         //d('#end_ip').val(d(evt).parents('tr').find('.end_ip').html());
+        d('#source_ip').val(d(evt).parents('tr').find('.source_ip').html().replace(",", "\n"));
+        
         d('#iface').val(d(evt).parents('tr').find('.iface').html().toLowerCase());
         d('#dest_alias').val(d(evt).parents('tr').find('.dest_alias').html());
         d('#enable').val(d(evt).parents('tr').find('.enable').html());
@@ -439,7 +443,7 @@ define(function (require, b) {
 	}
 
     function set_volide() {
-        var arg = {}, error_falg = 0, ip_arr = [], start_ip, end_ip;
+        var arg = {}, error_falg = 0, ip_arr = [], start_ip, source_ip;
 
         if (action == 'add' && static_route.length == 512) {
             h.ErrorTip(tip_num++, max_add_over);
@@ -453,7 +457,7 @@ define(function (require, b) {
         }
         start_ip = d("#start_ip").val();
         if(start_ip == "") {
-			h.ErrorTip(tip_num++, "Invalid IP Address");
+			h.ErrorTip(tip_num++, "Invalid Dest IP Address");
             return false;
 		}
 		
@@ -520,30 +524,85 @@ define(function (require, b) {
 		});
 		
 		if(bFound){
-			h.ErrorTip(tip_num++, "Invalid IP Address");
+			h.ErrorTip(tip_num++, "Invalid Dest IP Address");
 			return false;
 		}
 		
-        //end_ip = d("#end_ip").val();
-
-	/*
-        if (h.ip2int(start_ip) > h.ip2int(end_ip)) {
-            var tmp_num;
-            tmp_num = start_ip;
-            start_ip = end_ip;
-            end_ip = tmp_num;
-            ip_arr[0] = start_ip;
-            ip_arr[1] = end_ip;
-
-        } else if (h.ip2int(start_ip) == h.ip2int(end_ip)) {
-            ip_arr[0] = start_ip;
-        } else {
-            ip_arr[0] = start_ip;
-            ip_arr[1] = end_ip;
-        } */
-
-        //arg.ipaddr = ip_arr.join('-');
+		source_ip = d("#source_ip").val().replace("\r\n", ",").replace("\n",",");
+        if(source_ip == "") {
+			h.ErrorTip(tip_num++, "Invalid Source IP Address");
+            return false;
+		}
+		
+		var source_ipTokens = source_ip.split(",");
+		var source_ip_list = [];
+		d.each(source_ipTokens, function(n, m){
+			if(m.indexOf("-") > -1) {
+				//ip range
+				var ipRange = m.split("-");
+				var firstIP = ipRange[0] || "";
+				var secondIP = ipRange[1] || "";
+				if(firstIP == "" || secondIP == "") return;
+				if(h.ip2int(firstIP) == 0 || h.ip2int(secondIP) == 0) return;
+				
+				var firstIPNum = h.ip2int(firstIP);
+				var secondIPNum = h.ip2int(secondIP);
+				if(secondIPNum < firstIPNum) 
+				{
+					var tmp_num = firstIPNum;
+					firstIPNum = secondIPNum;
+					secondIPNum = tmp_num;
+				}
+				for(var i = firstIPNum; i <= secondIPNum; i++)
+				{
+					source_ip_list.push(i);
+				}
+			}
+			else if(m.indexOf("/") > -1) {
+				//subnet
+				var ipRange = parseCIDR2(m);
+				if(ipRange[0] == "" || ipRange[1] == "") return;
+				
+				var firstIPNum = h.ip2int(ipRange[0]);
+				var sencondIPNum = h.ip2int(ipRange[1]);
+				if(sencondIPNum < firstIPNum) 
+				{
+					var tmp_num = firstIPNum;
+					firstIPNum = sencondIPNum;
+					sencondIPNum = tmp_num;
+				}
+				for(var i = firstIPNum; i <= sencondIPNum; i++)
+				{
+					source_ip_list.push(i);
+				}
+			}
+			else{
+				//single ip
+				if(m == "") return;
+				source_ip_list.push(h.ip2int(m));
+			}
+		});
+		
+		bFound = false;
+		
+		d.each(source_ip_list, function(n, m){
+			d.each(ip_exception_list, function(ip_idx, ip){
+				if(m == ip){
+					bFound = true;
+					return false;
+				}
+			});
+			
+			if(bFound == true) return false;
+		});
+		
+		if(bFound){
+			h.ErrorTip(tip_num++, "Invalid Dest IP Address");
+			return false;
+		}
+		
         arg.target_ip = start_ip;
+        arg.source_ip = source_ip;
 
         arg.iface = d("#iface").val();
         arg.comment = d("#dest_alias").val();

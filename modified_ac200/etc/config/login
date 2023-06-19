@@ -1,6 +1,0 @@
-
-config login 'user'
-	option username 'admin'
-	option password 'admin'
-	option first_login '0'
-

@@ -1,8 +1,0 @@
-Package: heart_beat
-Version: 0.1-1
-Depends: libc, libuci, libubox, libblobmsg-json
-Source: package/ap/heart_beat
-Section: net
-Architecture: ramips_1004kc
-Installed-Size: 33079
-Description:  This package contains HEART BEAT Daemond

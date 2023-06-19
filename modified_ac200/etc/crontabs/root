@@ -1,7 +1,0 @@
-#
-*/1 * * * * /etc/rrd/loadrrd start
-*/2 * * * * /etc/dhcp_clientd start
-# cron for quantity limit
-*/30 * * * * /etc/qty_ctld start
-#
-

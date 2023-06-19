@@ -1,5 +1,0 @@
-config timing_reboot 'reboot'
-        option timing_enable '0'
-        option timing_weeks '1,2,3,4,03:00'
-        option timing_time '03:00'
-        option interval_enable '0'

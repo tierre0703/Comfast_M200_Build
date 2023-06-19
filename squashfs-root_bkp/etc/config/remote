@@ -1,4 +1,0 @@
-config remote 'remote'
-        option enable '0'
-        option port '80'
-        option ipaddr '0.0.0.0'

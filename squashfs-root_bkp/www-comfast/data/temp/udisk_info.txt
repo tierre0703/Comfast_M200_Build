@@ -1,2 +1,0 @@
-/dev/sda1                 5.2G      1.6G      3.7G  30% /mnt/sda1
-/dev/sda1: LABEL="´ó°×²ËUÅÌ" UUID="CE41-2653"

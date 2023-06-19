@@ -1,6 +1,0 @@
-/usr/bin/wtpd
-/etc/init.d/wtpd
-/etc/rc.d/S97wtpd
-/usr/bin/wtpd_server
-/usr/bin/wtpd_udp
-/usr/bin/wtpd_ubus

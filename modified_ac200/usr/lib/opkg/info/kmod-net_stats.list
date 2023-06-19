@@ -1,3 +1,0 @@
-/etc/modules.d/30-net_stats
-/lib/modules/3.18.9/net_stats.ko
-/etc/modules-boot.d/30-net_stats

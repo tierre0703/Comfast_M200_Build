@@ -1,8 +1,0 @@
-Package: fota_git
-Version: 0.1-1
-Depends: libc, libubox, libuci, git
-Source: package/fota/fota_git
-Section: net
-Architecture: ramips_1004kc
-Installed-Size: 26124
-Description:  This package contains Git FOTA(Firmware Over The Air base on Git)

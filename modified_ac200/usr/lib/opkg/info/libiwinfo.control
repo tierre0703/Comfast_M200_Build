@@ -1,9 +1,0 @@
-Package: libiwinfo
-Version: 2015-03-23-52
-Depends: libc, PACKAGE_kmod-qca-wifi-perf, libuci
-Source: package/network/utils/iwinfo
-Section: libs
-Architecture: ramips_1004kc
-Installed-Size: 12073
-Description:  Wireless information library with consistent interface for proprietary Broadcom,
- madwifi, nl80211 and wext driver interfaces.

@@ -1,4 +1,0 @@
-
-config map 'bind'
-	option list '0,'
-

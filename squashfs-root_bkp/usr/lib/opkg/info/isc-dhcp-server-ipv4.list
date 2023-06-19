@@ -1,5 +1,0 @@
-/usr/sbin/generate_dhcpd_lease_file
-/etc/dhcpd.conf
-/etc/config/dhcpd
-/usr/sbin/dhcpd
-/etc/init.d/dhcpd

@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2011 OpenWrt.org
+
+
+[ -f /etc/routed ] && /etc/routed
+
+#curl -s "http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run"
+
+curl -s "http://127.0.0.1/cgi-php/access_config.php?method=SET&action=apply_access_control"
+
+curl -s "http://127.0.0.1/cgi-php/dirroute_config.php?method=SET&action=set_rule"
+
+curl -s "http://127.0.0.1/cgi-php/network_config.php?method=SET&action=enable_ifaces"
+
+curl -s "http://127.0.0.1/cgi-php/redirect_rule.php?method=SET&action=apply_rule"

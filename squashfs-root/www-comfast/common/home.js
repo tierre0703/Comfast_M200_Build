@@ -391,7 +391,7 @@ define(function (require, exports) {
                 }
 
                 //connection
-                if(wan_connection.up == false)
+                if(wan_connection.speed == "")
                 {
                     this_html += '<td class="text-left"><span>no connection</span></td>'
                 }

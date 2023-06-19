@@ -819,7 +819,13 @@ if($method == "GET")
             foreach($json_data as $key=>$value)
             {
                 if($value['ifname'] == $port_name)
+                {
                     $json_data[$key]['speed'] = $speed;
+                    if($speed){
+                    }else{
+                        $json_data[$key]['up'] = false;
+                    }
+                }
             }
         }
 

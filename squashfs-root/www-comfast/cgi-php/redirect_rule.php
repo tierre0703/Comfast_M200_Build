@@ -391,8 +391,8 @@ else if($method == "SET") {
 			$cmd = sprintf("uci set pub_rule.@src_rule[%s].comment='%s'", $real_num, $comment); shell_exec($cmd);
 			$cmd = "uci commit pub_rule"; shell_exec($cmd);
 		}
-		
-		apply_rule();
+		shell_exec("/etc/route_rewrited");
+		//apply_rule();
 		header("Content-Type: application/json");
         echo json_encode(array("errCode"=>0));
 		

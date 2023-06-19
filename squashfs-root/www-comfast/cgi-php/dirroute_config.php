@@ -365,9 +365,9 @@ else if($method == "SET")
 		
 		shell_exec("uci commit traffic_rule");
 		
-		set_rules();
-		
-		shell_exec("curl -s \"http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run\"");
+		//set_rules();
+		//shell_exec("curl -s \"http://127.0.0.1/cgi-php/intervlan.php?method=SET&action=run\"");
+		shell_exec("/etc/route_rewrited");
         header("Content-Type: application/json");
         echo json_encode(array("errCode"=>0));
 	}

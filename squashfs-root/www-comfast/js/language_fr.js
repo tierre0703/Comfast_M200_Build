@@ -58,7 +58,7 @@ var cluster_queued_stauts = 'Waiting';
 var fw_Firewallsettings = 'Firewall Settings';
 var wlantype = 'Connection Type';
 var System_Information = 'System Information';
-var System_Tools = 'System Tools';
+var System_Tools = 'System';
 var softwareInfo = 'SW Info';
 var ledcontrol = 'Light Feature';
 var deviceInfo = 'Device Info';
@@ -141,7 +141,7 @@ var ddos_syn = "Anti SYN Attack";
 var ddos_null = "Anti NULL Scan";
 var ddos_fin = "Anti FIN Scan";
 var ddos_xmas = "Anti Xmas Tree";
-var ddos_smurf = "Anti Sumrf";
+var ddos_smurf = "Anti Smurf";
 var ddos_ping = "Anti Ping";
 var ddos_icmp_threshold = "ICMP Rate Threshold";
 var ddos_udp_threshold = "UDP Rate Threshold";
@@ -1343,8 +1343,8 @@ var static_route_netmask_error = 'target ip and netmask conflict';
 var static_route_ip_tip = 'Destination network address repetition';
 
 /*route_router.html*/
-var index_route_route = 'Directed Route';
-var routeroute_header = 'Directed Route Settings';
+var index_route_route = 'Traffic Rule';
+var routeroute_header = 'Traffic Rule Settings';
 
 /*vlan.html*/
 var index_vlan = 'VLAN Setup';
@@ -1399,7 +1399,7 @@ var vpn_pptp_username = 'Username:';
 var vpn_pptp_password = 'Password';
 var vpn_pptp_server = 'Server/IP';
 var vpn_pptp_server_is_null = 'Server/IP is Empty';
-var vpn_switch = 'PPTP Switch';
+var vpn_switch = 'PPTP Status';
 var vpn_dns_null = 'DNS Cannot be Empty';
 var vpn_same_name = 'The same user name already exists';
 
@@ -1543,7 +1543,7 @@ var lan2wan = "LAN port to WAN port";
 var pptp_client = 'PPTP Client';
 var l2tp_client = 'L2TP Client';
 
-var l2tp_switch = 'L2TP Switch';
+var l2tp_switch = 'L2TP Status';
 var policy_add = 'Join miltiline route';
 var policylineenable = 'join';
 var policylinedisable = 'not join';
@@ -1551,7 +1551,7 @@ var policylinedisable = 'not join';
 var vpn_server = 'VPN Server';
 var pptpd_server = 'PPTP Server';
 var pptp_user = 'PPTP User';
-var pptpd_server_switch = 'PPTP server switch';
+var pptpd_server_switch = 'PPTP server status';
 var pptpd_server_switch_enable = 'enable';
 var pptpd_server_switch_disable = 'disable';
 var pptpd_server_localip = 'ServerIP';
@@ -1881,7 +1881,7 @@ var wire_days_select = "Please select the Days";
 var wire_timeslot_select = "Please select the Time slot";
 var wire_time_slot = "Time slot";
 var forbid_modify = "Static";
-var wan_link_mode = "Static IP, DHCP or PPPoE";
+var wan_link_mode = "Static IP or DHCP";
 var netmask_tiptext = "Enter Subnet Mask Info";
 var gateway_tiptext = "Enter Gateway Info";
 var ac_mode = "Current AC Mode";
@@ -2122,7 +2122,7 @@ var select_allocated_to = "Bandwidth Allocation";
 var perform_test = "Perform Manual Test";
 
 var need_change = "Apply for the changes to take effect!";
-var please_waiting = 'Please waiting...';
+var please_waiting = 'Please wait...';
 var vlan_dns = "DNS";
 var vlan_dns2 = "Second DNS";
 var vlan_dns_tip = "Enter DNS Adress: xxx.xxx.xxx.xxx";
@@ -2160,4 +2160,8 @@ var ip_not_found = "Target IP not found";
 var device_macaddr = "MAC Address";
 
 var bm_already_enabled = "Not available when Bandwidth Management enabled";
+
+var system_info = "System Info";
+
+var redirect_rule = "Static Rule";
 /*auth all*/

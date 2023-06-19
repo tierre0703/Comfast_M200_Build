@@ -67,7 +67,10 @@ define(function (require, b) {
                 name_version = "CF-AC500-" + deviceVersion;
             } else if (cpu_model.indexOf("i7") > -1) {
                 name_version = "CF-AC600-" + deviceVersion;
-            } else {
+            } else if (deviceName.toUpperCase().indexOf("CF-AC200") > -1) {
+                name_version = "M200-" + deviceVersion;
+            } 
+            else {
                 name_version = firmware_info.version;
             }
         } else {

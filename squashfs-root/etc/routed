@@ -31,12 +31,13 @@ for entry in `ubus list | grep wan | cut -d . -f 3`; do
     #echo $table_id
 
     # cut nexthop
-    nexthop=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["route"][1].nexthop')
+    nexthop=$(ubus call network.interface.${br_name} status | jsonfilter -e '@.route[*].nexthop' | grep -v '0.0.0.0')
+    #nexthop=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["route"][1].nexthop')
     
-    if [ "$nexthop" == "" ]; then
-		nexthop=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["route"][0].nexthop')
-	fi
-
+    #if [ "$nexthop" == "" ]; then
+	#	nexthop=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["route"][0].nexthop')
+	#fi
+    
     # check rt_table
     rt_name=$(grep ${wanname} /etc/iproute2/rt_tables | grep -v _${wanname})
     if [ "$rt_name" == "" ]; then

@@ -43,7 +43,9 @@ run_speedtest()
 
             #cut wan_ip
             #"ipv4-address": [{"address": "10.100.100.131", "mask": 24}],
-            wan_ip=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["ipv4-address"][0].address')
+            wan_ip=$(ubus call network.interface.${br_name} status | jsonfilter -e '@.route[*].nexthop' | grep -v '0.0.0.0')
+
+            #wan_ip=$(ubus call network.interface.${br_name} status | jsonfilter -e '@["ipv4-address"][0].address')
             
             echo "wanname "${wanname}
             echo "wan_ip "${wan_ip}
